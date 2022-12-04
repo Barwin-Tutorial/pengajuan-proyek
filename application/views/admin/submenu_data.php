@@ -350,7 +350,7 @@ function reload_table()
             <div class="form-group row ">
               <label for="icon" class="col-sm-3 col-form-label">Icon</label>
               <div class="col-sm-9 kosong">
-                <input type="text" class="form-control" name="icon" id="icon" placeholder="Icon" >
+                <input type="text" class="form-control" name="icon" id="icon" placeholder="Icon" value="far far-circle">
                 <span class="help-block"></span>
               </div>
             </div>
