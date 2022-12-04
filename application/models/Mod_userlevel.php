@@ -17,6 +17,13 @@ class Mod_userlevel extends CI_Model {
 
 	private function _get_datatables_query()
     {
+        $level = $this->session->userdata['id_level'];
+        if ($level!=12) {
+            $where=$this->db->where_not_in('id_level','12');
+        }else{
+            $where="";
+        }
+        $where;
         $this->db->from($this->table);
         $i = 0;
     
@@ -71,7 +78,13 @@ class Mod_userlevel extends CI_Model {
 
     public function count_all()
     {
-        
+        $level = $this->session->userdata['id_level'];
+        if ($level!=12) {
+            $where=$this->db->where_not_in('id_level','12');
+        }else{
+            $where="";
+        }
+        $where;
         $this->db->from('tbl_userlevel');
         return $this->db->count_all_results();
     }

@@ -18,13 +18,12 @@ class Userlevel extends MY_Controller
 
 	public function index()
 	{
-		// 
-        $data['user_level'] = $this->Mod_userlevel->getAll();
-        
-        $link = $this->uri->segment(1);
+		$link = $this->uri->segment(1);
         $level = $this->session->userdata['id_level'];
-        // Cek Posisi Menu apakah Sub Menu Atau bukan
-        $jml = $this->Mod_dashboard->get_akses_menu($link,$level)->num_rows();;
+        
+        $data['user_level'] = $this->Mod_userlevel->getAll();
+        $jml = $this->Mod_dashboard->get_akses_menu($link,$level)->num_rows();
+
         if ($jml > 0) {//Jika Menu
             $data['akses_menu'] = $this->Mod_dashboard->get_akses_menu($link,$level)->row();
             $a_menu = $this->Mod_dashboard->get_akses_menu($link,$level)->row();
@@ -34,14 +33,12 @@ class Userlevel extends MY_Controller
             $a_submenu = $this->Mod_dashboard->get_akses_submenu($link,$level)->row();
             $akses=$a_submenu->view;
         }
-
-        
         if ($akses=="Y") {
-            $this->template->load('layoutbackend', 'admin/user_level', $data);
-        }else{
-            $data['page']=$link;
-            $this->template->load('layoutbackend','login/akses_ditolak',$data);
-        }
+           $this->template->load('layoutbackend', 'admin/user_level', $data);
+       }else{
+        $data['page']=$link;
+        $this->template->load('layoutbackend','admin/akses_ditolak',$data);
+    }
 	}
 
 	public function ajax_list()
@@ -56,14 +53,8 @@ class Userlevel extends MY_Controller
             $no++;
             $row = array();
             $row[] = $level->nama_level;
-            $row[] = "<a class=\"btn btn-xs btn-info\" href=\"javascript:void(0)\" title=\"Hak Akses Menu\" onclick=\"aksesmenu('$level->id_level')\">Hak Akses Menu</a>";
-           if ($level->id_level==1 || $cekuser > 0) {
-                $row[] = "<a class=\"btn btn-xs btn-outline-info\" href=\"javascript:void(0)\" title=\"View\" onclick=\"vlevel('$level->id_level')\"><i class=\"fas fa-eye\"></i></a> <a class=\"btn btn-xs btn-outline-primary\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit_level('$level->id_level')\"><i class=\"fas fa-edit\"></i></a>";
-            }else{
-                $row[] = "<a class=\"btn btn-xs btn-outline-info\" href=\"javascript:void(0)\" title=\"View\" onclick=\"vlevel('$level->id_level')\"><i class=\"fas fa-eye\"></i></a> <a class=\"btn btn-xs btn-outline-primary\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit_level('$level->id_level')\"><i class=\"fas fa-edit\"></i></a><a class=\"btn btn-xs btn-outline-danger\" href=\"javascript:void(0)\" title=\"Delete\" onclick=\"dellevel('$level->id_level')\"><i class=\"fas fa-trash\"></i></a>";
-            }
+            $row[] = $level->id_level;
             $row[] = $cekuser;
-            
             $data[] = $row;
         }
 
@@ -123,11 +114,12 @@ class Userlevel extends MY_Controller
                 'id_level'  => $id,
                 'id_submenu'   => $submenu->id_submenu,
                 'view' => 'N',
-                'add_level'  => 'N',
-                'edit_level' => 'N',
-                'delete_level' => 'N',
-                'print_level'  => 'N',
-                'upload_level' => 'N'
+                'add'  => 'N',
+                'edit' => 'N',
+                'delete' => 'N',
+                'print'  => 'N',
+                'upload' => 'N',
+                'download' => 'N'
             );
             $this->db->insert('tbl_akses_submenu', $datasubmenu);
         }
@@ -184,7 +176,8 @@ class Userlevel extends MY_Controller
             exit();
         }
     }
- public function view_akses_menu()
+
+    public function view_akses_menu()
     {
             $id = $this->input->post('id');
             $data['data_menu'] = $this->Mod_userlevel->view_akses_menu($id)->result();
@@ -234,4 +227,5 @@ class Userlevel extends MY_Controller
         $this->Mod_userlevel->update_akses_submenu($id, $up);
         echo json_encode(array("status" => TRUE));
     }
+     
 }

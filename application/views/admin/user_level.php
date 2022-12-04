@@ -16,7 +16,7 @@
               <div class="card-body">
                 <table id="tabellevel" class="table table-bordered table-striped table-hover">
                   <thead>
-                    <tr class="bg-teal">
+                    <tr class="bg-info">
                       <th>Level</th>
                       <th>Akses</th>
                       <th>Aksi</th>
@@ -74,12 +74,32 @@ $(document).ready(function() {
         "processing": true, //Feature control the processing indicator.
         "serverSide": true, //Feature control DataTables' server-side processing mode.
         "order": [], //Initial no order.
+
         // Load data for the table's content from an Ajax source
         "ajax": {
           "url": "<?php echo site_url('userlevel/ajax_list')?>",
           "type": "POST"
         },
-        
+         //Set column definition initialisation properties.
+         "columnDefs": [
+         { 
+            "targets": [ -1 ], //last column
+            "render": function ( data, type, row ) {
+              if (row[1]==1 || row[2] > 0) {
+                return "<a class=\"btn btn-xs btn-outline-info\" href=\"javascript:void(0)\" title=\"View\" onclick=\"vlevel("+row[1]+")\"><i class=\"fas fa-eye\"></i></a> <a class=\"btn btn-xs btn-outline-primary\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit_level("+row[1]+")\"><i class=\"fas fa-edit\"></i></a>";
+              }else{
+                return "<a class=\"btn btn-xs btn-outline-info\" href=\"javascript:void(0)\" title=\"View\" onclick=\"vlevel("+row[1]+")\"><i class=\"fas fa-eye\"></i></a> <a class=\"btn btn-xs btn-outline-primary\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit_level("+row[1]+")\"><i class=\"fas fa-edit\"></i></a><a class=\"btn btn-xs btn-outline-danger\" href=\"javascript:void(0)\" title=\"Delete\" onclick=\"dellevel("+row[1]+")\"><i class=\"fas fa-trash\"></i></a>";
+              }
+            },
+            "orderable": false, //set not orderable
+          },{
+            "targets" : [1],
+            "render" : function (data, type, row) {
+              return "<a class=\"btn btn-xs btn-info\" href=\"javascript:void(0)\" title=\"Hak Akses Menu\" onclick=\"aksesmenu("+row[1]+")\">Hak Akses Menu</a>";
+            }
+
+          },
+          ],
         });
  $("input").change(function(){
   $(this).parent().parent().removeClass('has-error');

@@ -20,8 +20,8 @@
 
         ?>
         <tr>
-          <td class="bg-teal"><?=$i++;?></td>
-          <td class="bg-teal"><?=$row->nama_menu?></td>
+          <td class="bg-success"><?=$i++;?></td>
+          <td class="bg-success"><?=$row->nama_menu?></td>
           <td>
             <?php if ($row->view=="Y") {?>
               <div id="vcek<?=$i.$row->id?>" onClick="akses_menu('<?=$row->id?>','<?=$row->id_level?>','view','checked')">

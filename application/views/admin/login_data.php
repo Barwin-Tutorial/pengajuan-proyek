@@ -123,8 +123,9 @@
         dataType : 'JSON',
         success : function(data) {
           if (data.status) {
+            // alert(data.url)
             toastr.success('Login Berhasil!');
-            var url = '<?php echo base_url('dashboard') ?>';
+            var url = '<?php echo base_url() ?>'+data.url;
             window.location = url;
           }else if (data.error) {
             toastr.error(

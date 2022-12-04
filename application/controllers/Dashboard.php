@@ -33,12 +33,12 @@ class Dashboard extends MY_Controller {
             }
 
             $data['jmluser'] =  $this->Mod_dashboard->JmlUser();
-            /*if ($akses=="Y") {*/
+            if ($akses=="Y") {
                  $this->template->load('layoutbackend','dashboard/dashboard_data',$data);
-            /* }else{
+             }else{
                 $data['page']=$link;
-                $this->template->load('layoutbackend','login/akses_ditolak',$data);
-            }*/
+                $this->template->load('layoutbackend','admin/akses_ditolak',$data);
+            }
         }
         
     }

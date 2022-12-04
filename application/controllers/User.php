@@ -37,7 +37,7 @@ class User extends MY_Controller {
             $this->template->load('layoutbackend', 'admin/user_data', $data);
         }else{
             $data['page']=$link;
-            $this->template->load('layoutbackend','login/akses_ditolak',$data);
+            $this->template->load('layoutbackend','admin/akses_ditolak',$data);
         }
     }
 

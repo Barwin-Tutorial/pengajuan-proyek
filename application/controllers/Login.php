@@ -14,7 +14,10 @@ class Login extends CI_Controller {
     {
         $logged_in = $this->session->userdata('logged_in');
         if ($logged_in==TRUE) {
-            redirect('dashboard');
+            $idlevel=$this->session->userdata('id_level');
+            $urls=$this->Mod_login->akses_menu($idlevel)->row();
+            // var_dump($urls->link);
+            redirect($urls->link);
         }else{
             $aplikasi['aplikasi'] = $this->Mod_login->Aplikasi()->row();
             $this->load->view('admin/login_data',$aplikasi);
@@ -48,8 +51,10 @@ class Login extends CI_Controller {
                     'logged_in'    => TRUE
                 );
 
+                $urls=$this->Mod_login->akses_menu($db->id_level)->row();
                 $this->session->set_userdata($userdata);
                 $data['status'] = TRUE;
+                $data['url'] = $urls->link;
                 echo json_encode($data);
             }else{
 

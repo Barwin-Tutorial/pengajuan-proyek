@@ -36,7 +36,7 @@ class Ganti_password extends MY_Controller
             $this->template->load('layoutbackend','admin/ganti_password',$data);
         }else{
             $data['page']=$link;
-            $this->template->load('layoutbackend','login/akses_ditolak',$data);
+            $this->template->load('layoutbackend','admin/akses_ditolak',$data);
         }
 	}
 

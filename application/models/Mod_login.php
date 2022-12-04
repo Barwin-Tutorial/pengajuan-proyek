@@ -22,6 +22,15 @@ class Mod_login extends CI_Model {
         return $this->db->get_where('tbl_user', array('username' => $username));
     }
 
+    function akses_menu($idlevel)
+    {
+
+        $this->db->select('b.link');
+        $this->db->where('a.id_level', $idlevel, 'ORDER BY urutan ASC LIMIT 1');
+        $this->db->where('a.view','Y');
+        $this->db->join('tbl_menu b', 'a.id_menu=b.id_menu');
+       return $this->db->get('tbl_akses_menu a');
+    }
 
 
 }
