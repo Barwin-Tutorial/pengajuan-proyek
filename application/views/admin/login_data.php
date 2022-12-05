@@ -41,7 +41,7 @@
   <!-- /.login-logo -->
   <div class="card">
     <div class="card-header bg-info">
-      <h4><i class="fas fa-sign-in-alt"></i> Sign in to start your session</h4>
+      <h4><i class="fas fa-sign-in-alt"></i> Silahkan Masuk</h4>
     </div>
     <div class="card-body login-card-body">
 
@@ -69,7 +69,7 @@
     
           <!-- /.col -->
           <div class="center" >
-            <button type="button" id="login" class="btn btn-info btn-block btn-flat"><span class="fa fa-sign-in-alt"></span> Sign In</button>
+            <button type="button" id="login" class="btn btn-info btn-block btn-flat"><span class="fa fa-sign-in-alt"></span> Masuk</button>
           </div>
           <!-- /.col -->
         <!-- </div> -->

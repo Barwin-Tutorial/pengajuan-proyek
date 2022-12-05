@@ -19,8 +19,9 @@ class Mod_barang extends CI_Model
 
 		private function _get_datatables_query()
 	{
-		
-		$this->db->from('barang');
+		$this->db->select('a.*,b.nama as nama_satuan');
+		$this->db->from('barang a');
+		$this->db->join('satuan b','a.satuan=b.id');
 		$i = 0;
 
 	foreach ($this->column_search as $item) // loop column 
@@ -101,5 +102,16 @@ class Mod_barang extends CI_Model
         $this->db->delete($table);
     }
 
-    
+        function max_no()
+    {
+        $today=date("Y-m-d");
+         $this->db->select('MAX(SUBSTR(kdbarang,-4)) AS kode');
+        $this->db->order_by('kdbarang','desc');
+        return $this->db->get('barang')->result_array();
+    }
+
+    function satuan()
+    {
+        return $this->db->get('satuan');
+    }
 }

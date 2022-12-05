@@ -306,7 +306,7 @@ function reload_table()
 
 <!-- Bootstrap modal -->
 <div class="modal fade" id="modal_form" role="dialog">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
 
       <div class="modal-header">
@@ -350,7 +350,7 @@ function reload_table()
             <div class="form-group row ">
               <label for="icon" class="col-sm-3 col-form-label">Icon</label>
               <div class="col-sm-9 kosong">
-                <input type="text" class="form-control" name="icon" id="icon" placeholder="Icon" value="far far-circle">
+                <input type="text" class="form-control" name="icon" id="icon" placeholder="Icon" value="far fa-circle">
                 <span class="help-block"></span>
               </div>
             </div>

@@ -165,11 +165,17 @@ function edit(id){
         {
 
             $('[name="id"]').val(data.id);
+             $('[name="barcode"]').val(data.barcode);
             $('[name="nama"]').val(data.nama);
+            $('[name="satuan"]').val(data.satuan);
+            $('[name="berat"]').val(data.berat);
+            $('[name="perundangan"]').val(data.perundangan);
+            $('[name="harga"]').val(data.harga);
+            $('[name="rak"]').val(data.rak);
             $('[name="view"]').val(data.view);
             
-             var image = "<?php echo base_url('assets/barang/')?>";
-             $("#v_image").attr("src",image+data.image);
+             /*var image = "<?php echo base_url('assets/barang/')?>";
+             $("#v_image").attr("src",image+data.image);*/
            
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
             $('.modal-title').text('Edit barang'); // Set title to Bootstrap modal title
@@ -245,6 +251,14 @@ var loadFile = function(event) {
   var image = document.getElementById('v_image');
   image.src = URL.createObjectURL(event.target.files[0]);
 };
+
+function hanyaAngka(evt) {
+  var charCode = (evt.which) ? evt.which : event.keyCode
+  if (charCode > 31 && (charCode < 48 || charCode > 57))
+
+    return false;
+  return true;
+}
 </script>
 
 
@@ -255,7 +269,7 @@ var loadFile = function(event) {
         <div class="modal-content ">
 
             <div class="modal-header">
-                <h3 class="modal-title">Person Form</h3>
+                <h3 class="modal-title">Barang Form</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -266,6 +280,13 @@ var loadFile = function(event) {
                     <input type="hidden" value="" name="id"/> 
                     <div class="card-body">
                         <div class="form-group row ">
+                            <label for="nama" class="col-sm-3 col-form-label">Barcode</label>
+                            <div class="col-sm-9 kosong">
+                                <input type="text" class="form-control" name="barcode" id="barcode" placeholder="Barcode" >
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row ">
                             <label for="nama" class="col-sm-3 col-form-label">Nama</label>
                             <div class="col-sm-9 kosong">
                                 <input type="text" class="form-control" name="nama" id="nama" placeholder="Nama" >
@@ -273,18 +294,60 @@ var loadFile = function(event) {
                             </div>
                         </div>
                         <div class="form-group row ">
+                            <label for="nama" class="col-sm-3 col-form-label">Satuan</label>
+                            <div class="col-sm-9 kosong">
+                                <select class="form-control" name="satuan" >
+                                  <option value="">Pilih Satuan...</option>
+                                  <?php 
+                                  foreach ($satuan as $row){
+                                    ?>
+                                    <option value="<?=$row->id?>"><?php echo $row->nama; ?></option>
+                                <?php } ?>
+                            </select>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row ">
+                            <label for="nama" class="col-sm-3 col-form-label">Berat</label>
+                            <div class="col-sm-9 kosong">
+                                <input type="text" class="form-control" name="berat" id="berat" placeholder="Berat" >
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row ">
+                            <label for="nama" class="col-sm-3 col-form-label">Perundangan</label>
+                            <div class="col-sm-9 kosong">
+                                <input type="text" class="form-control" name="perundangan" id="perundangan" placeholder="Perundangan" >
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row ">
+                            <label for="nama" class="col-sm-3 col-form-label">Harga</label>
+                            <div class="col-sm-9 kosong">
+                                <input type="text" class="form-control" onkeypress="return hanyaAngka(event)"  name="harga" id="harga" placeholder="Harga" >
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row ">
+                            <label for="nama" class="col-sm-3 col-form-label">Lokasi Rak</label>
+                            <div class="col-sm-9 kosong">
+                                <input type="text" class="form-control" name="rak" id="rak" placeholder="Lokasi Rak" >
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <!-- <div class="form-group row ">
                             <label for="logo" class="col-sm-3 col-form-label">Foto</label>
                             <div class="col-sm-9 kosong">
                               <img  id="v_image" width="100px" height="100px">
                               <input type="file" class="form-control btn-file" onchange="loadFile(event)" name="imagefile" id="imagefile" placeholder="Image" value="UPLOAD">
                           </div>
-                      </div>
+                      </div> -->
                         <div class="form-group row ">
-                            <label for="nama_owner" class="col-sm-3 col-form-label">View</label>
+                            <label for="nama_owner" class="col-sm-3 col-form-label">Aktivasi</label>
                             <div class="col-sm-9 kosong">
-                                <select class="form-control select" name="view">
-                                    <option value="Y">Ya</option>
-                                    <option value="N">Tidak</option>
+                                <select class="form-control select" name="aktivasi">
+                                    <option value="Ya">Ya</option>
+                                    <option value="Tidak">Tidak</option>
                                 </select>
                                 <span class="help-block"></span>
                             </div>
