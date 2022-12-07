@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+date_default_timezone_set('Asia/Jakarta');
 /**
  * Create By : Aryo
  * Youtube : Aryo Coding
@@ -31,7 +31,11 @@ class Penerimaan extends MY_Controller
             $a_submenu = $this->Mod_dashboard->get_akses_submenu($link,$level)->row();
             $akses=$a_submenu->view;
         }
+       
+
         if ($akses=="Y") {
+           $data['barang'] = $this->Mod_penerimaan->get_barang_all();
+           $data['supplier'] = $this->Mod_penerimaan->get_supplier_all();
             $this->template->load('layoutbackend','penerimaan/penerimaan',$data);
         }else{
             $data['page']=$link;
@@ -55,7 +59,6 @@ class Penerimaan extends MY_Controller
             $row[] = $pel->id_supplier;
             $row[] = $pel->id_supplier;
             $row[] = $pel->id_supplier;
-            $row[] = $pel->id_supplier;
             $row[] = "<a class=\"btn btn-xs btn-outline-primary edit\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit('$pel->id')\"><i class=\"fas fa-edit\"></i></a><a class=\"btn btn-xs btn-outline-danger delete\" href=\"javascript:void(0)\" title=\"Delete\"  onclick=\"hapus('$pel->id')\"><i class=\"fas fa-trash\"></i></a>";
             $data[] = $row;
         }
@@ -72,11 +75,13 @@ class Penerimaan extends MY_Controller
 
     public function insert()
     {
+        $waktu = date("H:i:s");
+       $tanggal=date("Y-m-d H:i:s", strtotime($this->input->post('tanggal').$waktu));
        
         $id_user = $this->session->userdata['id_user'];
         $save  = array(
             'faktur'         => $this->input->post('faktur'),
-            'tanggal'         => date("Y-m-d H:i:s", $this->input->post('tanggal')),
+            'tanggal'         => $tanggal,
             'id_supplier'         => $this->input->post('id_supplier'),
             'user_input'  => $id_user
         );
@@ -96,6 +101,7 @@ class Penerimaan extends MY_Controller
                 'id_barang'         => $id_barang,
                 'kemasan'         => $kemasan,
                 'nobatch'         => $nobatch,
+                'jumlah'         => $jumlah,
                 'ed'         => $ed,
                 'harga'         => $harga,
 
@@ -111,15 +117,37 @@ class Penerimaan extends MY_Controller
     {
         // $this->_validate();
         $id      = $this->input->post('id');
+        $waktu = date("H:i:s");
+       $tanggal=date("Y-m-d H:i:s", strtotime($this->input->post('tanggal').$waktu));
         $save  = array(
-            'nama'         => $this->input->post('nama'),
-            'notelp'         => $this->input->post('notelp'),
-            'alamat'         => $this->input->post('alamat'),
-            'kp_instalasi'         => $this->input->post('kp_instalasi'),
-            'admin_farmasi'         => $this->input->post('admin_farmasi'),
+            'faktur'         => $this->input->post('faktur'),
+            'tanggal'         => $tanggal,
+            'id_supplier'         => $this->input->post('id_supplier')
         );
 
         $this->Mod_penerimaan->update($id, $save);
+        foreach ($this->cart->contents() as $items) {
+
+            $id_detail = $items['id'];
+            var_dump($id_detail);
+            $kemasan = $items['kemasan'];
+            $jumlah = $items['qty'];
+            $nobatch = $items['nobatch'];
+            $ed     = $items['ed'];
+            $harga = $items['price'];
+            $subtotal = $items['subtotal'];
+
+            $save_detail  = array(
+                'kemasan'         => $kemasan,
+                'nobatch'         => $nobatch,
+                'jumlah'         => $jumlah,
+                'ed'         => $ed,
+                'harga'         => $harga,
+
+            );
+            $this->Mod_penerimaan->update_detail($id_detail, $save_detail);
+        }
+
         echo json_encode(array("status" => TRUE));
 
     }
@@ -127,6 +155,7 @@ class Penerimaan extends MY_Controller
     public function edit($id)
     {
         $data = $this->Mod_penerimaan->get($id);
+        
         echo json_encode($data);
     }
 
@@ -156,6 +185,29 @@ class Penerimaan extends MY_Controller
             echo json_encode($data);
             exit();
         }
+    }
+
+
+
+        function edit_to_cart(){ //fungsi Edit To Cart
+        // var_dump($this->input->post('produk_id'));
+        $id = $this->input->post('id');
+        $list = $this->Mod_penerimaan->get_detail($id);
+        foreach ($list as $dp) {
+
+            $data = array(
+                'id' => $dp->id, 
+                'name' => $dp->nama_barang, 
+                'price' => $dp->harga, 
+                'qty' => $dp->jumlah, 
+                'nobatch' => $dp->nobatch, 
+                'ed' => $dp->ed,
+                'kemasan' => $dp->kemasan,
+                'id_barang' => $dp->id_barang,
+            );
+            $this->cart->insert($data);
+        }
+        echo $this->show_cart(); //tampilkan cart setelah added
     }
 
     function add_to_cart(){ //fungsi Add To Cart
@@ -190,16 +242,19 @@ class Penerimaan extends MY_Controller
                     <td>'.$no.'</td>
                     <td>'.$items['name'].'</td>
                     <td>'.$items['kemasan'].'</td>
-                    <td>'.$items['qty'].'</td>
-                    <td>'.$items['nobatch'].'</td>
-                    <td>'.$items['ed'].'</td>
+                    <td><input type="text" size="5" class=" form-control item'.$no.'" onkeypress="return hanyaAngka(event)" value='.$items['qty'].'></td>
+                    <td><input type="text" class="form-control nobatch'.$no.'" value='.$items['nobatch'].'></td>
+                    <td><input type="date" class="form-control ed'.$no.'" value='.$items['ed'].'></td>
                     <td>'.number_format($items['price']).'</td>
                     <td>'.number_format($items['subtotal']).'</td>
-                    <td><button type="button" id="'.$items['rowid'].'" class="hapus_cart btn btn-danger btn-xs">Hapus</button></td>
+                    <td>
+                    <button type="button" id="'.$items['rowid'].'" class="hapus_cart btn btn-danger btn-xs">Hapus</button>
+                    <button type="button" id="'.$items['rowid'].'" no="'.$no.'"  class="simpan_cart btn btn-success btn-xs">simpan</button>
+                    </td>
+
                 </tr>
             ';
         }
-        // <td>'.number_format($items['subtotal']).'</td>
         $output .= '
             <tr>
                 <th colspan="7">Total</th>
@@ -213,6 +268,7 @@ class Penerimaan extends MY_Controller
         echo $this->show_cart();
     }
 
+
     function hapus_cart(){ //fungsi untuk menghapus item cart
         $data = array(
             'rowid' => $this->input->post('row_id'), 
@@ -222,4 +278,14 @@ class Penerimaan extends MY_Controller
         echo $this->show_cart();
     }
 
+    function update_cart(){ //fungsi untuk update item cart
+     $data = array(
+        'rowid' => $this->input->post('row_id'),
+        'qty' => $this->input->post('item'), 
+        'nobatch' => $this->input->post('nobatch'), 
+        'ed' => $this->input->post('ed'),
+    );
+        $this->cart->update($data);
+        echo $this->show_cart();
+    }
 }

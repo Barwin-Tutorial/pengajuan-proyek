@@ -43,7 +43,13 @@
 <script type="text/javascript">
 var save_method; //for save method string
 var table;
+function hanyaAngka(evt) {
+  var charCode = (evt.which) ? evt.which : event.keyCode
+  if (charCode > 31 && (charCode < 48 || charCode > 57))
 
+    return false;
+  return true;
+}
 $(document).ready(function() {
 
     //datatables
@@ -51,7 +57,7 @@ $(document).ready(function() {
         "responsive": true,
         "autoWidth": false,
         "language": {
-            "sEmptyTable": "Data penerimaan Belum Ada"
+            "sEmptyTable": "Data Penerimaan Belum Ada"
         },
         "processing": true, //Feature control the processing indicator.
         "serverSide": true, //Feature control DataTables' server-side processing mode.
@@ -144,7 +150,7 @@ function add()
     $('.form-group').removeClass('has-error'); // clear error class
     $('.help-block').empty(); // clear error string
     $('#modal_form').modal({backdrop: 'static', keyboard: false}); // show bootstrap modal
-    $('.modal-title').text('Add penerimaan'); // Set Title to Bootstrap modal title
+    $('.modal-title').text('Add Penerimaan'); // Set Title to Bootstrap modal title
 }
 
 function edit(id){
@@ -162,14 +168,20 @@ function edit(id){
         {
 
             $('[name="id"]').val(data.id);
-            $('[name="nama"]').val(data.nama);
-            $('[name="notelp"]').val(data.notelp);
-            $('[name="kp_instalasi"]').val(data.kp_instalasi);
-            $('[name="admin_farmasi"]').val(data.admin_farmasi);
-            $('[name="alamat"]').val(data.alamat);
-
+            $('[name="faktur"]').val(data.faktur);
+            $('[name="tanggal"]').val(data.tanggal);
+            $('[name="supplier"]').val(data.supplier);
+            $.ajax({
+                url : "penerimaan/edit_to_cart",
+                method : "POST",
+                data : {id:data.id},
+                dataType : 'html',
+                success: function(data){
+                    $('#detail_cart').html(data);
+                }
+            });
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
-            $('.modal-title').text('Edit penerimaan'); // Set title to Bootstrap modal title
+            $('.modal-title').text('Edit Penerimaan'); // Set title to Bootstrap modal title
 
         },
         error: function (jqXHR, textStatus, errorThrown)
@@ -218,11 +230,7 @@ function save()
                     icon : 'error',
                     showConfirmButton : true,
                 });
-               /* for (var i = 0; i < data.inputerror.length; i++) 
-                {
-                    $('[name="'+data.inputerror[i]+'"]').addClass('is-invalid');
-                    $('[name="'+data.inputerror[i]+'"]').next().text(data.error_string[i]).addClass('invalid-feedback');
-                }*/
+             
             }
             $('#btnSave').text('save'); //change button text
             $('#btnSave').attr('disabled',false); //set button enable 
@@ -268,7 +276,39 @@ $(function () {
                 }
             });
         });
+    $(document).on('click','.simpan_cart',function(){
+            var row_id=$(this).attr("id"); //mengambil row_id dari artibut id
+            var no = $(this).attr("no");
+            var item = $('.item'+no).val();
+            var nobatch = $('.nobatch'+no).val();
+            var ed = $('.ed'+no).val();
+
+            $.ajax({
+                url : "penerimaan/update_cart",
+                method : "POST",
+                data : {row_id : row_id,item : item,nobatch : nobatch,ed : ed},
+                success :function(data){
+                    $('#detail_cart').html(data);
+                }
+            });
+        });
 })
+function simpan_det(row_id, no)
+{
+    var item = $('.item'+no).val();
+    var nobatch = $('.nobatch'+no).val();
+    var ed = $('.ed'+no).val();
+  
+    $.ajax({
+        url : "penerimaan/update_cart",
+        method : "POST",
+        data : {row_id : row_id,item : item,nobatch : nobatch,ed : ed},
+        success :function(data){
+            $('#detail_cart').html(data);
+        }
+    });
+  
+}
 </script>
 
 
@@ -315,23 +355,33 @@ $(function () {
                         </div>
                         <div class="col-md-6">
                             <div class="form-group row ">
-                                <label for="nama" class="col-sm-3 col-form-label">Jumlah</label>
-                                <div class="col-sm-3 kosong">
-                                    <input type="text" class="form-control" name="jumlah" id="jumlah" placeholder="Jumlah" >
+                                <label for="nama" class="col-sm-2 col-form-label">Jumlah</label>
+                                <div class="col-sm-4 kosong">
+                                    <input type="text" class="form-control" onkeypress="return hanyaAngka(event)" name="jumlah" id="jumlah" placeholder="Jumlah" >
                                     <span class="help-block"></span>
                                 </div>
-                                <label for="nama" class="col-sm-3 col-form-label">Kemasan</label>
-                                <div class="col-sm-3 kosong">
+                                <label for="nama" class="col-sm-2 col-form-label">Kemasan</label>
+                                <div class="col-sm-4 kosong">
                                     <input type="text" class="form-control" name="kemasan" id="kemasan" placeholder="Kemasan" value="" >
                                     <span class="help-block"></span>
-                                    <input type="hidden" name="ed" value="">
-                                    <input type="hidden" name="nobatch" value="">
                                 </div>
                             </div>
                             <div class="form-group row ">
-                                <label for="nama" class="col-sm-3 col-form-label">Barang</label>
-                                <div class="col-sm-9 kosong">
-                                    <input type="text" class="form-control" name="produk_nama" id="produk_nama" placeholder="Scan Barcode / Input Manual" >
+                                <label for="nama" class="col-sm-2 col-form-label">Expired</label>
+                                <div class="col-sm-4 kosong">
+                                    <input type="date" class="form-control"  name="ed" id="ed" placeholder="Expired" >
+                                    <span class="help-block"></span>
+                                </div>
+                                <label for="nama" class="col-sm-2 col-form-label">No Batch</label>
+                                <div class="col-sm-4 kosong">
+                                    <input type="text" class="form-control" name="nobatch" id="nobatch" placeholder="No Batch" value="" >
+                                    <span class="help-block"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row ">
+                                <label for="nama" class="col-sm-2 col-form-label">Barang</label>
+                                <div class="col-sm-10 kosong" >
+                                    <input type="text" class="form-control" name="produk_nama" id="produk_nama" placeholder="Scan Barcode / Input Manual" autofocus>
                                     <input type="hidden" class="form-control" name="produk_id" id="produk_id" value="12"  >
                                     <input type="hidden" class="form-control" name="produk_harga" id="produk_harga" value="12000"  >
                                     <span class="help-block"></span>
@@ -364,6 +414,7 @@ $(function () {
                                     </tbody>
 
                                 </table>
+
                             </div>
                         </div>
                     </div>

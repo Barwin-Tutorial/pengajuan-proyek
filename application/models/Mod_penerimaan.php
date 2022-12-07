@@ -89,10 +89,33 @@ class Mod_penerimaan extends CI_Model
         $this->db->update('penerimaan', $data);
     }
 
+         function update_detail($id, $data)
+    {
+        $this->db->where('id', $id);
+        $this->db->update('penerimaan_detail', $data);
+    }
+
         function get($id)
     {   
         $this->db->where('id',$id);
         return $this->db->get('penerimaan')->row();
+    }
+
+    function get_supplier_all()
+    {   
+        return $this->db->get('supplier');
+    }
+
+     function get_barang_all()
+    {   
+        return $this->db->get('barang');
+    }
+      function get_detail($id)
+    {   
+    	$this->db->select('a.*,b.nama as nama_barang');
+        $this->db->where('a.id_penerimaan',$id);
+        $this->db->join('barang b', 'a.id_barang=b.id');
+        return $this->db->get('penerimaan_detail a')->result();
     }
 
         function delete($id, $table)
