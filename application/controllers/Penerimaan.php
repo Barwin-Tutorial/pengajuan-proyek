@@ -113,6 +113,8 @@ class Penerimaan extends MY_Controller
 
     }
 
+
+
     public function update()
     {
         // $this->_validate();
@@ -129,7 +131,7 @@ class Penerimaan extends MY_Controller
         foreach ($this->cart->contents() as $items) {
 
             $id_detail = $items['id'];
-            var_dump($id_detail);
+            // var_dump($id_detail);
             $kemasan = $items['kemasan'];
             $jumlah = $items['qty'];
             $nobatch = $items['nobatch'];
@@ -159,10 +161,44 @@ class Penerimaan extends MY_Controller
         echo json_encode($data);
     }
 
+    public function get_brg()
+    {
+        
+       $id = $this->input->get('term');
+        $data = $this->Mod_penerimaan->get_brg($id);
+        if (count($data) > 0) {
+            foreach ($data as $row) $arr_result = array( 'produk_nama'  => $row->nama );
+            echo json_encode($arr_result);
+        }else{
+            $arr_result = array( 'produk_nama'  => "Data Tidak di Temukan" );
+            echo json_encode($arr_result);
+        }
+
+    }
+
+    public function get_supplier()
+    {
+        $id = $this->input->get('term');
+        $data = $this->Mod_penerimaan->get_supplier($id);
+        if (count($data) > 0) {
+            foreach ($data as $row) $arr_result = array( 'vsup'  => $row->nama );
+            echo json_encode($arr_result);
+        }else{
+            $arr_result = array( 'vsup'  => "Data Tidak di Temukan" );
+            echo json_encode($arr_result);
+        }
+}
+
+public function getAllSupplier()
+{
+   $data = $this->Mod_penerimaan->get_supplier_all();
+    echo json_encode($data);
+}
     public function delete()
     {
         $id = $this->input->post('id');
-        $this->Mod_penerimaan->delete($id, 'penerimaan');        
+        $this->Mod_penerimaan->delete($id, 'penerimaan'); 
+         $this->Mod_penerimaan->delete_detail($id, 'penerimaan_detail');        
         echo json_encode(array("status" => TRUE));
     }
     private function _validate()

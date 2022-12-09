@@ -292,7 +292,9 @@ $(function () {
                 }
             });
         });
-})
+
+   
+});
 function simpan_det(row_id, no)
 {
     var item = $('.item'+no).val();
@@ -309,12 +311,17 @@ function simpan_det(row_id, no)
     });
   
 }
+
+$(document).ready(function(){
+    $( "#vsup").autocomplete({source: 'penerimaan/get_supplier/?', })
+$( "#produk_nama").autocomplete({source: 'penerimaan/get_brg/?', })
+// $( "#supplier" ).autocomplete( "option", "appendTo", "#modal_form" );
+        });
 </script>
 
 
-
 <!-- Bootstrap modal -->
-<div class="modal fade" id="modal_form" role="dialog">
+<div class="modal hide fade" id="modal_form" role="dialog" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content ">
 
@@ -348,8 +355,9 @@ function simpan_det(row_id, no)
                             <div class="form-group row ">
                                 <label for="nama" class="col-sm-3 col-form-label">Supplier</label>
                                 <div class="col-sm-9 kosong">
-                                    <input type="text" class="form-control" name="supplier" id="supplier" placeholder="Supplier" >
-                                    <span class="help-block"></span>
+                                    <input type="text" class="form-control"  name="vsup" id="vsup" placeholder="Supplier"  >
+                                    <input type="hidden" class="form-control"  name="supplier" id="supplier" placeholder="Supplier" autocomplete="off" >
+                                    <span class="help-block" ></span>
                                 </div>
                             </div>
                         </div>

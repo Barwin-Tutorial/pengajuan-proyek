@@ -110,10 +110,25 @@ class Mod_penerimaan extends CI_Model
     {   
         return $this->db->get('barang');
     }
+
+    function get_brg($id)
+    {   
+    	$this->db->like('id', $id);
+        return $this->db->get('barang')->result();
+    }
+
+     public  function get_supplier($id)
+    {   
+    	$this->db->like('nama', $id);
+    	$this->db->limit(10);
+        return $this->db->get('supplier')->result();
+    }
+
+
       function get_detail($id)
     {   
     	$this->db->select('a.*,b.nama as nama_barang');
-        $this->db->where('a.id_penerimaan',$id);
+        $this->db->where('a.id_penerimaan', $id);
         $this->db->join('barang b', 'a.id_barang=b.id');
         return $this->db->get('penerimaan_detail a')->result();
     }
@@ -121,6 +136,12 @@ class Mod_penerimaan extends CI_Model
         function delete($id, $table)
     {
         $this->db->where('id', $id);
+        $this->db->delete($table);
+    }
+
+            function delete_detail($id, $table)
+    {
+        $this->db->where('id_penerimaan', $id);
         $this->db->delete($table);
     }
 
