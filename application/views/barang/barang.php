@@ -65,7 +65,7 @@ $(document).ready(function() {
             "url": "<?php echo site_url('barang/ajax_list')?>",
             "type": "POST"
         },
-         
+
     });
 
  //set input/textarea/select event when change value, remove class error and remove text help block 
@@ -73,17 +73,17 @@ $(document).ready(function() {
     $(this).parent().parent().removeClass('has-error');
     $(this).next().empty();
     $(this).removeClass('is-invalid');
- });
+});
  $("textarea").change(function(){
     $(this).parent().parent().removeClass('has-error');
     $(this).next().empty();
     $(this).removeClass('is-invalid');
- });
+});
  $("select").change(function(){
     $(this).parent().parent().removeClass('has-error');
     $(this).next().empty();
     $(this).removeClass('is-invalid');
- });
+});
 
 });
 
@@ -104,37 +104,37 @@ const Toast = Swal.mixin({
 function hapus(id){
 
     Swal.fire({
-  title: 'Are you sure?',
-  text: "You won't be able to revert this!",
-  icon: 'warning',
-  showCancelButton: true,
-  confirmButtonColor: '#3085d6',
-  cancelButtonColor: '#d33',
-  confirmButtonText: 'Yes, delete it!'
-}).then((result) => {
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+  }).then((result) => {
 
-        $.ajax({
+    $.ajax({
         url:"<?php echo site_url('barang/delete');?>",
         type:"POST",
         data:"id="+id,
         cache:false,
-         dataType: 'json',
+        dataType: 'json',
         success:function(respone){
-        if (respone.status == true) {
-            reload_table();
-        Swal.fire(
-          'Deleted!',
-          'Your file has been deleted.',
-          'success'
-        );
-        }else{
-          Toast.fire({
+            if (respone.status == true) {
+                reload_table();
+                Swal.fire(
+                  'Deleted!',
+                  'Your file has been deleted.',
+                  'success'
+                  );
+            }else{
+              Toast.fire({
                   icon: 'error',
                   title: 'Delete Error!!.'
-                });
-        }
-        }
-    });
+              });
+          }
+      }
+  });
 })
 }
 
@@ -165,7 +165,7 @@ function edit(id){
         {
 
             $('[name="id"]').val(data.id);
-             $('[name="barcode"]').val(data.barcode);
+            $('[name="barcode"]').val(data.barcode);
             $('[name="nama"]').val(data.nama);
             $('[name="satuan"]').val(data.satuan);
             $('[name="berat"]').val(data.berat);
@@ -176,7 +176,7 @@ function edit(id){
             
              /*var image = "<?php echo base_url('assets/barang/')?>";
              $("#v_image").attr("src",image+data.image);*/
-           
+
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
             $('.modal-title').text('Edit barang'); // Set title to Bootstrap modal title
 
@@ -197,7 +197,7 @@ function save()
     } else {
         url = "<?php echo site_url('barang/update')?>";
     }
-   var formdata = new FormData($('#form')[0]);
+    var formdata = new FormData($('#form')[0]);
     // ajax adding data to database
     $.ajax({
         url : url,
@@ -257,15 +257,19 @@ function hanyaAngka(evt) {
   if (charCode > 31 && (charCode < 48 || charCode > 57))
 
     return false;
-  return true;
+return true;
 }
+$('.modal').on('shown.bs.modal', function() {
+  $(this).find('[autofocus]').focus();
+});
+
 </script>
 
 
 
 <!-- Bootstrap modal -->
-<div class="modal fade" id="modal_form" role="dialog">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade" id="modal_form" role="dialog" tabindex="-1" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content ">
 
             <div class="modal-header">
@@ -279,62 +283,75 @@ function hanyaAngka(evt) {
                 <form action="#" id="form" class="form-horizontal" >
                     <input type="hidden" value="" name="id"/> 
                     <div class="card-body">
-                        <div class="form-group row ">
-                            <label for="nama" class="col-sm-3 col-form-label">Barcode</label>
-                            <div class="col-sm-9 kosong">
-                                <input type="text" class="form-control" name="barcode" id="barcode" placeholder="Barcode" >
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row ">
+                                    <label for="nama" class="col-sm-3 col-form-label">Barcode</label>
+                                    <div class="col-sm-9 kosong">
+                                        <input type="text" class="form-control" autofocus  name="barcode" id="barcode" placeholder="Barcode" >
+                                        <span class="help-block"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group row ">
+                                    <label for="nama" class="col-sm-3 col-form-label">Nama</label>
+                                    <div class="col-sm-9 kosong">
+                                        <input type="text" class="form-control" name="nama" id="nama" placeholder="Nama" >
+                                        <span class="help-block"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group row ">
+                                    <label for="nama" class="col-sm-3 col-form-label">Satuan</label>
+                                    <div class="col-sm-9 kosong">
+                                        <select class="form-control" name="satuan" >
+                                          <option value="">Pilih Satuan...</option>
+                                          <?php 
+                                          foreach ($satuan as $row){
+                                            ?>
+                                            <option value="<?=$row->id?>"><?php echo $row->nama; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                    <span class="help-block"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row ">
+                                <label for="nama" class="col-sm-3 col-form-label">Perundangan</label>
+                                <div class="col-sm-9 kosong">
+
+                                    <select class="form-control" name="perundangan" >
+                                      <option value="">Pilih...</option>
+                                      <?php 
+                                      foreach ($perundangan as $row){
+                                        ?>
+                                        <option value="<?=$row->id?>"><?php echo $row->nama; ?></option>
+                                    <?php } ?>
+                                </select>
                                 <span class="help-block"></span>
                             </div>
                         </div>
-                        <div class="form-group row ">
-                            <label for="nama" class="col-sm-3 col-form-label">Nama</label>
-                            <div class="col-sm-9 kosong">
-                                <input type="text" class="form-control" name="nama" id="nama" placeholder="Nama" >
-                                <span class="help-block"></span>
-                            </div>
+                    </div>
+                    <div class="col-md-6">
+                       <div class="form-group row ">
+                        <label for="nama" class="col-sm-3 col-form-label">Berat</label>
+                        <div class="col-sm-9 kosong">
+                            <input type="text" class="form-control" name="berat" id="berat" placeholder="Berat" >
+                            <span class="help-block"></span>
                         </div>
-                        <div class="form-group row ">
-                            <label for="nama" class="col-sm-3 col-form-label">Satuan</label>
-                            <div class="col-sm-9 kosong">
-                                <select class="form-control" name="satuan" >
-                                  <option value="">Pilih Satuan...</option>
-                                  <?php 
-                                  foreach ($satuan as $row){
-                                    ?>
-                                    <option value="<?=$row->id?>"><?php echo $row->nama; ?></option>
-                                <?php } ?>
-                            </select>
-                                <span class="help-block"></span>
-                            </div>
+                    </div>
+                    <div class="form-group row ">
+                        <label for="nama" class="col-sm-3 col-form-label">Harga</label>
+                        <div class="col-sm-9 kosong">
+                            <input type="text" class="form-control" onkeypress="return hanyaAngka(event)"  name="harga" id="harga" placeholder="Harga" >
+                            <span class="help-block"></span>
                         </div>
-                        <div class="form-group row ">
-                            <label for="nama" class="col-sm-3 col-form-label">Berat</label>
-                            <div class="col-sm-9 kosong">
-                                <input type="text" class="form-control" name="berat" id="berat" placeholder="Berat" >
-                                <span class="help-block"></span>
-                            </div>
+                    </div>
+                    <div class="form-group row ">
+                        <label for="nama" class="col-sm-3 col-form-label">Lokasi Rak</label>
+                        <div class="col-sm-9 kosong">
+                            <input type="text" class="form-control" name="rak" id="rak" placeholder="Lokasi Rak" >
+                            <span class="help-block"></span>
                         </div>
-                        <div class="form-group row ">
-                            <label for="nama" class="col-sm-3 col-form-label">Perundangan</label>
-                            <div class="col-sm-9 kosong">
-                                <input type="text" class="form-control" name="perundangan" id="perundangan" placeholder="Perundangan" >
-                                <span class="help-block"></span>
-                            </div>
-                        </div>
-                        <div class="form-group row ">
-                            <label for="nama" class="col-sm-3 col-form-label">Harga</label>
-                            <div class="col-sm-9 kosong">
-                                <input type="text" class="form-control" onkeypress="return hanyaAngka(event)"  name="harga" id="harga" placeholder="Harga" >
-                                <span class="help-block"></span>
-                            </div>
-                        </div>
-                        <div class="form-group row ">
-                            <label for="nama" class="col-sm-3 col-form-label">Lokasi Rak</label>
-                            <div class="col-sm-9 kosong">
-                                <input type="text" class="form-control" name="rak" id="rak" placeholder="Lokasi Rak" >
-                                <span class="help-block"></span>
-                            </div>
-                        </div>
+                    </div>
                         <!-- <div class="form-group row ">
                             <label for="logo" class="col-sm-3 col-form-label">Foto</label>
                             <div class="col-sm-9 kosong">
@@ -342,26 +359,26 @@ function hanyaAngka(evt) {
                               <input type="file" class="form-control btn-file" onchange="loadFile(event)" name="imagefile" id="imagefile" placeholder="Image" value="UPLOAD">
                           </div>
                       </div> -->
-                        <div class="form-group row ">
-                            <label for="nama_owner" class="col-sm-3 col-form-label">Aktivasi</label>
-                            <div class="col-sm-9 kosong">
-                                <select class="form-control select" name="aktivasi">
-                                    <option value="Ya">Ya</option>
-                                    <option value="Tidak">Tidak</option>
-                                </select>
-                                <span class="help-block"></span>
-                            </div>
+                      <div class="form-group row ">
+                        <label for="nama_owner" class="col-sm-3 col-form-label">Aktivasi</label>
+                        <div class="col-sm-9 kosong">
+                            <select class="form-control select" name="aktivasi">
+                                <option value="Ya">Ya</option>
+                                <option value="Tidak">Tidak</option>
+                            </select>
+                            <span class="help-block"></span>
                         </div>
-                        
-                        
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="btnSave" onclick="save()" class="btn btn-primary">Save</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
+                </div>
+            </div> 
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" id="btnSave" onclick="save()" class="btn btn-primary">Save</button>
+    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+</div>
+</div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <!-- End Bootstrap modal -->

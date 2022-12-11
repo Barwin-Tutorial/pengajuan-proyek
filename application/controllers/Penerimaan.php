@@ -34,13 +34,14 @@ class Penerimaan extends MY_Controller
        
 
         if ($akses=="Y") {
-           $data['barang'] = $this->Mod_penerimaan->get_barang_all();
-           $data['supplier'] = $this->Mod_penerimaan->get_supplier_all();
+          
             $this->template->load('layoutbackend','penerimaan/penerimaan',$data);
         }else{
             $data['page']=$link;
             $this->template->load('layoutbackend','admin/akses_ditolak',$data);
         }
+
+
     }
 
     public function ajax_list()
@@ -54,12 +55,15 @@ class Penerimaan extends MY_Controller
 
             $no++;
             $row = array();
+            // $row[] = $no;
+
             $row[] = $pel->faktur;
             $row[] = $pel->tanggal;
-            $row[] = $pel->id_supplier;
-            $row[] = $pel->id_supplier;
-            $row[] = $pel->id_supplier;
-            $row[] = "<a class=\"btn btn-xs btn-outline-primary edit\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit('$pel->id')\"><i class=\"fas fa-edit\"></i></a><a class=\"btn btn-xs btn-outline-danger delete\" href=\"javascript:void(0)\" title=\"Delete\"  onclick=\"hapus('$pel->id')\"><i class=\"fas fa-trash\"></i></a>";
+            $row[] = $pel->nama_supplier;
+            /*$row[] = $pel->nama_barang;
+            $row[] = $pel->kemasan;
+            $row[] = $pel->jumlah;*/
+            $row[] = "<a class=\"btn btn-xs btn-outline-info \" href=\"javascript:void(0)\" title=\"View\" onclick=\"views('$pel->id')\"><i class=\"fas fa-eye\"></i></a>  <a class=\"btn btn-xs btn-outline-primary edit\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit('$pel->id')\"><i class=\"fas fa-edit\"></i></a>  <a class=\"btn btn-xs btn-outline-danger delete\" href=\"javascript:void(0)\" title=\"Delete\"  onclick=\"hapus('$pel->id')\"><i class=\"fas fa-trash\"></i></a>";
             $data[] = $row;
         }
 
@@ -75,89 +79,119 @@ class Penerimaan extends MY_Controller
 
     public function insert()
     {
+        $this->_validate();
+        $list = $this->Mod_penerimaan->get_detail(0);
+        if (count($list) == 0) {
+             echo json_encode(array("status" => FALSE, 'pesan' => 0));
+            
+            exit();
+        }
         $waktu = date("H:i:s");
-       $tanggal=date("Y-m-d H:i:s", strtotime($this->input->post('tanggal').$waktu));
-       
+       $tanggal=$this->input->post('tanggal');
+        $id_gudang = $this->session->userdata['id_gudang'];
         $id_user = $this->session->userdata['id_user'];
         $save  = array(
             'faktur'         => $this->input->post('faktur'),
             'tanggal'         => $tanggal,
-            'id_supplier'         => $this->input->post('id_supplier'),
-            'user_input'  => $id_user
+            'id_supplier'         => $this->input->post('supplier'),
+            'user_input'  => $id_user,
+            'id_gudang'   =>  $id_gudang
         );
         $this->Mod_penerimaan->insert("penerimaan", $save);
         $id_penerimaan = $this->db->insert_id();
-        foreach ($this->cart->contents() as $items) {
-            $id_barang = $items['id'];
-            $kemasan = $items['kemasan'];
-            $jumlah = $items['qty'];
-            $nobatch = $items['nobatch'];
-            $ed     = $items['ed'];
-            $harga = $items['price'];
-            $subtotal = $items['subtotal'];
 
-            $save_detail  = array(
-                'id_penerimaan'         => $id_penerimaan,
-                'id_barang'         => $id_barang,
-                'kemasan'         => $kemasan,
-                'nobatch'         => $nobatch,
-                'jumlah'         => $jumlah,
-                'ed'         => $ed,
-                'harga'         => $harga,
+        
 
+        
+        foreach ($list as $items) {
+            $save_detail = array('id_penerimaan' => $id_penerimaan);
+            $id_detail=$items->id;
+            $this->Mod_penerimaan->update_detail($id_detail, $save_detail);
+
+             $save_stok  = array(
+                'id_transaksi'         => $items->id,
+                'id_barang'         => $items->id_barang,
+                'tanggal'         => $tanggal,
+                'transaksi'         => 'Penerimaan',
+                'masuk'         => $items->jumlah,
+                'ed'         => $items->ed,
+                'nobatch'         => $items->nobatch,
+                'user_input'  => $id_user,
+                'id_gudang'   =>  $id_gudang
             );
-            $this->Mod_penerimaan->insert("penerimaan_detail", $save_detail);
+            $this->Mod_penerimaan->insert("stok_opname", $save_stok);
         }
-
-        echo json_encode(array("status" => TRUE));
-
+        
+           echo json_encode(array("status" => TRUE));
+        
+        
+       
     }
 
 
 
     public function update()
     {
-        // $this->_validate();
+         $id_gudang = $this->session->userdata['id_gudang'];
+        $id_user = $this->session->userdata['id_user'];
+        $this->_validate();
+
         $id      = $this->input->post('id');
         $waktu = date("H:i:s");
-       $tanggal=date("Y-m-d H:i:s", strtotime($this->input->post('tanggal').$waktu));
+       $tanggal=$this->input->post('tanggal');
         $save  = array(
             'faktur'         => $this->input->post('faktur'),
             'tanggal'         => $tanggal,
-            'id_supplier'         => $this->input->post('id_supplier')
+            'id_supplier'         => $this->input->post('supplier')
         );
 
         $this->Mod_penerimaan->update($id, $save);
-        foreach ($this->cart->contents() as $items) {
+        $list = $this->Mod_penerimaan->get_detail($id);
+        /*if (count($list)==0) {
+            $list = $this->Mod_penerimaan->get_detail(0);
+        }*/
+        foreach ($list as $items) {
+            $id_penerimaan = $items->id_penerimaan;
+            $id_detail = $items->id;
+            $jumlah = $items->jumlah;
 
-            $id_detail = $items['id'];
-            // var_dump($id_detail);
-            $kemasan = $items['kemasan'];
-            $jumlah = $items['qty'];
-            $nobatch = $items['nobatch'];
-            $ed     = $items['ed'];
-            $harga = $items['price'];
-            $subtotal = $items['subtotal'];
-
-            $save_detail  = array(
-                'kemasan'         => $kemasan,
-                'nobatch'         => $nobatch,
-                'jumlah'         => $jumlah,
-                'ed'         => $ed,
-                'harga'         => $harga,
-
-            );
+            $save_detail = array('id_penerimaan' => $id);
             $this->Mod_penerimaan->update_detail($id_detail, $save_detail);
+
+            $cek=$this->Mod_penerimaan->get_stok($id_detail);
+            if (count($cek) == 0) {
+                $save_stok  = array(
+                    'id_transaksi'         => $items->id,
+                    'id_barang'         => $items->id_barang,
+                    'tanggal'         => $tanggal,
+                    'transaksi'         => 'Penerimaan',
+                    'masuk'         => $items->jumlah,
+                    'ed'         => $items->ed,
+                    'nobatch'         => $items->nobatch,
+                    'user_input'  => $id_user,
+                    'id_gudang'   =>  $id_gudang
+                );
+                $this->Mod_penerimaan->insert("stok_opname", $save_stok);
+            }else{
+               $save_stok  = array(
+                'masuk'         => $jumlah,
+                'ed'         => $items->ed,
+                'nobatch'         => $items->nobatch,
+            );
+               $this->Mod_penerimaan->update_stok_opname($id_detail, $save_stok);
+            }
+            
+          
         }
 
         echo json_encode(array("status" => TRUE));
-
+        
+       
     }
 
     public function edit($id)
     {
         $data = $this->Mod_penerimaan->get($id);
-        
         echo json_encode($data);
     }
 
@@ -167,7 +201,9 @@ class Penerimaan extends MY_Controller
        $id = $this->input->get('term');
         $data = $this->Mod_penerimaan->get_brg($id);
         if (count($data) > 0) {
-            foreach ($data as $row) $arr_result = array( 'produk_nama'  => $row->nama );
+            foreach ($data as $row) {
+                $arr_result[] = array( 'label'  => $row->nama, 'produk_nama'  => $row->nama, 'produk_id' => $row->id, 'produk_harga' =>  $row->harga, 'id_kemasan' => $row->kemasan, 'nama_satuan' => $row->nama_satuan);
+            }
             echo json_encode($arr_result);
         }else{
             $arr_result = array( 'produk_nama'  => "Data Tidak di Temukan" );
@@ -181,10 +217,13 @@ class Penerimaan extends MY_Controller
         $id = $this->input->get('term');
         $data = $this->Mod_penerimaan->get_supplier($id);
         if (count($data) > 0) {
-            foreach ($data as $row) $arr_result = array( 'vsup'  => $row->nama );
-            echo json_encode($arr_result);
+
+            foreach ($data as $row){
+                $arr_result[] = array( 'value' => $row->id, 'label'  => $row->nama,  );
+            } 
+             echo json_encode($arr_result);
         }else{
-            $arr_result = array( 'vsup'  => "Data Tidak di Temukan" );
+            $arr_result = array( 'label'  => "Data Tidak di Temukan" );
             echo json_encode($arr_result);
         }
 }
@@ -197,6 +236,13 @@ public function getAllSupplier()
     public function delete()
     {
         $id = $this->input->post('id');
+        $list = $this->Mod_penerimaan->get_detail($id);
+        foreach ($list as $items) {
+
+            $id_detail = $items->id;
+             $this->Mod_penerimaan->del_stok($id_detail, "stok_opname");
+          
+        }
         $this->Mod_penerimaan->delete($id, 'penerimaan'); 
          $this->Mod_penerimaan->delete_detail($id, 'penerimaan_detail');        
         echo json_encode(array("status" => TRUE));
@@ -208,10 +254,10 @@ public function getAllSupplier()
         $data['inputerror'] = array();
         $data['status'] = TRUE;
 
-        if($this->input->post('nama') == '')
+        if($this->input->post('vsup') == '')
         {
-            $data['inputerror'][] = 'nama';
-            $data['error_string'][] = 'Nama penerimaan Tidak Boleh Kosong';
+            $data['inputerror'][] = 'vsup';
+            $data['error_string'][] = 'Supplier Tidak Boleh Kosong';
             $data['status'] = FALSE;
         }
        
@@ -226,102 +272,91 @@ public function getAllSupplier()
 
 
         function edit_to_cart(){ //fungsi Edit To Cart
-        // var_dump($this->input->post('produk_id'));
         $id = $this->input->post('id');
-        $list = $this->Mod_penerimaan->get_detail($id);
-        foreach ($list as $dp) {
-
-            $data = array(
-                'id' => $dp->id, 
-                'name' => $dp->nama_barang, 
-                'price' => $dp->harga, 
-                'qty' => $dp->jumlah, 
-                'nobatch' => $dp->nobatch, 
-                'ed' => $dp->ed,
-                'kemasan' => $dp->kemasan,
-                'id_barang' => $dp->id_barang,
-            );
-            $this->cart->insert($data);
-        }
-        echo $this->show_cart(); //tampilkan cart setelah added
+        $this->load_cart($id); //tampilkan cart setelah added
     }
 
     function add_to_cart(){ //fungsi Add To Cart
-        // var_dump($this->input->post('produk_id'));
-        $option=array(
-            'nobatch' => $this->input->post('nobatch'), 
-            'ed' => $this->input->post('ed'),
-            'kemasan' => $this->input->post('kemasan'),
+       $id_user = $this->session->userdata['id_user'];
+        $id_penerimaan = $this->input->post('id');
+        $save_detail  = array(
+            'id_barang'         => $this->input->post('produk_id'),
+            'kemasan'         => $this->input->post('kemasan'),
+            'nobatch'         => $this->input->post('nobatch'),
+            'jumlah'         => $this->input->post('jumlah'),
+            'ed'         => $this->input->post('ed'),
+            'harga'         => $this->input->post('produk_harga'),
+            'id_penerimaan' => $id_penerimaan,
+            'id_user'   => $id_user
+
         );
-        $data = array(
-            'id' => $this->input->post('produk_id'), 
-            'name' => $this->input->post('produk_nama'), 
-            'price' => $this->input->post('produk_harga'), 
-            'qty' => $this->input->post('jumlah'), 
-            'nobatch' => $this->input->post('nobatch'), 
-            'ed' => $this->input->post('ed'),
-            'kemasan' => $this->input->post('kemasan'),
-        );
-        $this->cart->insert($data);
-        echo $this->show_cart(); //tampilkan cart setelah added
+        $this->Mod_penerimaan->insert("penerimaan_detail", $save_detail);
+       
+         $this->load_cart($id_penerimaan); //tampilkan cart setelah added
     }
 
-    function show_cart(){ //Fungsi untuk menampilkan Cart
+
+    function show_cart($id_penerimaan){ //Fungsi untuk menampilkan Cart
         $output = '';
         $no = 0;
-
-        foreach ($this->cart->contents() as $items) {
-
+        $total = 0;
+        $list = $this->Mod_penerimaan->get_detail($id_penerimaan);
+        foreach ($list as $items) {
+            $subtotal = ($items->harga * $items->jumlah);
+            $total += $subtotal;
             $no++;
             $output .='
-                <tr>
-                    <td>'.$no.'</td>
-                    <td>'.$items['name'].'</td>
-                    <td>'.$items['kemasan'].'</td>
-                    <td><input type="text" size="5" class=" form-control item'.$no.'" onkeypress="return hanyaAngka(event)" value='.$items['qty'].'></td>
-                    <td><input type="text" class="form-control nobatch'.$no.'" value='.$items['nobatch'].'></td>
-                    <td><input type="date" class="form-control ed'.$no.'" value='.$items['ed'].'></td>
-                    <td>'.number_format($items['price']).'</td>
-                    <td>'.number_format($items['subtotal']).'</td>
-                    <td>
-                    <button type="button" id="'.$items['rowid'].'" class="hapus_cart btn btn-danger btn-xs">Hapus</button>
-                    <button type="button" id="'.$items['rowid'].'" no="'.$no.'"  class="simpan_cart btn btn-success btn-xs">simpan</button>
-                    </td>
+            <tr>
+            <td>'.$no.'</td>
+            <td>'.$items->nama_barang.'</td>
+            <td>'.$items->nama_satuan.'</td>';
+        $output .= '<td><input type="text" size="5" class=" form-control item'.$no.'" onkeypress="return hanyaAngka(event)" value='.$items->jumlah.'></td>
+                <td><input type="text" class="form-control nobatch'.$no.'" value='.$items->nobatch.'></td>
+                <td><input type="date" class="form-control ed'.$no.'" value='.$items->ed.'></td>';
+          
+         $output .= '<td>'.number_format($items->harga).'</td>';
+         $output .= '<td>'.number_format($subtotal).'</td>
+         <td>
+         <button type="button" id_penerimaan="'.$items->id_penerimaan.'"  id_detail="'.$items->id.'" class="hapus_cart btn btn-danger btn-xs">Hapus</button>
+         <button type="button" id_penerimaan="'.$items->id_penerimaan.'" id_detail="'.$items->id.'"  class="simpan_cart btn btn-success btn-xs">simpan</button>
+         </td>
 
-                </tr>
-            ';
-        }
+         </tr>
+         ';
+     }
         $output .= '
             <tr>
-                <th colspan="7">Total</th>
-                <th colspan="2">'.'Rp '.number_format($this->cart->total()).'</th>
+                <th colspan="7" style="text-align : center;">Total</th>
+                <th colspan="2">'.'Rp '.number_format($total).'</th>
             </tr>
         ';
         return $output;
     }
 
-    function load_cart(){ //load data cart
-        echo $this->show_cart();
+    function load_cart($id_penerimaan){ //load data cart
+        echo $this->show_cart($id_penerimaan);
     }
 
 
     function hapus_cart(){ //fungsi untuk menghapus item cart
-        $data = array(
-            'rowid' => $this->input->post('row_id'), 
-            'qty' => 0, 
-        );
-        $this->cart->update($data);
-        echo $this->show_cart();
+        $id_penerimaan = $this->input->post('id');
+        $id_detail = $this->input->post('id_detail');
+        $this->Mod_penerimaan->delete($id_detail,'penerimaan_detail');
+        $this->Mod_penerimaan->del_stok($id_detail,'stok_opname');
+        $this->load_cart($id_penerimaan);
     }
 
     function update_cart(){ //fungsi untuk update item cart
-     $data = array(
-        'rowid' => $this->input->post('row_id'),
-        'qty' => $this->input->post('item'), 
-        'nobatch' => $this->input->post('nobatch'), 
-        'ed' => $this->input->post('ed'),
-    );
-        $this->cart->update($data);
-        echo $this->show_cart();
+     
+        $id_penerimaan = $this->input->post('id');
+         $id_detail = $this->input->post('id_detail');
+         $save_detail  = array(
+            'nobatch'         => $this->input->post('nobatch'),
+            'jumlah'         => $this->input->post('jumlah'),
+            'ed'         => $this->input->post('nobatch'),
+        );
+
+         $this->Mod_penerimaan->update_detail($id_detail, $save_detail);
+         $this->load_cart($id_penerimaan);
     }
 }

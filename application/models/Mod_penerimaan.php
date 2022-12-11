@@ -19,8 +19,19 @@ class Mod_penerimaan extends CI_Model
 
 		private function _get_datatables_query()
 	{
+		 $level = $this->session->userdata['id_level'];
+		 $id_gudang = $this->session->userdata['id_gudang'];
 		
-		$this->db->from('penerimaan');
+		
+		// $this->db->select('a.*,b.jumlah,b.kemasan,b.nobatch,b.ed,b.harga,c.nama as nama_barang, d.nama as nama_supplier');
+		/*$this->db->join('penerimaan_detail b', 'a.id=b.id_penerimaan');
+		$this->db->join('barang c', 'b.id_barang=c.id');*/
+		if ($level!=1) {
+			$this->db->where('a.id_gudang', $id_gudang);
+		} 
+		$this->db->select('a.*, d.nama as nama_supplier');
+		$this->db->join('supplier d', 'a.id_supplier=d.id');
+		$this->db->from('penerimaan a');
 		$i = 0;
 
 	foreach ($this->column_search as $item) // loop column 
@@ -73,7 +84,17 @@ class Mod_penerimaan extends CI_Model
 
 	function count_all()
 	{
-		$this->db->from('penerimaan');
+		$level = $this->session->userdata['id_level'];
+		 $id_gudang = $this->session->userdata['id_gudang'];
+		 if ($level!=1) {
+			$this->db->where('a.id_gudang', $id_gudang);
+		} 
+		// $this->db->select('a.*,b.jumlah,b.kemasan,b.nobatch,c.nama as nama_barang');
+		/*$this->db->join('penerimaan_detail b', 'a.id=b.id_penerimaan');
+		$this->db->join('barang c', 'b.id_barang=c.id');*/
+		$this->db->select('a.*, d.nama as nama_supplier');
+		$this->db->join('supplier d', 'a.id_supplier=d.id');
+		$this->db->from('penerimaan a');
 		return $this->db->count_all_results();
 	}
 
@@ -95,31 +116,70 @@ class Mod_penerimaan extends CI_Model
         $this->db->update('penerimaan_detail', $data);
     }
 
+         function update_stok_opname($id, $data)
+    {
+        $this->db->where('id_transaksi', $id);
+        $this->db->where('transaksi', 'Penerimaan');
+        $this->db->update('stok_opname', $data);
+    }
+
         function get($id)
     {   
-        $this->db->where('id',$id);
-        return $this->db->get('penerimaan')->row();
+    	$level = $this->session->userdata['id_level'];
+		 $id_gudang = $this->session->userdata['id_gudang'];
+		 if ($level!=1) {
+			$this->db->where('a.id_gudang', $id_gudang);
+		} 
+        $this->db->where('a.id',$id);
+        $this->db->select('a.*, d.nama as nama_supplier');
+		$this->db->join('supplier d', 'a.id_supplier=d.id');
+        return $this->db->get('penerimaan a')->row();
     }
 
     function get_supplier_all()
     {   
+    	$level = $this->session->userdata['id_level'];
+		 $id_gudang = $this->session->userdata['id_gudang'];
+		 if ($level!=1) {
+			$this->db->where('id_gudang', $id_gudang);
+		} 
         return $this->db->get('supplier');
     }
 
      function get_barang_all()
     {   
+    	$level = $this->session->userdata['id_level'];
+		 $id_gudang = $this->session->userdata['id_gudang'];
+		 if ($level!=1) {
+			$this->db->where('id_gudang', $id_gudang);
+		} 
         return $this->db->get('barang');
     }
 
     function get_brg($id)
     {   
-    	$this->db->like('id', $id);
-        return $this->db->get('barang')->result();
+    	$level = $this->session->userdata['id_level'];
+		 $id_gudang = $this->session->userdata['id_gudang'];
+		 if ($level!=1) {
+			$this->db->where('id_gudang', $id_gudang);
+		} 
+		$this->db->select('a.*,b.nama as nama_satuan');
+    	$this->db->like('a.id', $id);
+    	$this->db->or_like('a.nama', $id);
+    	$this->db->join('satuan b', 'a.kemasan=b.id');
+    	$this->db->limit(10);
+        return $this->db->get('barang a')->result();
     }
 
-     public  function get_supplier($id)
+       function get_supplier($id)
     {   
-    	$this->db->like('nama', $id);
+    	$level = $this->session->userdata['id_level'];
+		 $id_gudang = $this->session->userdata['id_gudang'];
+		 if ($level!=1) {
+			$this->db->where('id_gudang', $id_gudang);
+		} 
+    	$this->db->like('id', $id);
+    	$this->db->or_like('nama', $id);
     	$this->db->limit(10);
         return $this->db->get('supplier')->result();
     }
@@ -127,21 +187,47 @@ class Mod_penerimaan extends CI_Model
 
       function get_detail($id)
     {   
-    	$this->db->select('a.*,b.nama as nama_barang');
-        $this->db->where('a.id_penerimaan', $id);
+    	$id_user = $this->session->userdata['id_user'];
+    	if ($id==0) {
+    		$this->db->where('a.id_penerimaan', '0');
+    		$this->db->where('a.id_user', $id_user);
+    	}else{
+    		$this->db->where('a.id_penerimaan', $id);
+    	}
+    	$this->db->select('a.*,b.nama as nama_barang, c.nama as nama_satuan');
         $this->db->join('barang b', 'a.id_barang=b.id');
+        $this->db->join('satuan c', 'a.kemasan=c.id');
         return $this->db->get('penerimaan_detail a')->result();
     }
 
+    //Cek Barang di detail
+          function get_detail_brg($id_barang)
+    {   
+    	$this->db->where('id_barang',$id_barang);
+        return $this->db->get('penerimaan_detail')->row();
+    }
         function delete($id, $table)
     {
         $this->db->where('id', $id);
         $this->db->delete($table);
     }
 
-            function delete_detail($id, $table)
+    function delete_detail($id, $table)
     {
         $this->db->where('id_penerimaan', $id);
+        $this->db->delete($table);
+    }
+
+    function get_stok($id_transaksi)
+    {   
+    	$this->db->where('id_transaksi', $id_transaksi);
+        return $this->db->get('stok_opname')->result();
+    }
+
+        function del_stok($id, $table)
+    {
+        $this->db->where('id_transaksi', $id);
+        $this->db->where('transaksi' , 'Penerimaan');
         $this->db->delete($table);
     }
 

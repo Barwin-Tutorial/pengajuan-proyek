@@ -16,11 +16,12 @@
                         <table id="tbl_penerimaan" class="table table-bordered table-striped table-hover">
                             <thead>
                                 <tr class="bg-info">
-                                    <th>No</th>
-                                    <th>Nama Barang</th>
+                                    <th>Faktur</th>
+                                    <th>Tanggal</th>
+                                    <th>Supplier</th>
+                                   <!--  <th>Nama Barang</th>
                                     <th>Kemasan</th>
-                                    <th>Jumlah</th>
-                                    <th>No Batch</th>
+                                    <th>Jumlah</th> -->
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -157,6 +158,7 @@ function edit(id){
     save_method = 'update';
     $('#form')[0].reset(); // reset form on modals
     $('.form-group').removeClass('has-error'); // clear error class
+    $('#modal_form').modal({backdrop: 'static', keyboard: false});
     $('.help-block').empty(); // clear error string
 
     //Ajax Load data from ajax
@@ -170,7 +172,8 @@ function edit(id){
             $('[name="id"]').val(data.id);
             $('[name="faktur"]').val(data.faktur);
             $('[name="tanggal"]').val(data.tanggal);
-            $('[name="supplier"]').val(data.supplier);
+            $('[name="supplier"]').val(data.id_supplier);
+            $('[name="vsup"]').val(data.nama_supplier);
             $.ajax({
                 url : "penerimaan/edit_to_cart",
                 method : "POST",
@@ -215,21 +218,31 @@ function save()
 
             if(data.status) //if success close modal and reload ajax table
             {
+
                 $('#modal_form').modal('hide');
                 reload_table();
                 Toast.fire({
                     icon: 'success',
                     title: 'Success!!.'
                 });
+
             }
             else
             {
-                Swal.fire({
-                    title : 'Error!',
-                    text : data.pesan,
-                    icon : 'error',
-                    showConfirmButton : true,
-                });
+                if (data.pesan==0) {
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Data Penerimaan Masih Kosong'
+                  });
+                }else{
+
+                 for (var i = 0; i < data.inputerror.length; i++) 
+                
+                {
+                    $('[name="'+data.inputerror[i]+'"]').addClass('is-invalid');
+                    $('[name="'+data.inputerror[i]+'"]').next().text(data.error_string[i]).addClass('invalid-feedback');
+                }
+            }
              
             }
             $('#btnSave').text('save'); //change button text
@@ -252,7 +265,7 @@ var loadFile = function(event) {
 };
 
 $(function () {
-    $("#produk_nama").change(function () {
+    $("#jumlah").change(function () {
         var formdata = $('#form').serialize();
         $.ajax({
                 url : "penerimaan/add_to_cart",
@@ -266,27 +279,30 @@ $(function () {
     })
 
     $(document).on('click','.hapus_cart',function(){
-            var row_id=$(this).attr("id"); //mengambil row_id dari artibut id
+            var id=$(this).attr("id_penerimaan"); //mengambil row_id dari artibut id
+            var id_detail=$(this).attr("id_detail");
+            
             $.ajax({
                 url : "penerimaan/hapus_cart",
                 method : "POST",
-                data : {row_id : row_id},
+                data : {id : id,id_detail:id_detail},
                 success :function(data){
                     $('#detail_cart').html(data);
                 }
             });
         });
     $(document).on('click','.simpan_cart',function(){
-            var row_id=$(this).attr("id"); //mengambil row_id dari artibut id
+            var id=$(this).attr("id_penerimaan");
+            var id_detail=$(this).attr("id_detail"); //mengambil row_id dari artibut id
             var no = $(this).attr("no");
-            var item = $('.item'+no).val();
+            var jumlah = $('.item'+no).val();
             var nobatch = $('.nobatch'+no).val();
             var ed = $('.ed'+no).val();
 
             $.ajax({
                 url : "penerimaan/update_cart",
                 method : "POST",
-                data : {row_id : row_id,item : item,nobatch : nobatch,ed : ed},
+                data : {id : id,id_detail : id_detail,jumlah : jumlah,nobatch : nobatch,ed : ed},
                 success :function(data){
                     $('#detail_cart').html(data);
                 }
@@ -313,10 +329,54 @@ function simpan_det(row_id, no)
 }
 
 $(document).ready(function(){
-    $( "#vsup").autocomplete({source: 'penerimaan/get_supplier/?', })
-$( "#produk_nama").autocomplete({source: 'penerimaan/get_brg/?', })
-// $( "#supplier" ).autocomplete( "option", "appendTo", "#modal_form" );
+
+         $( "#vsup").autocomplete({
+        source: 'penerimaan/get_supplier/?', 
+        select : function (event, ui) {
+        
+         // display the selected text
+        var value = ui.item.value;
+        $("#supplier").val(value); // save selected id to hidden input
+        $("#vsup").val(ui.item.label);
+        return false;
+    },
+    change : function (event, ui) {
+         // display the selected text
+        var value = ui.item.value;
+        $("#supplier").val(value); // save selected id to hidden input
+        $("#vsup").val(ui.item.label);
+        return false;
+    }
+    })
+    
+
+    
+    $( "#scanbar").autocomplete({
+        source: 'penerimaan/get_brg/?', 
+        select : function (event, ui) {
+        
+        $("#produk_nama").val(ui.item.label); // display the selected text
+        $("#produk_nama").val(ui.item.produk_nama);
+        $("#produk_id").val(ui.item.produk_id); // save selected id to hidden input
+        $("#produk_harga").val(ui.item.produk_harga);
+        $("#nama_satuan").val(ui.item.nama_satuan);
+        $("#kemasan").val(ui.item.id_kemasan);
+        $('#scanbar').val('');
+        return false;
+
+    }
+    })
         });
+
+ function batal() {
+       $.ajax({
+        url : "penerimaan/hapus_all_cart",
+        success :function(data){
+           
+        }
+    });
+ }
+    
 </script>
 
 
@@ -327,17 +387,17 @@ $( "#produk_nama").autocomplete({source: 'penerimaan/get_brg/?', })
 
             <div class="modal-header">
                 <h3 class="modal-title">penerimaan Form</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="batal()">
                     <span aria-hidden="true">&times;</span>
                 </button>
 
             </div>
             <div class="modal-body form">
                 <form action="#" id="form" class="form-horizontal" >
-                    <input type="hidden" value="" name="id"/> 
+                    <input type="hidden" value="0" name="id"/> 
                     <div class="card-body">
                         <div class="row">
-                           <div class="col-md-6">
+                           <div class="col-md-4">
                             <div class="form-group row ">
                                 <label for="nama" class="col-sm-3 col-form-label">Faktur</label>
                                 <div class="col-sm-9 kosong">
@@ -348,52 +408,63 @@ $( "#produk_nama").autocomplete({source: 'penerimaan/get_brg/?', })
                             <div class="form-group row ">
                                 <label for="nama" class="col-sm-3 col-form-label">Tanggal</label>
                                 <div class="col-sm-9 kosong">
-                                    <input type="date" class="form-control" name="tanggal" id="tanggal" placeholder="Tanggal" >
+                                    <input type="date" class="form-control" name="tanggal" id="tanggal" placeholder="Tanggal" value="<?php echo date("Y-m-d") ?>" readonly>
                                     <span class="help-block"></span>
                                 </div>
                             </div>
                             <div class="form-group row ">
                                 <label for="nama" class="col-sm-3 col-form-label">Supplier</label>
                                 <div class="col-sm-9 kosong">
-                                    <input type="text" class="form-control"  name="vsup" id="vsup" placeholder="Supplier"  >
-                                    <input type="hidden" class="form-control"  name="supplier" id="supplier" placeholder="Supplier" autocomplete="off" >
+                                    <input type="hidden" class="form-control"  name="supplier" id="supplier" placeholder="Supplier" autocomplete="off" autofocus="">
+                                    <input type="text" class="form-control"  name="vsup" id="vsup" placeholder="Supplier" autocomplete="off" >
                                     <span class="help-block" ></span>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group row ">
-                                <label for="nama" class="col-sm-2 col-form-label">Jumlah</label>
-                                <div class="col-sm-4 kosong">
-                                    <input type="text" class="form-control" onkeypress="return hanyaAngka(event)" name="jumlah" id="jumlah" placeholder="Jumlah" >
+                        <div class="col-md-8">
+                             <div class="form-group row ">
+                                <label for="nama" class="col-sm-2 col-form-label">Barcode</label>
+                                <div class="col-sm-4 kosong" >
+                                    <input type="text" class="form-control" name="scanbar" id="scanbar" placeholder="Scan Barcode" autofocus>
+                                    <input type="hidden" class="form-control" name="produk_id" id="produk_id" value=""  >
+                                    <input type="hidden" class="form-control" name="produk_harga" id="produk_harga" value=""  >
+                                    <input type="hidden" class="form-control" name="kemasan" id="kemasan" placeholder="Kemasan" value="">
+                                    <input type="hidden" class="form-control" name="nama_satuan" id="nama_satuan"  value="" >
                                     <span class="help-block"></span>
                                 </div>
-                                <label for="nama" class="col-sm-2 col-form-label">Kemasan</label>
+                                <label for="nama" class="col-sm-2 col-form-label">Nama</label>
                                 <div class="col-sm-4 kosong">
-                                    <input type="text" class="form-control" name="kemasan" id="kemasan" placeholder="Kemasan" value="" >
+                                    <input type="text" class="form-control" name="produk_nama" id="produk_nama" placeholder="Nama" value="" readonly="">
                                     <span class="help-block"></span>
                                 </div>
                             </div>
-                            <div class="form-group row ">
-                                <label for="nama" class="col-sm-2 col-form-label">Expired</label>
-                                <div class="col-sm-4 kosong">
-                                    <input type="date" class="form-control"  name="ed" id="ed" placeholder="Expired" >
+                            <!-- <div class="form-group row">
+                                <label for="nama" class="col-sm-2 col-form-label">Nama</label>
+                                <div class="col-sm-10 kosong">
+                                    <input type="text" class="form-control" name="produk_nama" id="produk_nama" placeholder="Nama" value="" readonly="">
                                     <span class="help-block"></span>
                                 </div>
+                            </div> -->
+                            <div class="form-group row ">
                                 <label for="nama" class="col-sm-2 col-form-label">No Batch</label>
                                 <div class="col-sm-4 kosong">
                                     <input type="text" class="form-control" name="nobatch" id="nobatch" placeholder="No Batch" value="" >
                                     <span class="help-block"></span>
                                 </div>
-                            </div>
-                            <div class="form-group row ">
-                                <label for="nama" class="col-sm-2 col-form-label">Barang</label>
-                                <div class="col-sm-10 kosong" >
-                                    <input type="text" class="form-control" name="produk_nama" id="produk_nama" placeholder="Scan Barcode / Input Manual" autofocus>
-                                    <input type="hidden" class="form-control" name="produk_id" id="produk_id" value="12"  >
-                                    <input type="hidden" class="form-control" name="produk_harga" id="produk_harga" value="12000"  >
+                                <label for="nama" class="col-sm-2 col-form-label">Expired</label>
+                                <div class="col-sm-4 kosong">
+                                    <input type="date" class="form-control"  name="ed" id="ed" placeholder="Expired"  value="<?php echo date("Y-m-d") ?>">
                                     <span class="help-block"></span>
                                 </div>
+                                
+                            </div>
+                           <div class="form-group row ">
+                                <label for="nama" class="col-sm-2 col-form-label">Jumlah</label>
+                                <div class="col-sm-4 kosong">
+                                    <input type="text" class="form-control" onkeypress="return hanyaAngka(event)" name="jumlah" id="jumlah" placeholder="Jumlah" >
+                                    <span class="help-block"></span>
+                                </div>
+                                <!-- <button type="button" class="btn btn-primary " onclick="simpan_det()">Simpan</button> -->
                             </div>
                         </div>
                     </div>
@@ -403,7 +474,7 @@ $( "#produk_nama").autocomplete({source: 'penerimaan/get_brg/?', })
                             <div class="card">
                               
                               <div class="card-body table-responsive p-0">
-                                <table class="table table-hover text-nowrap">
+                                <table class="table table-hover text-nowrap table-bordered">
                                     <thead class="bg-info">
                                         <tr>
                                             <th>No</th>
@@ -432,7 +503,7 @@ $( "#produk_nama").autocomplete({source: 'penerimaan/get_brg/?', })
     </div>
     <div class="modal-footer">
         <button type="button" id="btnSave" onclick="save()" class="btn btn-primary">Save</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal" >Cancel</button>
     </div>
 </div><!-- /.modal-content -->
 </div><!-- /.modal-dialog -->

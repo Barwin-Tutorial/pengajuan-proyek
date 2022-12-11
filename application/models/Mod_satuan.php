@@ -73,6 +73,7 @@ class Mod_satuan extends CI_Model
 
 	function count_all()
 	{
+
 		$this->db->from('satuan');
 		return $this->db->count_all_results();
 	}

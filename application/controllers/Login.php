@@ -47,7 +47,7 @@ class Login extends CI_Controller {
                     'title'       => $apl->title,
                     'logo'        => $apl->logo,
                     'nama_owner'     => $apl->nama_owner,
-                    'image'       => $db->image,
+                    'id_gudang'       => $db->id_gudang,
                     'logged_in'    => TRUE
                 );
 

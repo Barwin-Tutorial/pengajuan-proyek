@@ -5,11 +5,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * Create By : Aryo
  * Youtube : Aryo Coding
  */
-class Mod_barang extends CI_Model
+class Mod_stok extends CI_Model
 {
-	var $table = 'barang';
-	var $column_search = array('nama'); 
-	var $column_order = array('nama');
+	var $table = 'stok_opname';
+	var $column_search = array('b.nama'); 
+	var $column_order = array('b.nama');
 	var $order = array('id' => 'desc'); 
 	function __construct()
 	{
@@ -24,10 +24,9 @@ class Mod_barang extends CI_Model
 		 if ($level!=1) {
 			$this->db->where('a.id_gudang', $id_gudang);
 		} 
-		$this->db->select('a.*,b.nama as nama_satuan,c.nama as nama_perundangan');
-		$this->db->from('barang a');
-		$this->db->join('satuan b','a.satuan=b.id');
-		$this->db->join('perundangan c','a.perundangan=c.id');
+		$this->db->select('a.*,b.nama as nama_barang');
+		$this->db->join('barang b', 'a.id_barang=b.id');
+		$this->db->from('stok_opname a');
 		$i = 0;
 
 	foreach ($this->column_search as $item) // loop column 
@@ -85,7 +84,7 @@ class Mod_barang extends CI_Model
 		 if ($level!=1) {
 			$this->db->where('id_gudang', $id_gudang);
 		} 
-		$this->db->from('barang');
+		$this->db->from('stok_opname');
 		return $this->db->count_all_results();
 	}
 
@@ -98,13 +97,18 @@ class Mod_barang extends CI_Model
         function update($id, $data)
     {
         $this->db->where('id', $id);
-        $this->db->update('barang', $data);
+        $this->db->update('stok_opname', $data);
     }
 
         function get($id)
     {   
+    	$level = $this->session->userdata['id_level'];
+		 $id_gudang = $this->session->userdata['id_gudang'];
+		 if ($level!=1) {
+			$this->db->where('id_gudang', $id_gudang);
+		} 
         $this->db->where('id',$id);
-        return $this->db->get('barang')->row();
+        return $this->db->get('stok_opname')->row();
     }
 
         function delete($id, $table)
@@ -113,21 +117,19 @@ class Mod_barang extends CI_Model
         $this->db->delete($table);
     }
 
-        function max_no()
-    {
-        $today=date("Y-m-d");
-         $this->db->select('MAX(SUBSTR(kdbarang,-4)) AS kode');
-        $this->db->order_by('kdbarang','desc');
-        return $this->db->get('barang')->result_array();
+    function get_brg($id)
+    {   
+    	$level = $this->session->userdata['id_level'];
+		 $id_gudang = $this->session->userdata['id_gudang'];
+		 if ($level!=1) {
+			$this->db->where('id_gudang', $id_gudang);
+		} 
+		$this->db->select('a.*,b.nama as nama_satuan');
+    	$this->db->like('a.id', $id);
+    	$this->db->or_like('a.nama', $id);
+    	$this->db->join('satuan b', 'a.kemasan=b.id');
+    	$this->db->limit(10);
+        return $this->db->get('barang a')->result();
     }
-
-    function satuan()
-    {
-        return $this->db->get('satuan');
-    }
-
-    function perundangan()
-    {
-        return $this->db->get('perundangan');
-    }
+ 
 }

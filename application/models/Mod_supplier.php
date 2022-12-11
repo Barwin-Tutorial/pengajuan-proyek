@@ -19,7 +19,11 @@ class Mod_supplier extends CI_Model
 
 		private function _get_datatables_query()
 	{
-		
+		$level = $this->session->userdata['id_level'];
+		 $id_gudang = $this->session->userdata['id_gudang'];
+		 if ($level!=1) {
+			$this->db->where('id_gudang', $id_gudang);
+		} 
 		$this->db->from('supplier');
 		$i = 0;
 
@@ -73,6 +77,11 @@ class Mod_supplier extends CI_Model
 
 	function count_all()
 	{
+		$level = $this->session->userdata['id_level'];
+		 $id_gudang = $this->session->userdata['id_gudang'];
+		 if ($level!=1) {
+			$this->db->where('id_gudang', $id_gudang);
+		} 
 		$this->db->from('supplier');
 		return $this->db->count_all_results();
 	}
@@ -91,6 +100,11 @@ class Mod_supplier extends CI_Model
 
         function get($id)
     {   
+    	$level = $this->session->userdata['id_level'];
+		 $id_gudang = $this->session->userdata['id_gudang'];
+		 if ($level!=1) {
+			$this->db->where('id_gudang', $id_gudang);
+		} 
         $this->db->where('id',$id);
         return $this->db->get('supplier')->row();
     }

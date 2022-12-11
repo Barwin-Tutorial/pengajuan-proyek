@@ -30,6 +30,7 @@ $this->load->view('templates/header',$data);
 <!-- menu -->
 <?php 
 $this->load->view('templates/menu'); 
+$this->load->view('templates/footer'); 
 ?>
 <!-- end menu -->
 

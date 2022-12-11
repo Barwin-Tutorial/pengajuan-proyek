@@ -73,13 +73,15 @@ class Pelanggan extends MY_Controller
     {
        
         $id_user = $this->session->userdata['id_user'];
+        $id_gudang = $this->session->userdata['id_gudang'];
         $save  = array(
             'nama'         => $this->input->post('nama'),
             'notelp'         => $this->input->post('notelp'),
             'alamat'         => $this->input->post('alamat'),
             'kp_instalasi'         => $this->input->post('kp_instalasi'),
             'admin_farmasi'         => $this->input->post('admin_farmasi'),
-            'user_input'  => $id_user
+            'user_input'  => $id_user,
+            'id_gudang'  => $id_gudang
         );
         $this->Mod_pelanggan->insert("pelanggan", $save);
         echo json_encode(array("status" => TRUE));

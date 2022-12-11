@@ -5,13 +5,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * Create By : Aryo
  * Youtube : Aryo Coding
  */
-class Barang extends MY_Controller
+class Retur extends MY_Controller
 {
 
     function __construct()
     {
         parent::__construct();
-        $this->load->model('Mod_barang');
+        $this->load->model('Mod_retur');
         // $this->load->model('dashboard/Mod_dashboard');
     }
 
@@ -19,9 +19,6 @@ class Barang extends MY_Controller
     {
         $link = $this->uri->segment(1);
         $level = $this->session->userdata['id_level'];
-        
-        $data['satuan'] = $this->Mod_barang->satuan()->result();
-        $data['perundangan'] = $this->Mod_barang->perundangan()->result();
         // Cek Posisi Menu apakah Sub Menu Atau bukan
         $jml = $this->Mod_dashboard->get_akses_menu($link,$level)->num_rows();
 
@@ -35,7 +32,7 @@ class Barang extends MY_Controller
             $akses=$a_submenu->view;
         }
         if ($akses=="Y") {
-            $this->template->load('layoutbackend','barang/barang',$data);
+            $this->template->load('layoutbackend','retur/retur',$data);
         }else{
             $data['page']=$link;
             $this->template->load('layoutbackend','admin/akses_ditolak',$data);
@@ -46,29 +43,27 @@ class Barang extends MY_Controller
     {
         ini_set('memory_limit','512M');
         set_time_limit(3600);
-        $list = $this->Mod_barang->get_datatables();
+        $list = $this->Mod_retur->get_datatables();
         $data = array();
         $no = $_POST['start'];
         foreach ($list as $pel) {
 
             $no++;
             $row = array();
-            $row[] = $pel->barcode;
             $row[] = $pel->nama;
-            $row[] = $pel->nama_satuan;
-            $row[] = $pel->berat;
-            $row[] = $pel->nama_perundangan;
-            $row[] = $pel->harga;
-            $row[] = $pel->rak;
-            $row[] = $pel->aktivasi;
+            $row[] = $pel->notelp;
+            $row[] = $pel->alamat;
+            $row[] = $pel->kp_instalasi;
+            $row[] = $pel->admin_farmasi;
+            $row[] = $pel->admin_farmasi;
             $row[] = "<a class=\"btn btn-xs btn-outline-primary edit\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit('$pel->id')\"><i class=\"fas fa-edit\"></i></a><a class=\"btn btn-xs btn-outline-danger delete\" href=\"javascript:void(0)\" title=\"Delete\"  onclick=\"hapus('$pel->id')\"><i class=\"fas fa-trash\"></i></a>";
             $data[] = $row;
         }
 
         $output = array(
             "draw" => $_POST['draw'],
-            "recordsTotal" => $this->Mod_barang->count_all(),
-            "recordsFiltered" => $this->Mod_barang->count_filtered(),
+            "recordsTotal" => $this->Mod_retur->count_all(),
+            "recordsFiltered" => $this->Mod_retur->count_filtered(),
             "data" => $data,
         );
         //output to json format
@@ -77,32 +72,19 @@ class Barang extends MY_Controller
 
     public function insert()
     {
-        $trx= $this->Mod_barang->max_no();
-       if ($trx[0]['kode']==NULL) {
-            $n="00001";
-            $kode='B'.$n;
-        }else{
-            $n=$trx[0]['kode']+1;
-            $x='00000'.$n;
-            $kode='B'.substr($x, -5);
-        }
-        $level = $this->session->userdata['id_level'];
+       
         $id_user = $this->session->userdata['id_user'];
         $id_gudang = $this->session->userdata['id_gudang'];
         $save  = array(
             'nama'         => $this->input->post('nama'),
-            'barcode'         => $this->input->post('barcode'),
-            'kdbarang'         => $this->input->post('barcode'),
-            'satuan'         => $this->input->post('satuan'),
-            'berat'         => $this->input->post('berat'),
-            'perundangan'         => $this->input->post('perundangan'),
-            'harga'         => $this->input->post('harga'),
-            'rak'         => $this->input->post('rak'),
-            'aktivasi'         => $this->input->post('aktivasi'),
-            'id_gudang'   => $id_gudang,
-            'user_input'  => $id_user
+            'notelp'         => $this->input->post('notelp'),
+            'alamat'         => $this->input->post('alamat'),
+            'kp_instalasi'         => $this->input->post('kp_instalasi'),
+            'admin_farmasi'         => $this->input->post('admin_farmasi'),
+            'user_input'  => $id_user,
+            'id_gudang'  => $id_gudang
         );
-        $this->Mod_barang->insert("barang", $save);
+        $this->Mod_retur->insert("retur", $save);
         echo json_encode(array("status" => TRUE));
 
     }
@@ -113,30 +95,27 @@ class Barang extends MY_Controller
         $id      = $this->input->post('id');
         $save  = array(
             'nama'         => $this->input->post('nama'),
-            'barcode'         => $this->input->post('barcode'),
-            'satuan'         => $this->input->post('satuan'),
-            'berat'         => $this->input->post('berat'),
-            'perundangan'         => $this->input->post('perundangan'),
-            'harga'         => $this->input->post('harga'),
-            'rak'         => $this->input->post('rak'),
-            'aktivasi'         => $this->input->post('aktivasi')
+            'notelp'         => $this->input->post('notelp'),
+            'alamat'         => $this->input->post('alamat'),
+            'kp_instalasi'         => $this->input->post('kp_instalasi'),
+            'admin_farmasi'         => $this->input->post('admin_farmasi'),
         );
 
-        $this->Mod_barang->update($id, $save);
+        $this->Mod_retur->update($id, $save);
         echo json_encode(array("status" => TRUE));
 
     }
 
     public function edit($id)
     {
-        $data = $this->Mod_barang->get($id);
+        $data = $this->Mod_retur->get($id);
         echo json_encode($data);
     }
 
     public function delete()
     {
         $id = $this->input->post('id');
-        $this->Mod_barang->delete($id, 'barang');        
+        $this->Mod_retur->delete($id, 'retur');        
         echo json_encode(array("status" => TRUE));
     }
     private function _validate()
@@ -149,25 +128,10 @@ class Barang extends MY_Controller
         if($this->input->post('nama') == '')
         {
             $data['inputerror'][] = 'nama';
-            $data['error_string'][] = 'Nama Barang Tidak Boleh Kosong';
+            $data['error_string'][] = 'Nama retur Tidak Boleh Kosong';
             $data['status'] = FALSE;
         }
-
-        if($this->input->post('harga') == '')
-        {
-            $data['inputerror'][] = 'harga';
-            $data['error_string'][] = 'Harga Tidak Boleh Kosong';
-            $data['status'] = FALSE;
-        }
-
-        if($this->input->post('satuan') == '')
-        {
-            $data['inputerror'][] = 'satuan';
-            $data['error_string'][] = 'Satuan Tidak Boleh Kosong';
-            $data['status'] = FALSE;
-        }
-
-        
+       
 
         if($data['status'] === FALSE)
         {

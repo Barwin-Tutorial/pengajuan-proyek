@@ -5,9 +5,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * Create By : Aryo
  * Youtube : Aryo Coding
  */
-class Mod_barang extends CI_Model
+class Mod_perundangan extends CI_Model
 {
-	var $table = 'barang';
+	var $table = 'perundangan';
 	var $column_search = array('nama'); 
 	var $column_order = array('nama');
 	var $order = array('id' => 'desc'); 
@@ -19,15 +19,8 @@ class Mod_barang extends CI_Model
 
 		private function _get_datatables_query()
 	{
-		$level = $this->session->userdata['id_level'];
-		 $id_gudang = $this->session->userdata['id_gudang'];
-		 if ($level!=1) {
-			$this->db->where('a.id_gudang', $id_gudang);
-		} 
-		$this->db->select('a.*,b.nama as nama_satuan,c.nama as nama_perundangan');
-		$this->db->from('barang a');
-		$this->db->join('satuan b','a.satuan=b.id');
-		$this->db->join('perundangan c','a.perundangan=c.id');
+		
+		$this->db->from('perundangan');
 		$i = 0;
 
 	foreach ($this->column_search as $item) // loop column 
@@ -80,12 +73,8 @@ class Mod_barang extends CI_Model
 
 	function count_all()
 	{
-		$level = $this->session->userdata['id_level'];
-		 $id_gudang = $this->session->userdata['id_gudang'];
-		 if ($level!=1) {
-			$this->db->where('id_gudang', $id_gudang);
-		} 
-		$this->db->from('barang');
+
+		$this->db->from('perundangan');
 		return $this->db->count_all_results();
 	}
 
@@ -98,13 +87,13 @@ class Mod_barang extends CI_Model
         function update($id, $data)
     {
         $this->db->where('id', $id);
-        $this->db->update('barang', $data);
+        $this->db->update('perundangan', $data);
     }
 
         function get($id)
     {   
         $this->db->where('id',$id);
-        return $this->db->get('barang')->row();
+        return $this->db->get('perundangan')->row();
     }
 
         function delete($id, $table)
@@ -113,21 +102,5 @@ class Mod_barang extends CI_Model
         $this->db->delete($table);
     }
 
-        function max_no()
-    {
-        $today=date("Y-m-d");
-         $this->db->select('MAX(SUBSTR(kdbarang,-4)) AS kode');
-        $this->db->order_by('kdbarang','desc');
-        return $this->db->get('barang')->result_array();
-    }
-
-    function satuan()
-    {
-        return $this->db->get('satuan');
-    }
-
-    function perundangan()
-    {
-        return $this->db->get('perundangan');
-    }
+ 
 }

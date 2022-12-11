@@ -21,6 +21,7 @@
                       <th>User name</th>
                       <th>Full Name</th>
                       <th>Level</th>
+                      <th>Gudang</th>
                       <th>Is Active</th>
                       <th>Aksi</th>
                     </tr>
@@ -82,36 +83,6 @@ $(document).ready(function() {
           "url": "<?php echo site_url('user/ajax_list')?>",
           "type": "POST"
         },
-         //Set column definition initialisation properties.
-         "columnDefs": [
-         { 
-            "targets": [-1], //last column
-            "render": function ( data, type, row ) {
-             
-              if (row[4]=="N") { 
-                return "<a class=\"btn btn-xs btn-outline-info\" href=\"javascript:void(0)\" title=\"View\" onclick=\"vuser("+row[5]+")\"><i class=\"fas fa-eye\"></i></a> <a class=\"btn btn-xs btn-outline-primary\"  href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit_user("+row[5]+")\"><i class=\"fas fa-edit\"></i></a><a class=\"btn btn-xs btn-outline-danger\" href=\"javascript:void(0)\" title=\"Delete\"  onclick=\"deluser("+row[5]+")\"><i class=\"fas fa-trash\"></i></a>"
-                /*return "<a class=\"btn btn-xs btn-outline-info\" href=\"javascript:void(0)\" title=\"View\" onclick=\"vuser("+row[5]+")\"><i class=\"fas fa-eye\"></i></a> <a class=\"btn btn-xs btn-outline-primary\"  href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit_user("+row[5]+")\"><i class=\"fas fa-edit\"></i></a>"*/
-              }else{
-               return "<a class=\"btn btn-xs btn-outline-info\" href=\"javascript:void(0)\" title=\"View\" onclick=\"vuser("+row[5]+")\"><i class=\"fas fa-eye\"></i></a> <a class=\"btn btn-xs btn-outline-primary\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit_user("+row[5]+")\"><i class=\"fas fa-edit\"></i></a> <a class=\"btn btn-xs btn-outline-warning\" href=\"javascript:void(0)\" title=\"Reset Password\" onclick=\"riset("+row[5]+")\"><i>Riset Pass</i></a>";
-             }
-             
-
-           },
-            "orderable": false, //set not orderable
-            
-          },
-          {
-            "targets": [0],
-            "render": function(data , type , row){
-              if (row[0]!=null) {
-                return "<img class=\"myImgx\"  src='<?php echo base_url("assets/foto/user/");?>"+row[0]+"' width=\"100px\" height=\"100px\">";
-              }else{
-                return "<img class=\"myImgx\"  src='<?php echo base_url("assets/foto/default-150x150.png");?>' width=\"100px\" height=\"100px\">";
-              }
-            }
-          },
-          ],
-          
         });
  $("input").change(function(){
   $(this).parent().parent().removeClass('has-error');
@@ -275,7 +246,8 @@ function add_user()
         $('[name="full_name"]').val(data.full_name);
         $('[name="is_active"]').val(data.is_active);
         $('[name="level"]').val(data.id_level);
-        
+        $('[name="id_gudang"]').val(data.id_gudang);
+
         if (data.image==null) {
           var image = "<?php echo base_url('assets/foto/user/default.png')?>";
           $("#v_image").attr("src",image);
@@ -371,7 +343,7 @@ function add_user()
 
 <!-- Bootstrap modal -->
 <div class="modal fade" id="modal_form" role="dialog">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
 
       <div class="modal-header">
@@ -411,7 +383,18 @@ function add_user()
                 <input type="text" class="form-control" name="full_name" id="full_name" placeholder="Full Name">
               </div>
             </div>
-            
+            <div class="form-group row ">
+              <label for="level" class="col-sm-3 col-form-label">Gudang</label>
+              <div class="col-sm-9 kosong">
+                <select class="form-control" name="id_gudang" id="id_gudang">
+                  <option value="">Pilih Gudang</option>
+                  <?php
+                  foreach ($gudang->result() as $g) {?>
+                    <option value="<?=$g->id;?>"><?=$g->nama;?></option>
+                  <?php }?>
+                </select>
+              </div>
+            </div>
             <div class="form-group row ">
               <label for="password" class="col-sm-3 col-form-label">Password</label>
               <div class="col-sm-9 kosong">
