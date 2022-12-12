@@ -26,7 +26,7 @@ class Mod_barang extends CI_Model
 		} 
 		$this->db->select('a.*,b.nama as nama_satuan,c.nama as nama_perundangan');
 		$this->db->from('barang a');
-		$this->db->join('satuan b','a.satuan=b.id');
+		$this->db->join('satuan b','a.kemasan=b.id');
 		$this->db->join('perundangan c','a.perundangan=c.id');
 		$i = 0;
 

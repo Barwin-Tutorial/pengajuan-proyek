@@ -24,8 +24,10 @@ class Mod_keluar extends CI_Model
 		 if ($level!=1) {
 			$this->db->where('a.id_gudang', $id_gudang);
 		} 
-		$this->db->select('a.*,b.nama as nama_pel');
+		$this->db->select('a.*,b.nama as nama_pel, d.nama as nama_barang,c.jumlah');
 		$this->db->join('pelanggan b', 'a.id_pelanggan=b.id');
+		$this->db->join('keluar_detail c', 'a.id=c.id_keluar');
+		$this->db->join('barang d', 'c.id_barang=d.id');
 		$this->db->from('keluar a');
 		$i = 0;
 
@@ -86,6 +88,8 @@ class Mod_keluar extends CI_Model
 		} 
 		$this->db->select('a.*,b.nama as nama_pel');
 		$this->db->join('pelanggan b', 'a.id_pelanggan=b.id');
+		$this->db->join('keluar_detail c', 'a.id=c.id_keluar');
+		$this->db->join('barang d', 'c.id_barang=d.id');
 		$this->db->from('keluar a');
 		return $this->db->count_all_results();
 	}
@@ -127,6 +131,16 @@ class Mod_keluar extends CI_Model
         $this->db->where('id', $id);
         $this->db->delete($table);
     }
+        function delete_detail($id, $table)
+    {
+        $this->db->where('id_keluar', $id);
+        $this->db->delete($table);
+    }
+         function update_detail($id, $data)
+    {
+        $this->db->where('id', $id);
+        $this->db->update('keluar_detail', $data);
+    }
 
         function get_pelanggan($id)
     {   
@@ -135,16 +149,21 @@ class Mod_keluar extends CI_Model
 		 if ($level!=1) {
 			$this->db->where('id_gudang', $id_gudang);
 		} 
-    	$this->db->like('id', $id);
-    	$this->db->or_like('nama', $id);
+    	$this->db->like('nama', $id);
     	$this->db->limit(10);
         return $this->db->get('pelanggan')->result();
     }
 
     function get_detail($id)
     {   
+    	$id_user = $this->session->userdata['id_user'];
+    	if ($id==0) {
+    		$this->db->where('a.id_keluar', $id);
+    		$this->db->where('a.id_user', $id_user);
+    	}else{
+    		$this->db->where('a.id_keluar', $id);
+    	}
     	 $this->db->select('a.*,b.nama as nama_barang, c.nama as nama_satuan');
-        $this->db->where('a.id_keluar', $id);
         $this->db->join('barang b', 'a.id_barang=b.id');
         $this->db->join('satuan c', 'a.kemasan=c.id');
         return $this->db->get('keluar_detail a')->result();
@@ -156,14 +175,67 @@ class Mod_keluar extends CI_Model
     	$level = $this->session->userdata['id_level'];
 		 $id_gudang = $this->session->userdata['id_gudang'];
 		 if ($level!=1) {
+			$sql= $this->db->where('a.id_gudang', $id_gudang);
+		} 
+		$date = date("Y-m-d");
+
+		/*$sql=$this->db->select('a.*,c.nama as nama_satuan, b.nama as nama_barang, b.harga, b.kemasan');
+    	$sql=$this->db->order_by('a.ed','asc');*/
+    	// $sql=$this->db->or_like('sa.nama', $id);
+    	/*$sql=$this->db->join('barang b', 'a.id_barang=b.id');
+    	$sql=$this->db->join('satuan c', 'b.kemasan=c.id');*/
+    	// $sql=$this->db->where('');
+    	// $sql=$this->db->where('aa.ed >= "'.$date.'"');
+    	/*$sql=$this->db->limit(10);
+      	$sql= $this->db->get('stok_opname a')->result();
+      	
+      	$sql1=$this->db->order_by('id_barang');
+      	$sql1=$this->db->get($sql)->result();*/
+      	// return $sql1;
+        $sql=$this->db->query("SELECT * FROM(
+        SELECT `a`.*, `c`.`nama` AS `nama_satuan`, `b`.`nama` AS `nama_barang`, `b`.`harga`, `b`.`kemasan`
+        FROM `stok_opname` `a`
+        JOIN `barang` `b` ON `a`.`id_barang`=`b`.`id`
+        JOIN `satuan` `c` ON `b`.`kemasan`=`c`.`id`
+        WHERE`a`.`masuk` >0
+        AND `a`.`ed` >= '$date'
+        AND (`b`.`nama` LIKE '%$id%' ESCAPE '!' OR b.barcode LIKE '%$id%' ESCAPE '!')
+        ORDER  BY ABS( DATEDIFF( a.ed, NOW() ) )
+        LIMIT 10)
+        AS sa GROUP BY sa.`id_barang`");
+
+        return $sql->result();
+
+    }
+
+        function get_stok($id_transaksi)
+    {   
+    	$level = $this->session->userdata['id_level'];
+		 $id_gudang = $this->session->userdata['id_gudang'];
+		 if ($level!=1) {
 			$this->db->where('id_gudang', $id_gudang);
 		} 
-		$this->db->select('a.*,b.nama as nama_satuan');
-    	$this->db->like('a.id', $id);
-    	$this->db->or_like('a.nama', $id);
-    	$this->db->join('satuan b', 'a.kemasan=b.id');
-    	$this->db->limit(10);
-        return $this->db->get('barang a')->result();
+    	$this->db->where('transaksi', 'Keluar');
+    	$this->db->where('id_transaksi', $id_transaksi);
+        return $this->db->get('stok_opname')->result();
+    }
+
+    function get_stok_opname($id_barang)
+    {   
+    	$level = $this->session->userdata['id_level'];
+		 $id_gudang = $this->session->userdata['id_gudang'];
+		 if ($level!=1) {
+			$this->db->where('id_gudang', $id_gudang);
+		} 
+    	$this->db->where('transaksi', 'Penerimaan');
+    	$this->db->where('id_barang', $id_barang);
+    	return $this->db->get('stok_opname')->result();
+    }
+        function del_stok($id, $table)
+    {
+        $this->db->where('id_transaksi', $id);
+        $this->db->where('transaksi' , 'Keluar');
+        $this->db->delete($table);
     }
    
 }

@@ -31,10 +31,11 @@ class Penerimaan extends MY_Controller
             $a_submenu = $this->Mod_dashboard->get_akses_submenu($link,$level)->row();
             $akses=$a_submenu->view;
         }
+        
        
 
         if ($akses=="Y") {
-          
+            
             $this->template->load('layoutbackend','penerimaan/penerimaan',$data);
         }else{
             $data['page']=$link;
@@ -63,7 +64,8 @@ class Penerimaan extends MY_Controller
             /*$row[] = $pel->nama_barang;
             $row[] = $pel->kemasan;
             $row[] = $pel->jumlah;*/
-            $row[] = "<a class=\"btn btn-xs btn-outline-info \" href=\"javascript:void(0)\" title=\"View\" onclick=\"views('$pel->id')\"><i class=\"fas fa-eye\"></i></a>  <a class=\"btn btn-xs btn-outline-primary edit\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit('$pel->id')\"><i class=\"fas fa-edit\"></i></a>  <a class=\"btn btn-xs btn-outline-danger delete\" href=\"javascript:void(0)\" title=\"Delete\"  onclick=\"hapus('$pel->id')\"><i class=\"fas fa-trash\"></i></a>";
+            // <a class=\"btn btn-xs btn-outline-info \" href=\"javascript:void(0)\" title=\"View\" onclick=\"views('$pel->id')\"><i class=\"fas fa-eye\">
+            $row[] = "</i></a>  <a class=\"btn btn-xs btn-outline-primary edit\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit('$pel->id')\"><i class=\"fas fa-edit\"></i></a>  <a class=\"btn btn-xs btn-outline-danger delete\" href=\"javascript:void(0)\" title=\"Delete\"  onclick=\"hapus('$pel->id')\"><i class=\"fas fa-trash\"></i></a>";
             $data[] = $row;
         }
 
@@ -128,7 +130,21 @@ class Penerimaan extends MY_Controller
        
     }
 
+    public function no_faktur()
+    {
+        $id_gudang = $this->session->userdata['id_gudang'];
+        $trx= $this->Mod_penerimaan->max_no();
+        if ($trx[0]['kode']==NULL) {
+            $n="00001";
+            $kode='PNR-'.$n.'-'.$id_gudang.'/'.date("m-Y");
+        }else{
+            $n=$trx[0]['kode']+1;
+            $x='00000'.$n;
+            $kode='PNR-'.substr($x,1,5).'-'.$id_gudang.'/'.date("m-Y");
+        }
 
+        echo json_encode(array('kode' => $kode));
+    }
 
     public function update()
     {
@@ -317,8 +333,8 @@ public function getAllSupplier()
          $output .= '<td>'.number_format($items->harga).'</td>';
          $output .= '<td>'.number_format($subtotal).'</td>
          <td>
-         <button type="button" id_penerimaan="'.$items->id_penerimaan.'"  id_detail="'.$items->id.'" class="hapus_cart btn btn-danger btn-xs">Hapus</button>
-         <button type="button" id_penerimaan="'.$items->id_penerimaan.'" id_detail="'.$items->id.'"  class="simpan_cart btn btn-success btn-xs">simpan</button>
+         <button type="button" id_penerimaan="'.$items->id_penerimaan.'" no="'.$no.'"  id_detail="'.$items->id.'" class="hapus_cart btn btn-danger btn-xs">Hapus</button>
+         <button type="button" id_penerimaan="'.$items->id_penerimaan.'" id_detail="'.$items->id.'" no="'.$no.'" class="simpan_cart btn btn-success btn-xs">simpan</button>
          </td>
 
          </tr>
@@ -353,7 +369,7 @@ public function getAllSupplier()
          $save_detail  = array(
             'nobatch'         => $this->input->post('nobatch'),
             'jumlah'         => $this->input->post('jumlah'),
-            'ed'         => $this->input->post('nobatch'),
+            'ed'         => $this->input->post('ed'),
         );
 
          $this->Mod_penerimaan->update_detail($id_detail, $save_detail);

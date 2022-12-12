@@ -140,6 +140,7 @@ function add()
 {
     save_method = 'add';
     $('#form')[0].reset(); // reset form on modals
+    $('#detail_cart').empty();
     $('.form-group').removeClass('has-error'); // clear error class
     $('.help-block').empty(); // clear error string
     $('#modal_form').modal({backdrop: 'static', keyboard: false}); // show bootstrap modal
@@ -165,6 +166,15 @@ function edit(id){
             $('[name="vpel"]').val(data.nama_pel);
             $('[name="pelanggan"]').val(data.id_pelanggan);
 
+            $.ajax({
+                url : "keluar/edit_to_cart",
+                method : "POST",
+                data : {id:data.id},
+                dataType : 'html',
+                success: function(data){
+                    $('#detail_cart').html(data);
+                }
+            });
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
             $('.modal-title').text('Edit Keluar Barang'); // Set title to Bootstrap modal title
 
@@ -209,17 +219,12 @@ function save()
             }
             else
             {
-                Swal.fire({
-                    title : 'Error!',
-                    text : data.pesan,
-                    icon : 'error',
-                    showConfirmButton : true,
-                });
-               /* for (var i = 0; i < data.inputerror.length; i++) 
+               
+                for (var i = 0; i < data.inputerror.length; i++) 
                 {
                     $('[name="'+data.inputerror[i]+'"]').addClass('is-invalid');
                     $('[name="'+data.inputerror[i]+'"]').next().text(data.error_string[i]).addClass('invalid-feedback');
-                }*/
+                }
             }
             $('#btnSave').text('save'); //change button text
             $('#btnSave').attr('disabled',false); //set button enable 
@@ -263,11 +268,13 @@ $(function () {
     })
 
     $(document).on('click','.hapus_cart',function(){
-            var row_id=$(this).attr("id"); //mengambil row_id dari artibut id
+            var id=$(this).attr("id_keluar"); //mengambil row_id dari artibut id
+            var id_detail=$(this).attr("id_detail");
+            
             $.ajax({
-                url : "penerimaan/hapus_cart",
+                url : "keluar/hapus_cart",
                 method : "POST",
-                data : {row_id : row_id},
+                data : {id : id,id_detail:id_detail},
                 success :function(data){
                     $('#detail_cart').html(data);
                 }
@@ -281,9 +288,9 @@ $(function () {
             var ed = $('.ed'+no).val();
 
             $.ajax({
-                url : "penerimaan/update_cart",
+                url : "keluar/update_cart",
                 method : "POST",
-                data : {row_id : row_id,item : item,nobatch : nobatch,ed : ed},
+                data : {id : id,item : item,nobatch : nobatch,ed : ed},
                 success :function(data){
                     $('#detail_cart').html(data);
                 }
@@ -306,13 +313,17 @@ $(document).ready(function(){
     }
     })
     $( "#produk_nama").autocomplete({
-        source: 'penerimaan/get_brg/?', 
+        source: 'keluar/get_brg/?', 
         select: function (event, ui) {
         
-        $("#produk_nama").val(ui.item.label); // display the selected text
+       $("#produk_nama").val(ui.item.label); // display the selected text
         $("#produk_nama").val(ui.item.produk_nama);
         $("#produk_id").val(ui.item.produk_id); // save selected id to hidden input
         $("#produk_harga").val(ui.item.produk_harga);
+        $("#nama_satuan").val(ui.item.nama_satuan);
+        $("#kemasan").val(ui.item.id_kemasan);
+        $("#ed").val(ui.item.ed);
+        $("#nobatch").val(ui.item.nobatch);
         return false;
     }
     })
@@ -334,15 +345,16 @@ $(document).ready(function(){
             </div>
             <div class="modal-body form">
                 <form action="#" id="form" class="form-horizontal" >
-                    <input type="hidden" value="" name="id"/> 
+                    <input type="hidden" value="0" name="id"/> 
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group row ">
                                     <label for="nama" class="col-sm-4 col-form-label">Nama Pelanggan</label>
                                     <div class="col-sm-8 kosong">
-                                        <input type="text" class="form-control" name="vpel" id="vpel" placeholder="Nama Pelanggan" >
                                         <input type="hidden" class="form-control" name="pelanggan" id="pelanggan" placeholder="Nama Pelanggan" >
+                                        <input type="text" class="form-control" name="vpel" id="vpel" placeholder="Nama Pelanggan" >
+                                        
                                         <span class="help-block"></span>
                                     </div>
                                 </div>
@@ -361,11 +373,24 @@ $(document).ready(function(){
                                     <input type="text" class="form-control" name="produk_nama" id="produk_nama" placeholder="Scan Barcode / Input Manual" autofocus>
                                     <input type="hidden" class="form-control" name="produk_id" id="produk_id" value=""  >
                                     <input type="hidden" class="form-control" name="produk_harga" id="produk_harga" value=""  >
-                                    <input type="hidden" class="form-control" name="Kemasan" id="Kemasan" value=""  >
+                                    <input type="hidden" class="form-control" name="kemasan" id="kemasan" value=""  >
                                     <input type="hidden" class="form-control" name="nama_satuan" id="nama_satuan" value=""  >
                                     <span class="help-block"></span>
                                 </div>
                                 </div>
+                                <div class="form-group row ">
+                                <label for="nama" class="col-sm-3 col-form-label">No Batch</label>
+                                <div class="col-sm-3 kosong">
+                                    <input type="text" class="form-control" name="nobatch" id="nobatch" placeholder="No Batch" value="" readonly="">
+                                    <span class="help-block"></span>
+                                </div>
+                                <label for="nama" class="col-sm-3 col-form-label">Expired</label>
+                                <div class="col-sm-3 kosong">
+                                    <input type="date" class="form-control"  name="ed" id="ed" placeholder="Expired"  value="" readonly="">
+                                    <span class="help-block"></span>
+                                </div>
+                                
+                            </div>
                                 <div class="form-group row ">
                                     <label for="nama" class="col-sm-3 col-form-label">Jumlah</label>
                                     <div class="col-sm-9 kosong">
@@ -390,8 +415,8 @@ $(document).ready(function(){
                                             <th>Nama Barang</th>
                                             <th>Kemasan</th>
                                             <th>Jumlah</th>
-                                            <th>No Batch</th>
                                             <th>ED</th>
+                                            <th>No Batch</th>
                                             <th>Sisa Stok</th>
                                             <th>Harga Jual</th>
                                             <th>Aksi</th>

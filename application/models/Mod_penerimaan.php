@@ -164,7 +164,7 @@ class Mod_penerimaan extends CI_Model
 			$this->db->where('id_gudang', $id_gudang);
 		} 
 		$this->db->select('a.*,b.nama as nama_satuan');
-    	$this->db->like('a.id', $id);
+    	$this->db->like('a.barcode', $id);
     	$this->db->or_like('a.nama', $id);
     	$this->db->join('satuan b', 'a.kemasan=b.id');
     	$this->db->limit(10);
@@ -178,8 +178,8 @@ class Mod_penerimaan extends CI_Model
 		 if ($level!=1) {
 			$this->db->where('id_gudang', $id_gudang);
 		} 
-    	$this->db->like('id', $id);
-    	$this->db->or_like('nama', $id);
+    	
+    	$this->db->like('nama', $id);
     	$this->db->limit(10);
         return $this->db->get('supplier')->result();
     }
@@ -189,7 +189,7 @@ class Mod_penerimaan extends CI_Model
     {   
     	$id_user = $this->session->userdata['id_user'];
     	if ($id==0) {
-    		$this->db->where('a.id_penerimaan', '0');
+    		$this->db->where('a.id_penerimaan', $id);
     		$this->db->where('a.id_user', $id_user);
     	}else{
     		$this->db->where('a.id_penerimaan', $id);
@@ -220,6 +220,7 @@ class Mod_penerimaan extends CI_Model
 
     function get_stok($id_transaksi)
     {   
+    	$this->db->where('transaksi', 'Penerimaan');
     	$this->db->where('id_transaksi', $id_transaksi);
         return $this->db->get('stok_opname')->result();
     }
@@ -231,5 +232,18 @@ class Mod_penerimaan extends CI_Model
         $this->db->delete($table);
     }
 
- 
+         function max_no()
+    {
+    	$level = $this->session->userdata['id_level'];
+		 $id_gudang = $this->session->userdata['id_gudang'];
+		 
+		$this->db->where('id_gudang', $id_gudang);
+        $m=date("m");
+        $y=date("Y");
+         $this->db->select('MAX(SUBSTR(faktur,4,5)) AS kode');
+         $this->db->where('MONTH(tanggal)', $m);
+         $this->db->where('YEAR(tanggal)', $y);
+        $this->db->order_by('id','desc');
+        return $this->db->get('penerimaan')->result_array();
+    }
 }

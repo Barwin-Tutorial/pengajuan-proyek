@@ -57,12 +57,10 @@ class Keluar extends MY_Controller
             $row = array();
             // $row[] = $no;
 
-            $row[] = $pel->faktur;
             $row[] = $pel->tanggal;
-            $row[] = $pel->pelanggan;
-            /*$row[] = $pel->nama_barang;
-            $row[] = $pel->kemasan;
-            $row[] = $pel->jumlah;*/
+            $row[] = $pel->nama_pel;
+            $row[] = $pel->nama_barang;
+            $row[] = $pel->jumlah;
             $row[] = "<a class=\"btn btn-xs btn-outline-info \" href=\"javascript:void(0)\" title=\"View\" onclick=\"views('$pel->id')\"><i class=\"fas fa-eye\"></i></a>  <a class=\"btn btn-xs btn-outline-primary edit\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit('$pel->id')\"><i class=\"fas fa-edit\"></i></a>  <a class=\"btn btn-xs btn-outline-danger delete\" href=\"javascript:void(0)\" title=\"Delete\"  onclick=\"hapus('$pel->id')\"><i class=\"fas fa-trash\"></i></a>";
             $data[] = $row;
         }
@@ -91,16 +89,13 @@ class Keluar extends MY_Controller
         $id_gudang = $this->session->userdata['id_gudang'];
         $id_user = $this->session->userdata['id_user'];
         $save  = array(
-            'faktur'         => $this->input->post('faktur'),
             'tanggal'         => $tanggal,
-            'id_supplier'         => $this->input->post('supplier'),
+            'id_pelanggan'         => $this->input->post('pelanggan'),
             'user_input'  => $id_user,
             'id_gudang'   =>  $id_gudang
         );
         $this->Mod_keluar->insert("keluar", $save);
         $id_keluar = $this->db->insert_id();
-
-        
 
         
         foreach ($list as $items) {
@@ -112,8 +107,8 @@ class Keluar extends MY_Controller
                 'id_transaksi'         => $items->id,
                 'id_barang'         => $items->id_barang,
                 'tanggal'         => $tanggal,
-                'transaksi'         => 'keluar',
-                'masuk'         => $items->jumlah,
+                'transaksi'         => 'Keluar',
+                'keluar'         => $items->jumlah,
                 'ed'         => $items->ed,
                 'nobatch'         => $items->nobatch,
                 'user_input'  => $id_user,
@@ -140,16 +135,13 @@ class Keluar extends MY_Controller
         $waktu = date("H:i:s");
        $tanggal=$this->input->post('tanggal');
         $save  = array(
-            'faktur'         => $this->input->post('faktur'),
             'tanggal'         => $tanggal,
-            'id_supplier'         => $this->input->post('supplier')
+            'id_pelanggan'         => $this->input->post('pelanggan')
         );
 
         $this->Mod_keluar->update($id, $save);
         $list = $this->Mod_keluar->get_detail($id);
-        /*if (count($list)==0) {
-            $list = $this->Mod_keluar->get_detail(0);
-        }*/
+        
         foreach ($list as $items) {
             $id_keluar = $items->id_keluar;
             $id_detail = $items->id;
@@ -164,8 +156,8 @@ class Keluar extends MY_Controller
                     'id_transaksi'         => $items->id,
                     'id_barang'         => $items->id_barang,
                     'tanggal'         => $tanggal,
-                    'transaksi'         => 'keluar',
-                    'masuk'         => $items->jumlah,
+                    'transaksi'         => 'Keluar',
+                    'keluar'         => $items->jumlah,
                     'ed'         => $items->ed,
                     'nobatch'         => $items->nobatch,
                     'user_input'  => $id_user,
@@ -174,7 +166,7 @@ class Keluar extends MY_Controller
                 $this->Mod_keluar->insert("stok_opname", $save_stok);
             }else{
                $save_stok  = array(
-                'masuk'         => $jumlah,
+                'keluar'         => $jumlah,
                 'ed'         => $items->ed,
                 'nobatch'         => $items->nobatch,
             );
@@ -202,7 +194,7 @@ class Keluar extends MY_Controller
         $data = $this->Mod_keluar->get_brg($id);
         if (count($data) > 0) {
             foreach ($data as $row) {
-                $arr_result[] = array( 'label'  => $row->nama, 'produk_nama'  => $row->nama, 'produk_id' => $row->id, 'produk_harga' =>  $row->harga, 'id_kemasan' => $row->kemasan, 'nama_satuan' => $row->nama_satuan);
+                $arr_result[] = array( 'label'  => $row->nama_barang, 'produk_nama'  => $row->nama_barang, 'produk_id' => $row->id_barang, 'produk_harga' =>  $row->harga, 'id_kemasan' => $row->kemasan, 'nama_satuan' => $row->nama_satuan, 'ed' => $row->ed, 'nobatch' => $row->nobatch);
             }
             echo json_encode($arr_result);
         }else{
@@ -212,10 +204,10 @@ class Keluar extends MY_Controller
 
     }
 
-    public function get_supplier()
+    public function get_pelanggan()
     {
         $id = $this->input->get('term');
-        $data = $this->Mod_keluar->get_supplier($id);
+        $data = $this->Mod_keluar->get_pelanggan($id);
         if (count($data) > 0) {
 
             foreach ($data as $row){
@@ -228,7 +220,7 @@ class Keluar extends MY_Controller
         }
 }
 
-public function getAllSupplier()
+public function getAllPelanggan()
 {
    $data = $this->Mod_keluar->get_supplier_all();
     echo json_encode($data);
@@ -254,10 +246,10 @@ public function getAllSupplier()
         $data['inputerror'] = array();
         $data['status'] = TRUE;
 
-        if($this->input->post('vsup') == '')
+        if($this->input->post('vpel') == '')
         {
-            $data['inputerror'][] = 'vsup';
-            $data['error_string'][] = 'Supplier Tidak Boleh Kosong';
+            $data['inputerror'][] = 'vpel';
+            $data['error_string'][] = 'Pelanggan Tidak Boleh Kosong';
             $data['status'] = FALSE;
         }
        
@@ -285,7 +277,7 @@ public function getAllSupplier()
             'nobatch'         => $this->input->post('nobatch'),
             'jumlah'         => $this->input->post('jumlah'),
             'ed'         => $this->input->post('ed'),
-            'harga'         => $this->input->post('produk_harga'),
+            'harga_jual'         => $this->input->post('produk_harga'),
             'id_keluar' => $id_keluar,
             'id_user'   => $id_user
 
@@ -302,23 +294,33 @@ public function getAllSupplier()
         $total = 0;
         $list = $this->Mod_keluar->get_detail($id_keluar);
         foreach ($list as $items) {
-            $subtotal = ($items->harga * $items->jumlah);
+            $subtotal = ($items->harga_jual * $items->jumlah);
             $total += $subtotal;
             $no++;
+            $id_barang = $items->id_barang;
+            $stokop = $this->Mod_keluar->get_stok_opname($id_barang);
+            
             $output .='
             <tr>
             <td>'.$no.'</td>
             <td>'.$items->nama_barang.'</td>
-            <td>'.$items->nama_satuan.'</td>';
-        $output .= '<td><input type="text" size="5" class=" form-control item'.$no.'" onkeypress="return hanyaAngka(event)" value='.$items->jumlah.'></td>
-                <td><input type="text" class="form-control nobatch'.$no.'" value='.$items->nobatch.'></td>
-                <td><input type="date" class="form-control ed'.$no.'" value='.$items->ed.'></td>';
-          
-         $output .= '<td>'.number_format($items->harga).'</td>';
+            <td>'.$items->nama_satuan.'</td>
+            <td><input type="text" size="5" class=" form-control form-control-sm item'.$no.'" onkeypress="return hanyaAngka(event)" value='.$items->jumlah.'></td>
+            <td><input type="text" class="form-control form-control-sm ed'.$no.'" value='.$items->ed.' readonly></td>
+             <td>';
+             $output .= '
+             <select class="form-control form-control-sm nobatch'.$no.'" >';
+              foreach ($stokop as $k) {
+                $sel = ($items->nobatch==$k->nobatch) ? 'selected' : '' ;
+                 $output .='<option value="'.$k->id.'">'.$k->nobatch.'</option>';
+             }
+             $output .='</select>';
+             $output .='</td>';
+         $output .= '<td>'.number_format($items->harga_jual).'</td>';
          $output .= '<td>'.number_format($subtotal).'</td>
          <td>
-         <button type="button" id_keluar="'.$items->id_keluar.'"  id_detail="'.$items->id.'" class="hapus_cart btn btn-danger btn-xs">Hapus</button>
-         <button type="button" id_keluar="'.$items->id_keluar.'" id_detail="'.$items->id.'"  class="simpan_cart btn btn-success btn-xs">simpan</button>
+         <button type="button" id_keluar="'.$items->id_keluar.'"  id_detail="'.$items->id.'" no="'.$no.'" class="hapus_cart btn btn-danger btn-xs">Hapus</button>
+         <button type="button" id_keluar="'.$items->id_keluar.'" id_detail="'.$items->id.'"  no="'.$no.'" class="simpan_cart btn btn-success btn-xs">simpan</button>
          </td>
 
          </tr>
@@ -353,7 +355,7 @@ public function getAllSupplier()
          $save_detail  = array(
             'nobatch'         => $this->input->post('nobatch'),
             'jumlah'         => $this->input->post('jumlah'),
-            'ed'         => $this->input->post('nobatch'),
+            'ed'         => $this->input->post('ed'),
         );
 
          $this->Mod_keluar->update_detail($id_detail, $save_detail);

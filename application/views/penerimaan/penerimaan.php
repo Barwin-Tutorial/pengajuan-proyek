@@ -148,10 +148,19 @@ function add()
 {
     save_method = 'add';
     $('#form')[0].reset(); // reset form on modals
+    $('#detail_cart').empty();
     $('.form-group').removeClass('has-error'); // clear error class
     $('.help-block').empty(); // clear error string
     $('#modal_form').modal({backdrop: 'static', keyboard: false}); // show bootstrap modal
     $('.modal-title').text('Add Penerimaan'); // Set Title to Bootstrap modal title
+    $.ajax({
+        url : "penerimaan/no_faktur",
+        method : "POST",
+        dataType : 'json',
+        success :function(data){
+            $('#faktur').val(data.kode);
+        }
+    });
 }
 
 function edit(id){
@@ -401,7 +410,7 @@ $(document).ready(function(){
                             <div class="form-group row ">
                                 <label for="nama" class="col-sm-3 col-form-label">Faktur</label>
                                 <div class="col-sm-9 kosong">
-                                    <input type="text" class="form-control" name="faktur" id="faktur" placeholder="Faktur" >
+                                    <input type="text" class="form-control" name="faktur" id="faktur" placeholder="Faktur" value="" >
                                     <span class="help-block"></span>
                                 </div>
                             </div>
