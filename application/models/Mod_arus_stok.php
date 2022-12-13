@@ -5,110 +5,99 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * Create By : Aryo
  * Youtube : Aryo Coding
  */
-class Mod_stok extends CI_Model
+class Mod_arus_stok extends CI_Model
 {
-	var $table = 'stok_opname';
-	var $column_search = array('nama'); 
-	var $column_order = array('nama');
-	var $order = array('id' => 'desc'); 
+
 	function __construct()
 	{
 		parent::__construct();
 		$this->load->database();
 	}
 
-		private function _get_datatables_query()
-	{
-		$level = $this->session->userdata['id_level'];
-		 $id_gudang = $this->session->userdata['id_gudang'];
-		 if ($level!=1) {
-			$this->db->where('id_gudang', $id_gudang);
-		} 
-		$this->db->from('stok_opname');
-		$i = 0;
-
-	foreach ($this->column_search as $item) // loop column 
-	{
-	if($_POST['search']['value']) // if datatable send POST for search
-	{
-
-	if($i===0) // first loop
-	{
-	$this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
-	$this->db->like($item, $_POST['search']['value']);
-	}
-	else
-	{
-		$this->db->or_like($item, $_POST['search']['value']);
-	}
-
-		if(count($this->column_search) - 1 == $i) //last loop
-		$this->db->group_end(); //close bracket
-	}
-	$i++;
-	}
-
-		if(isset($_POST['order'])) // here order processing
-		{
-			$this->db->order_by($this->column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
-		} 
-		else if(isset($this->order))
-		{
-			$order = $this->order;
-			$this->db->order_by(key($order), $order[key($order)]);
-		}
-	}
-
-	function get_datatables()
-	{
-		$this->_get_datatables_query();
-		if($_POST['length'] != -1)
-			$this->db->limit($_POST['length'], $_POST['start']);
-		$query = $this->db->get();
-		return $query->result();
-	}
-
-	function count_filtered()
-	{
-		$this->_get_datatables_query();
-		$query = $this->db->get();
-		return $query->num_rows();
-	}
-
-	function count_all()
-	{
-		$level = $this->session->userdata['id_level'];
-		 $id_gudang = $this->session->userdata['id_gudang'];
-		 if ($level!=1) {
-			$this->db->where('id_gudang', $id_gudang);
-		} 
-		$this->db->from('stok_opname');
-		return $this->db->count_all_results();
-	}
-
-	function insert($table, $data)
-    {
-        $insert = $this->db->insert($table, $data);
-        return $insert;
-    }
-
-        function update($id, $data)
-    {
-        $this->db->where('id', $id);
-        $this->db->update('stok_opname', $data);
-    }
-
-        function get($id)
+	    function get_brg($id)
     {   
-        $this->db->where('id',$id);
-        return $this->db->get('stok_opname')->row();
+    	$level = $this->session->userdata['id_level'];
+		 $id_gudang = $this->session->userdata['id_gudang'];
+		 if ($level!=1) {
+			$this->db->where('id_gudang', $id_gudang);
+		} 
+		$this->db->select('a.*,b.nama as nama_satuan');
+    	$this->db->like('a.barcode', $id);
+    	$this->db->or_like('a.nama', $id);
+    	$this->db->join('satuan b', 'a.kemasan=b.id');
+    	$this->db->limit(10);
+        return $this->db->get('barang a')->result();
     }
 
-        function delete($id, $table)
-    {
-        $this->db->where('id', $id);
-        $this->db->delete($table);
-    }
+ 	function get_perundangan()
+ 	{
+ 		return $this->db->get('perundangan');
+ 	}
 
- 
+ 	public function get_laporan($id_barang,$tglrange,$perundangan)
+ 	{
+
+ 		$level = $this->session->userdata['id_level'];
+ 		$id_gudang = $this->session->userdata['id_gudang'];
+ 		$gdg="";
+ 		if ($level!=1) {
+ 			$gdg = " AND st.id_gudang=$id_gudang";
+ 		} 	
+ 		$and="";
+ 		if (isset($id_barang)) {
+ 			$and = " AND st.id_barang like '%".$id_barang."%'";
+ 		}
+
+ 		$date=explode(" - ", $tglrange);
+ 		$p1=date("Y-m-d", strtotime($date[0]));
+		$p2=date("Y-m-d", strtotime($date[1]));
+		$and1="";
+ 		if (isset($tglrange)) {
+ 			$and1 = " AND date(st.tanggal) BETWEEN '$p1' AND '$p2'";
+ 		}
+ 		$and2="";
+ 		if ($perundangan != 'all') {
+ 			$and2 = " AND st.perundangan like '%".$id_barang."%'";
+ 		}
+ 			
+ 		$sql = $this->db->query("select * from (
+ 			SELECT a.*,b.`nama` AS nama_barang, e.`nama` AS nama_supplier, 
+ 			'' AS nama_pelanggan, d.faktur FROM `stok_opname` a 
+ 			LEFT JOIN barang b ON a.`id_barang`=b.`id`
+ 			LEFT JOIN penerimaan_detail c ON a.`id_transaksi`=c.`id`
+ 			LEFT JOIN penerimaan d ON c.`id_penerimaan`=d.`id`
+ 			LEFT JOIN supplier e ON d.`id_supplier`=e.`id` where a.`transaksi`='Penerimaan'
+ 			union all
+ 			SELECT a.*,b.`nama` AS nama_barang, '' AS nama_supplier, 
+ 			e.`nama` AS nama_pelanggan, '' faktur FROM `stok_opname` a 
+ 			LEFT JOIN barang b ON a.`id_barang`=b.`id`
+ 			left JOIN keluar_detail c ON a.`id_transaksi`=c.`id`
+ 			left JOIN keluar d ON c.`id_keluar`=d.`id`
+ 			LEFT JOIN pelanggan e ON d.`id_pelanggan`=e.`id` where a.`transaksi`='Keluar'
+ 			UNION ALL
+ 			SELECT a.*,b.`nama` AS nama_barang, '' AS nama_supplier, 
+ 			e.`nama` AS nama_pelanggan, '' faktur FROM `stok_opname` a 
+ 			LEFT JOIN barang b ON a.`id_barang`=b.`id`
+ 			left JOIN keluar_detail c ON a.`id_transaksi`=c.`id`
+ 			left JOIN keluar d ON c.`id_keluar`=d.`id`
+ 			LEFT JOIN pelanggan e ON d.`id_pelanggan`=e.`id` WHERE a.`transaksi`  not in ('Keluar','Penerimaan')
+ 		) as st where 1=1 $gdg $and $and1 $and2 ");
+ 		return $sql;
+ 	}
+
+ 	public function get_laporan_sisa()
+ 	{
+
+ 		$level = $this->session->userdata['id_level'];
+ 		$id_gudang = $this->session->userdata['id_gudang'];
+ 		$gdg="";
+ 		if ($level!=1) {
+ 			$gdg = " WHERE st.id_gudang=$id_gudang";
+ 		} 	
+
+ 		$sql = $this->db->query("
+ 			SELECT b.`nama` AS nama_barang, SUM(masuk) AS masuk, SUM(keluar) AS keluar, (SUM(masuk)-SUM(keluar)) AS sisa, b.`harga`, ((SUM(masuk)-SUM(keluar))*b.harga) AS modal  FROM `stok_opname` a 
+ 			LEFT JOIN barang b ON a.`id_barang`=b.`id` $gdg GROUP BY a.`id_barang`");
+ 		return $sql;
+ 	}
 }

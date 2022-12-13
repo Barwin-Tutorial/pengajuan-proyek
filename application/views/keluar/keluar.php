@@ -140,7 +140,6 @@ function add()
 {
     save_method = 'add';
     $('#form')[0].reset(); // reset form on modals
-    $('#detail_cart').empty();
     $('.form-group').removeClass('has-error'); // clear error class
     $('.help-block').empty(); // clear error string
     $('#modal_form').modal({backdrop: 'static', keyboard: false}); // show bootstrap modal
@@ -255,6 +254,16 @@ function hanyaAngka(evt) {
 
 $(function () {
     $("#jumlah").change(function () {
+        var jumlah = $(this).val();
+        var jmlstok = $('#jmlstok').val();
+        if (jumlah > jmlstok) {
+            Swal.fire({
+                  icon: 'warning',
+                  title : 'Peringatan',
+                  text: 'Jumlah Tidak Boleh Lebih dari Jumlah Stok!!. '+jmlstok,
+              });
+            return false;
+        }
         var formdata = $('#form').serialize();
         $.ajax({
                 url : "keluar/add_to_cart",
@@ -300,9 +309,9 @@ $(function () {
    
 });
 
-$(document).ready(function(){
+$(function(){
 
-         $( "#vpel").autocomplete({
+     $( "#vpel").autocomplete({
         source: 'keluar/get_pelanggan/?', 
         select: function (event, ui) {
         
@@ -324,10 +333,11 @@ $(document).ready(function(){
         $("#kemasan").val(ui.item.id_kemasan);
         $("#ed").val(ui.item.ed);
         $("#nobatch").val(ui.item.nobatch);
+        $("#jmlstok").val(ui.item.jumlah);
         return false;
     }
     })
-        });
+});
 </script>
 
 
@@ -353,7 +363,7 @@ $(document).ready(function(){
                                     <label for="nama" class="col-sm-4 col-form-label">Nama Pelanggan</label>
                                     <div class="col-sm-8 kosong">
                                         <input type="hidden" class="form-control" name="pelanggan" id="pelanggan" placeholder="Nama Pelanggan" >
-                                        <input type="text" class="form-control" name="vpel" id="vpel" placeholder="Nama Pelanggan" >
+                                        <input type="text" class="form-control" name="vpel" id="vpel" placeholder="Nama Pelanggan" autofocus autocomplete="on">
                                         
                                         <span class="help-block"></span>
                                     </div>
@@ -375,6 +385,7 @@ $(document).ready(function(){
                                     <input type="hidden" class="form-control" name="produk_harga" id="produk_harga" value=""  >
                                     <input type="hidden" class="form-control" name="kemasan" id="kemasan" value=""  >
                                     <input type="hidden" class="form-control" name="nama_satuan" id="nama_satuan" value=""  >
+                                    <input type="hidden" class="form-control" name="jmlstok" id="jmlstok" value=""  >
                                     <span class="help-block"></span>
                                 </div>
                                 </div>

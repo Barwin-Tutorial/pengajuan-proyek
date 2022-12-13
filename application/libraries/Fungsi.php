@@ -15,7 +15,7 @@ class Fungsi {
 		$this->_ci->load->view('layoutbackend.php', $data);
 	}
 
-	function rupiah($nominal)
+	function rupiah1($nominal)
 	{
  		$rp = number_format($nominal,0,',','.');
 		return $rp;

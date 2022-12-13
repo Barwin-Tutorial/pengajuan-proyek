@@ -194,7 +194,7 @@ class Keluar extends MY_Controller
         $data = $this->Mod_keluar->get_brg($id);
         if (count($data) > 0) {
             foreach ($data as $row) {
-                $arr_result[] = array( 'label'  => $row->nama_barang, 'produk_nama'  => $row->nama_barang, 'produk_id' => $row->id_barang, 'produk_harga' =>  $row->harga, 'id_kemasan' => $row->kemasan, 'nama_satuan' => $row->nama_satuan, 'ed' => $row->ed, 'nobatch' => $row->nobatch);
+                $arr_result[] = array( 'label'  => $row->nama_barang, 'produk_nama'  => $row->nama_barang, 'produk_id' => $row->id_barang, 'produk_harga' =>  $row->harga, 'id_kemasan' => $row->kemasan, 'nama_satuan' => $row->nama_satuan, 'ed' => $row->ed, 'nobatch' => $row->nobatch, 'jumlah' => $row->masuk);
             }
             echo json_encode($arr_result);
         }else{
