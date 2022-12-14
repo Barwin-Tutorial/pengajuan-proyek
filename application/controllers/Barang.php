@@ -93,7 +93,7 @@ class Barang extends MY_Controller
             'nama'         => $this->input->post('nama'),
             'barcode'         => $this->input->post('barcode'),
             'kdbarang'         => $this->input->post('barcode'),
-            'satuan'         => $this->input->post('satuan'),
+            'kemasan'         => $this->input->post('kemasan'),
             'berat'         => $this->input->post('berat'),
             'perundangan'         => $this->input->post('perundangan'),
             'harga'         => $this->input->post('harga'),
@@ -114,7 +114,7 @@ class Barang extends MY_Controller
         $save  = array(
             'nama'         => $this->input->post('nama'),
             'barcode'         => $this->input->post('barcode'),
-            'satuan'         => $this->input->post('satuan'),
+            'kemasan'         => $this->input->post('kemasan'),
             'berat'         => $this->input->post('berat'),
             'perundangan'         => $this->input->post('perundangan'),
             'harga'         => $this->input->post('harga'),
@@ -160,10 +160,10 @@ class Barang extends MY_Controller
             $data['status'] = FALSE;
         }
 
-        if($this->input->post('satuan') == '')
+        if($this->input->post('kemasan') == '')
         {
-            $data['inputerror'][] = 'satuan';
-            $data['error_string'][] = 'Satuan Tidak Boleh Kosong';
+            $data['inputerror'][] = 'kemasan';
+            $data['error_string'][] = 'Kemasan Tidak Boleh Kosong';
             $data['status'] = FALSE;
         }
 

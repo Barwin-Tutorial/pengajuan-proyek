@@ -167,7 +167,7 @@ function edit(id){
             $('[name="id"]').val(data.id);
             $('[name="barcode"]').val(data.barcode);
             $('[name="nama"]').val(data.nama);
-            $('[name="satuan"]').val(data.satuan);
+            $('[name="kemasan"]').val(data.kemasan);
             $('[name="berat"]').val(data.berat);
             $('[name="perundangan"]').val(data.perundangan);
             $('[name="harga"]').val(data.harga);
@@ -302,7 +302,7 @@ $('.modal').on('shown.bs.modal', function() {
                                 <div class="form-group row ">
                                     <label for="nama" class="col-sm-3 col-form-label">Satuan</label>
                                     <div class="col-sm-9 kosong">
-                                        <select class="form-control" name="satuan" >
+                                        <select class="form-control" name="kemasan" >
                                           <option value="">Pilih Satuan...</option>
                                           <?php 
                                           foreach ($satuan as $row){
