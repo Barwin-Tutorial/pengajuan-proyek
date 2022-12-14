@@ -14,6 +14,8 @@ class Mod_dashboard extends CI_Model
 		$this->load->database();
 	}
 
+	
+
 	function get_akses_menu($link,$level)
 	{
 		

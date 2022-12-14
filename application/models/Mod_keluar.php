@@ -128,7 +128,7 @@ class Mod_keluar extends CI_Model
             $this->db->where('a.id_gudang', $id_gudang);
         }       
         $this->db->where('a.id',$id);
-        $this->db->select('a.*,b.nama as nama_pel');
+        $this->db->select('a.*,b.nama as nama_pelanggan,b.alamat');
         $this->db->join('pelanggan b', 'a.id_pelanggan=b.id');
         return $this->db->get('keluar a')->row();
     }
@@ -247,4 +247,28 @@ class Mod_keluar extends CI_Model
         $this->db->delete($table);
     }
    
+         function max_no()
+    {
+        $level = $this->session->userdata['id_level'];
+         $id_gudang = $this->session->userdata['id_gudang'];
+         
+        $this->db->where('id_gudang', $id_gudang);
+        $m=date("m");
+        $y=date("Y");
+         $this->db->select('MAX(SUBSTR(faktur,4,5)) AS kode');
+         $this->db->where('MONTH(tanggal)', $m);
+         $this->db->where('YEAR(tanggal)', $y);
+        $this->db->order_by('id','desc');
+        return $this->db->get('keluar')->result_array();
+    }
+
+       function get_cetak($id)
+    {   
+       
+        $this->db->where('a.id_keluar', $id);
+         $this->db->select('a.*,b.nama as nama_barang, c.nama as nama_satuan');
+        $this->db->join('barang b', 'a.id_barang=b.id');
+        $this->db->join('satuan c', 'a.kemasan=c.id');
+        return $this->db->get('keluar_detail a')->result();
+    }
 }

@@ -61,7 +61,7 @@ class Keluar extends MY_Controller
             $row[] = $pel->nama_pel;
             $row[] = $pel->nama_barang;
             $row[] = $pel->jumlah;
-            $row[] = "  <a class=\"btn btn-xs btn-outline-primary edit\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit('$pel->id')\"><i class=\"fas fa-edit\"></i></a>  <a class=\"btn btn-xs btn-outline-danger delete\" href=\"javascript:void(0)\" title=\"Delete\"  onclick=\"hapus('$pel->id')\"><i class=\"fas fa-trash\"></i></a>";
+            $row[] = "  <a class=\"btn btn-xs btn-outline-primary edit\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit('$pel->id')\"><i class=\"fas fa-edit\"></i></a>  <a class=\"btn btn-xs btn-outline-danger delete\" href=\"javascript:void(0)\" title=\"Delete\"  onclick=\"hapus('$pel->id')\"><i class=\"fas fa-trash\"></i></a> <a class=\"btn btn-xs btn-outline-info \" href=\"javascript:void(0)\" title=\"Print\" onclick=\"cetak('$pel->id')\"><i class=\"fas fa-print\"></i></a>";
             $data[] = $row;
         }
 
@@ -88,11 +88,21 @@ class Keluar extends MY_Controller
        $tanggal=$this->input->post('tanggal');
        $id_gudang = $this->session->userdata['id_gudang'];
        $id_user = $this->session->userdata['id_user'];
+       $trx= $this->Mod_keluar->max_no();
+       if ($trx[0]['kode']==NULL) {
+        $n="00001";
+        $kode='KB-'.$n.'-'.$id_gudang.'/'.date("d-m-Y");
+    }else{
+        $n=$trx[0]['kode']+1;
+        $x='00000'.$n;
+        $kode='KB-'.substr($x,1,5).'-'.$id_gudang.'/'.date("d-m-Y");
+    }
        $save  = array(
         'tanggal'         => $tanggal,
         'id_pelanggan'         => $this->input->post('pelanggan'),
         'user_input'  => $id_user,
-        'id_gudang'   =>  $id_gudang
+        'id_gudang'   =>  $id_gudang,
+        'faktur'      => $kode,
     );
        $this->Mod_keluar->insert("keluar", $save);
        $id_keluar = $this->db->insert_id();
@@ -134,6 +144,7 @@ public function update()
    $id      = $this->input->post('id');
    $waktu = date("H:i:s");
    $tanggal=$this->input->post('tanggal');
+  
    $save  = array(
     'tanggal'         => $tanggal,
     'id_pelanggan'         => $this->input->post('pelanggan')
@@ -373,5 +384,15 @@ private function _validate()
          function hapus_all_cart(){ //fungsi untuk menghapus item cart
             $id_keluar='0';
             $this->Mod_keluar->delete_detail($id_keluar, 'keluar_detail');
+        }
+
+
+        public function cetak()
+        {
+            $id = $this->input->post('id');
+            $data['keluar'] = $this->Mod_keluar->get($id);
+            $data['lap'] = $this->Mod_keluar->get_cetak($id);
+            $this->load->view('keluar/cetak_kb',$data);
+
         }
 }

@@ -29,7 +29,7 @@
                     <div class="col-md-6">
                         <div class="input-group input-group-sm">
                             <label class="aria-label col-md-6">Perundangan</label>
-                            <select class="form-control select2 form-control-sm" name="perundangan" id="perundangan">
+                            <select class="form-control  form-control-sm" name="perundangan" id="perundangan">
                                 <option value="all">Semua</option>
                                 <?php 
                                 foreach ($perundangan->result() as $tr):

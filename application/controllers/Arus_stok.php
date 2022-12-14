@@ -13,7 +13,7 @@ class Arus_stok extends MY_Controller
     function __construct()
     {
         parent::__construct();
-        $this->load->model('Mod_arus_stok');
+        $this->load->model('Mod_laporan');
         // $this->load->model('dashboard/Mod_dashboard');
     }
 
@@ -34,7 +34,7 @@ class Arus_stok extends MY_Controller
             $akses=$a_submenu->view;
         }
         if ($akses=="Y") {
-            $data['perundangan'] = $this->Mod_arus_stok->get_perundangan();
+            $data['perundangan'] = $this->Mod_laporan->get_perundangan();
             $this->template->load('layoutbackend','laporan/arus_stok',$data);
         }else{
             $data['page']=$link;
@@ -47,9 +47,9 @@ class Arus_stok extends MY_Controller
     public function get_brg()
     {
 
-     $id = $this->input->get('term');
-     $data = $this->Mod_arus_stok->get_brg($id);
-     if (count($data) > 0) {
+       $id = $this->input->get('term');
+       $data = $this->Mod_laporan->get_brg($id);
+       if (count($data) > 0) {
         foreach ($data as $row) {
             $arr_result[] = array( 'label'  => $row->nama, 'produk_nama'  => $row->nama, 'id_barang' => $row->id, 'produk_harga' =>  $row->harga, 'id_kemasan' => $row->kemasan, 'nama_satuan' => $row->nama_satuan);
         }
@@ -67,9 +67,10 @@ public function laporan()
     $tglrange =$this->input->post('tanggal');
     $perundangan =$this->input->post('perundangan');
     $data['act'] = "";
-    $data['lap'] = $this->Mod_arus_stok->get_laporan($id_barang,$tglrange,$perundangan);
+    $data['lap'] = $this->Mod_laporan->get_laporan($id_barang,$tglrange,$perundangan);
     $this->load->view('laporan/view_arus_stok',$data);
 }
+
 
 public function cetak()
 {
@@ -77,7 +78,7 @@ public function cetak()
     $tglrange =$this->input->post('tanggal');
     $perundangan =$this->input->post('perundangan');
     $data['act'] = "";
-    $data['lap'] = $this->Mod_arus_stok->get_laporan($id_barang,$tglrange,$perundangan);
+    $data['lap'] = $this->Mod_laporan->get_laporan($id_barang,$tglrange,$perundangan);
     $this->load->view('laporan/cetak_arus_stok',$data);
 }
 
@@ -86,7 +87,7 @@ public function laporan_xls()
     $id_barang=$this->input->post('id_barang');
     $tglrange =$this->input->post('tanggal');
     $perundangan =$this->input->post('perundangan');
-    $list = $this->Mod_arus_stok->get_laporan($id_barang,$tglrange,$perundangan)->result();
+    $list = $this->Mod_laporan->get_laporan($id_barang,$tglrange,$perundangan)->result();
     $spreadsheet = new Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
     $sheet->setCellValue('A1', 'No');
@@ -97,14 +98,24 @@ public function laporan_xls()
     $sheet->setCellValue('F1', 'Supplier');
     $sheet->setCellValue('G1', 'No. Batch');
     $sheet->setCellValue('H1', 'Faktur Penerimaan');
-    $sheet->setCellValue('I1', 'Masuk');
-    $sheet->setCellValue('J1', 'Keluar');
-    $sheet->setCellValue('K1', 'Sisa');
+    $sheet->setCellValue('I1', 'Awal');
+    $sheet->setCellValue('J1', 'Masuk');
+    $sheet->setCellValue('K1', 'Keluar');
+    $sheet->setCellValue('L1', 'Sisa');
     $no = 1;
     $x = 2;
     foreach($list as $row)
     {
-        $sisa= ($row->masuk-$row->keluar);
+        $tanggal = $row->tanggal;
+        $id_barang = $row->id_barang;
+        $a= $this->db->select('(sum(masuk)-sum(keluar)) as awal, (sum(masuk)-sum(keluar)) as sisa');
+        $a= $this->db->where('id_barang','$id_barang');
+        $a= $this->db->where('date(tanggal) <',$tanggal);
+        $a= $this->db->get('stok_opname')->row();
+
+        $awal = (isset($a->awal)) ? $a->awal : '0' ;
+        $sisa = (isset($a->sisa)) ? $a->sisa : '0' ;
+        
         $sheet->setCellValue('A'.$x, $no++);
         $sheet->setCellValue('B'.$x, $row->transaksi);
         $sheet->setCellValue('C'.$x, date("d/m/Y", strtotime($row->tanggal)));
@@ -113,9 +124,10 @@ public function laporan_xls()
         $sheet->setCellValue('F'.$x, $row->nama_supplier);
         $sheet->setCellValue('G'.$x, $row->nobatch);
         $sheet->setCellValue('H'.$x, $row->faktur);
-        $sheet->setCellValue('I'.$x, $row->masuk);
-        $sheet->setCellValue('J'.$x, $row->keluar);
-        $sheet->setCellValue('K'.$x, $sisa);
+        $sheet->setCellValue('I'.$x, $awal);
+        $sheet->setCellValue('J'.$x, $row->masuk);
+        $sheet->setCellValue('K'.$x, $row->keluar);
+        $sheet->setCellValue('L'.$x, $sisa);
         $x++;
     }
     $writer = new Xlsx($spreadsheet);

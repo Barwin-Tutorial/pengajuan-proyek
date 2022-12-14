@@ -45,7 +45,7 @@ class Mod_laporan extends CI_Model
 		} 	
 		$and="";
 		if (!empty($id_barang)) {
-			$and = " AND st.nama_barang like '%".$id_barang."%' ";
+			$and = " AND st.id_barang='".$id_barang."' ";
 		}
 
 		$date=explode(" - ", $tglrange);
@@ -62,21 +62,21 @@ class Mod_laporan extends CI_Model
 
 		$sql = $this->db->query("select * from (
 			SELECT a.*,b.`nama` AS nama_barang, e.`nama` AS nama_supplier, 
-			'' AS nama_pelanggan, d.faktur FROM `stok_opname` a 
+			'' AS nama_pelanggan, d.faktur, b.`perundangan` FROM `stok_opname` a 
 			LEFT JOIN barang b ON a.`id_barang`=b.`id`
 			LEFT JOIN penerimaan_detail c ON a.`id_transaksi`=c.`id`
 			LEFT JOIN penerimaan d ON c.`id_penerimaan`=d.`id`
 			LEFT JOIN supplier e ON d.`id_supplier`=e.`id` where a.`transaksi`='Penerimaan'
 			union all
 			SELECT a.*,b.`nama` AS nama_barang, '' AS nama_supplier, 
-			e.`nama` AS nama_pelanggan, '' faktur FROM `stok_opname` a 
+			e.`nama` AS nama_pelanggan, d faktur, b.`perundangan` FROM `stok_opname` a 
 			LEFT JOIN barang b ON a.`id_barang`=b.`id`
 			left JOIN keluar_detail c ON a.`id_transaksi`=c.`id`
 			left JOIN keluar d ON c.`id_keluar`=d.`id`
 			LEFT JOIN pelanggan e ON d.`id_pelanggan`=e.`id` where a.`transaksi`='Keluar'
 			UNION ALL
 			SELECT a.*,b.`nama` AS nama_barang, '' AS nama_supplier, 
-			e.`nama` AS nama_pelanggan, '' faktur FROM `stok_opname` a 
+			e.`nama` AS nama_pelanggan, '' faktur, b.`perundangan` FROM `stok_opname` a 
 			LEFT JOIN barang b ON a.`id_barang`=b.`id`
 			left JOIN keluar_detail c ON a.`id_transaksi`=c.`id`
 			left JOIN keluar d ON c.`id_keluar`=d.`id`
@@ -92,7 +92,7 @@ class Mod_laporan extends CI_Model
 		$id_gudang = $this->session->userdata['id_gudang'];
 		$gdg="";
 		if ($level!=1) {
-			$gdg = " WHERE st.id_gudang=$id_gudang";
+			$gdg = " WHERE a.id_gudang=$id_gudang";
 		} 	
 
 		$sql = $this->db->query("
@@ -117,10 +117,7 @@ class Mod_laporan extends CI_Model
 		return $sql;
 	}
 
- 	/*public	function get_perundangan()
- 	{
- 		return $this->db->get('perundangan');
- 	}*/
+
 
  	public function get_laporan_tb($id_supplier,$tglrange,$faktur)
  	{
@@ -189,4 +186,6 @@ class Mod_laporan extends CI_Model
  			JOIN perundangan f ON d.`perundangan`=f.`id` where 1=1 $gdg $and $and1  ");
  		return $sql;
  	}
+
+
  }

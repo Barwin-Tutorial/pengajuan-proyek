@@ -9,6 +9,7 @@
 			<th>Supplier</th>
 			<th>No. Batch</th>
 			<th>Faktur Penerimaan</th>
+			<th>Awal</th>
 			<th>Masuk</th>
 			<th>Keluar</th>
 			<th>Sisa</th>
@@ -16,7 +17,15 @@
 		</thead>
 		<tbody>
 			<?php $no=1; foreach ($lap->result() as $row): 
-				/*$sisa= ($row->masuk-$row->keluar);*/
+			$tanggal = $row->tanggal;
+			$id_barang = $row->id_barang;
+			$a= $this->db->select('(sum(masuk)-sum(keluar)) as awal, (sum(masuk)-sum(keluar)) as sisa');
+			$a= $this->db->where('id_barang','$id_barang');
+			$a= $this->db->where('date(tanggal) <',$tanggal);
+			$a= $this->db->get('stok_opname')->row();
+
+			$awal = (isset($a->awal)) ? $a->awal : '0' ;
+			$sisa = (isset($a->sisa)) ? $a->sisa : '0' ;
 			?>
 				<tr>
 					<td><?=$no++;?></td>
@@ -27,9 +36,10 @@
 					<td><?php echo $row->nama_supplier; ?></td>
 					<td><?php echo $row->nobatch; ?></td>
 					<td><?php echo $row->faktur; ?></td>
+					<td><?php echo $awal; ?></td>
 					<td><?php echo $row->masuk; ?></td>
 					<td><?php echo $row->keluar; ?></td>
-					<!-- <td><?php echo $sisa; ?></td> -->
+					<td><?php echo $sisa; ?></td>
 					
 					
 				</tr>

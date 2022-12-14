@@ -65,7 +65,7 @@ class Penerimaan extends MY_Controller
             $row[] = $pel->kemasan;
             $row[] = $pel->jumlah;*/
             // <a class=\"btn btn-xs btn-outline-info \" href=\"javascript:void(0)\" title=\"View\" onclick=\"views('$pel->id')\"><i class=\"fas fa-eye\">
-            $row[] = "</i></a>  <a class=\"btn btn-xs btn-outline-primary edit\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit('$pel->id')\"><i class=\"fas fa-edit\"></i></a>  <a class=\"btn btn-xs btn-outline-danger delete\" href=\"javascript:void(0)\" title=\"Delete\"  onclick=\"hapus('$pel->id')\"><i class=\"fas fa-trash\"></i></a>";
+            $row[] = "</i></a>  <a class=\"btn btn-xs btn-outline-primary edit\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit('$pel->id')\"><i class=\"fas fa-edit\"></i></a>  <a class=\"btn btn-xs btn-outline-danger delete\" href=\"javascript:void(0)\" title=\"Delete\"  onclick=\"hapus('$pel->id')\"><i class=\"fas fa-trash\"></i></a>  <a class=\"btn btn-xs btn-outline-info \" href=\"javascript:void(0)\" title=\"Print\" onclick=\"cetak('$pel->id')\"><i class=\"fas fa-print\"></i></a>";
             $data[] = $row;
         }
 
@@ -136,11 +136,11 @@ class Penerimaan extends MY_Controller
         $trx= $this->Mod_penerimaan->max_no();
         if ($trx[0]['kode']==NULL) {
             $n="00001";
-            $kode='PNR-'.$n.'-'.$id_gudang.'/'.date("m-Y");
+            $kode='PNR-'.$n.'-'.$id_gudang.'/'.date("d-m-Y");
         }else{
             $n=$trx[0]['kode']+1;
             $x='00000'.$n;
-            $kode='PNR-'.substr($x,1,5).'-'.$id_gudang.'/'.date("m-Y");
+            $kode='PNR-'.substr($x,1,5).'-'.$id_gudang.'/'.date("d-m-Y");
         }
 
         echo json_encode(array('kode' => $kode));
@@ -380,4 +380,13 @@ public function getAllSupplier()
         $id_penerimaan='0';
         $this->Mod_penerimaan->delete_detail($id_penerimaan, 'penerimaan_detail');
     }
+
+     public function cetak()
+        {
+            $id = $this->input->post('id');
+            $data['tb'] = $this->Mod_penerimaan->get($id);
+            $data['lap'] = $this->Mod_penerimaan->get_cetak($id);
+            $this->load->view('penerimaan/cetak_penerimaan',$data);
+
+        }
 }

@@ -67,5 +67,25 @@ if(!function_exists('hash_verified'))
    }
 }
 
+	function tanggalindo($tanggal)
+	{
+		$bulan = array (
+			1 => 'Januari',
+				 'Februari',
+				 'Maret',
+				 'April',
+				 'Mei',
+				 'Juni',
+				 'Juli',
+				 'Agustus',
+				 'September',
+				 'Oktober',
+				 'November',
+				 'Desember'
+		);
+		$p = explode('-', $tanggal);
+		return $p[2] . ' ' . $bulan[ (int)$p[1] ] . ' ' . $p[0];
+	}
+
 /** login codeIgniter menggunakan bycrypt **/
 

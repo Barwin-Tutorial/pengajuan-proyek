@@ -42,6 +42,21 @@
 
 
 <script type="text/javascript">
+
+    function cetak(id) {
+   $.ajax({
+        url : 'penerimaan/cetak',
+        data : {id:id},
+        type : 'post',
+        dataType : 'html',
+        success : function (respon) {
+            /*$("#load").html(respon);*/
+            var doc = window.open();
+            doc.document.write(respon);
+            doc.print();
+        }
+    })
+}
 var save_method; //for save method string
 var table;
 function hanyaAngka(evt) {

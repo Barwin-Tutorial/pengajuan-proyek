@@ -46,6 +46,15 @@ class Dashboard extends MY_Controller {
         
     }
 
+    public function header_perusahaan()
+    {
+        $apl = $this->db->get("aplikasi")->row();
+        echo '<h1><center><font size="5" face="arial">'.$apl->nama_owner.'</font></center></h1><br>
+        <center><b>'.$apl->alamat.'<b></center><br>
+        <hr><width="100" height="75"></hr>';
+        
+    }
+
 }
 /* End of file Controllername.php */
  

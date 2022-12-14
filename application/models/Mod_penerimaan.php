@@ -131,7 +131,7 @@ class Mod_penerimaan extends CI_Model
 			$this->db->where('a.id_gudang', $id_gudang);
 		} 
         $this->db->where('a.id',$id);
-        $this->db->select('a.*, d.nama as nama_supplier');
+        $this->db->select('a.*, d.nama as nama_supplier,d.alamat');
 		$this->db->join('supplier d', 'a.id_supplier=d.id');
         return $this->db->get('penerimaan a')->row();
     }
@@ -245,10 +245,20 @@ class Mod_penerimaan extends CI_Model
 		$this->db->where('id_gudang', $id_gudang);
         $m=date("m");
         $y=date("Y");
-         $this->db->select('MAX(SUBSTR(faktur,4,5)) AS kode');
+         $this->db->select('MAX(SUBSTR(faktur,5,5)) AS kode');
          $this->db->where('MONTH(tanggal)', $m);
          $this->db->where('YEAR(tanggal)', $y);
         $this->db->order_by('id','desc');
         return $this->db->get('penerimaan')->result_array();
+    }
+
+         function get_cetak($id)
+    {   
+       
+        $this->db->where('a.id_penerimaan', $id);
+         $this->db->select('a.*,b.nama as nama_barang, c.nama as nama_satuan');
+        $this->db->join('barang b', 'a.id_barang=b.id');
+        $this->db->join('satuan c', 'a.kemasan=c.id');
+        return $this->db->get('penerimaan_detail a')->result();
     }
 }
