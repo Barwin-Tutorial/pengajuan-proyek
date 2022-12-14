@@ -21,23 +21,33 @@
                    <div class="col-md-8">
                         <div class="input-group input-group-sm">
                             <label class="aria-label col-md-5">Nama Pelanggan</label>
-                            <input type="text" class="form-control  float-right form-control-sm" name="pelanggan" id="pelanggan" placeholder="Nama Pelanggan">
+                            <input type="text" class="form-control  float-right form-control-sm" name="pelanggan" id="pelanggan" autofocus placeholder="Nama Pelanggan">
                             <input type="hidden" class="form-control  float-right form-control-sm" name="id_pelanggan" id="id_pelanggan">
                         </div>
                     </div>
                   </div>
                    <div class="row">
                    <div class="col-md-8">
-                        <div class="input-group input-group-sm">
-                          <label class="aria-label col-md-5"></label>
-                        <div class="form-check">
-                          <input class="form-check-input" type="radio" name="group" checked="">
-                          <label class="form-check-label">Group</label>
+                        <div class="form-group input-group-sm">
+                          
+                     
+                      <!-- radio -->
+                      <div class="form-group">
+                        <div class="custom-control custom-radio">
+                          <input class="custom-control-input" type="radio" id="customRadio1" name="customRadio">
+                          <label for="customRadio1" class="custom-control-label">Custom Radio</label>
                         </div>
-                        <div class="form-check">
-                          <input class="form-check-input" type="radio" name="group" >
-                          <label class="form-check-label">Detail</label>
+                        <div class="custom-control custom-radio">
+                          <input class="custom-control-input" type="radio" id="customRadio2" name="customRadio" checked="">
+                          <label for="customRadio2" class="custom-control-label">Custom Radio checked</label>
                         </div>
+                        <div class="custom-control custom-radio">
+                          <input class="custom-control-input" type="radio" id="customRadio3" disabled="">
+                          <label for="customRadio3" class="custom-control-label">Custom Radio disabled</label>
+                        </div>
+                      </div>
+                    
+                    
                         </div>
                     </div>
                   </div>
@@ -63,6 +73,20 @@
 </section>
 
 <script >
+    function cetak() {
+        $.ajax({
+        url : 'lap_kb/cetak',
+        data : $('#form_lap').serialize(),
+        type : 'post',
+        dataType : 'html',
+        success : function (respon) {
+            /*$("#load").html(respon);*/
+            var doc = window.open();
+            doc.document.write(respon);
+            doc.print();
+        }
+    })
+    }
    $(function () {
        $('.select2').select2();
          

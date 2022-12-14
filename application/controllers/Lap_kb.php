@@ -68,6 +68,16 @@ class Lap_kb extends MY_Controller
         $this->load->view('laporan/vlap_kb',$data);
     }
 
+        public function cetak()
+    {
+        $group=$this->input->post('group');
+        $tglrange =$this->input->post('tgl');
+        $id_pelanggan =$this->input->post('id_pelanggan');
+        $data['act'] = $group;
+        $data['lap'] = $this->Mod_laporan->get_laporan_kb($tglrange,$id_pelanggan);
+        $this->load->view('laporan/cetak_kb',$data);
+    }
+
      public function lap_excel()
     {
         $group=$this->input->post('group');

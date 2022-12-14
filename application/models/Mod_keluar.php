@@ -113,6 +113,13 @@ class Mod_keluar extends CI_Model
         $this->db->update('stok_opname', $data);
     }
 
+    function get_batch($nobatch)
+    {
+        $this->db->where('nobatch', $nobatch);
+        $this->db->where('masuk > 0');
+        return $this->db->get('stok_opname')->row();
+    }
+
         function get($id)
     {   
         $level = $this->session->userdata['id_level'];
@@ -133,6 +140,8 @@ class Mod_keluar extends CI_Model
     }
         function delete_detail($id, $table)
     {
+        $id_user = $this->session->userdata['id_user'];
+        $this->db->where('id_user', $id_user);
         $this->db->where('id_keluar', $id);
         $this->db->delete($table);
     }

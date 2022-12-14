@@ -305,7 +305,21 @@ $(function () {
                 }
             });
         });
+    $(document).on('change','.selbatch',function(){
+            var no = $(this).attr("no");
+            var nobatch = $('.nobatch'+no).val();
 
+            $.ajax({
+                url : "keluar/cek_nobatch",
+                method : "POST",
+                data : {nobatch : nobatch},
+                dataType : 'JSON',
+                success :function(data){
+                    $('.item'+no).attr('masuk', data.masuk);
+                    $('.ed'+no).val(data.ed);
+                }
+            });
+        });
    
 });
 
@@ -338,6 +352,15 @@ $(function(){
     }
     })
 });
+
+ function batal() {
+       $.ajax({
+        url : "keluar/hapus_all_cart",
+        success :function(data){
+           location.reload();
+        }
+    });
+ }
 </script>
 
 
@@ -363,7 +386,7 @@ $(function(){
                                     <label for="nama" class="col-sm-4 col-form-label">Nama Pelanggan</label>
                                     <div class="col-sm-8 kosong">
                                         <input type="hidden" class="form-control" name="pelanggan" id="pelanggan" placeholder="Nama Pelanggan" >
-                                        <input type="text" class="form-control" name="vpel" id="vpel" placeholder="Nama Pelanggan" autofocus autocomplete="on">
+                                        <input type="text" class="form-control" name="vpel" id="vpel" autofocus autocomplete="off" placeholder="Nama Pelanggan" >
                                         
                                         <span class="help-block"></span>
                                     </div>
@@ -448,7 +471,7 @@ $(function(){
             </div>
             <div class="modal-footer">
                 <button type="button" id="btnSave" onclick="save()" class="btn btn-primary">Save</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="batal()">Cancel</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

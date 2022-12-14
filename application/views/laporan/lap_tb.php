@@ -21,7 +21,7 @@
            <div class="col-md-8">
             <div class="input-group input-group-sm">
               <label class="aria-label col-md-5">Nama Supplier</label>
-              <input type="text" class="form-control  float-right form-control-sm" name="vsup" id="vsup" placeholder="Nama Supplier">
+              <input type="text" class="form-control  float-right form-control-sm" name="vsup" id="vsup" autofocus placeholder="Nama Supplier" >
               <input type="hidden" class="form-control  float-right form-control-sm" name="supplier" id="supplier">
             </div>
           </div>
@@ -56,6 +56,21 @@
 </section>
 
 <script >
+function cetak() {
+        $.ajax({
+        url : 'lap_tb/cetak',
+        data : $('#form_lap').serialize(),
+        type : 'post',
+        dataType : 'html',
+        success : function (respon) {
+            /*$("#load").html(respon);*/
+            var doc = window.open();
+            doc.document.write(respon);
+            doc.print();
+        }
+    })
+    }
+
  $(function () {
    $('.select2').select2();
 

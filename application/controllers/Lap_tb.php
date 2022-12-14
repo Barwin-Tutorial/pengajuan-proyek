@@ -50,6 +50,17 @@ class Lap_tb extends MY_Controller
         $this->load->view('laporan/vlap_tb',$data);
     }
     
+       public function cetak()
+    {
+        $id_supplier=$this->input->post('supplier');
+        $tglrange =$this->input->post('tgl');
+        $faktur =$this->input->post('faktur');
+        $data['act'] = "";
+        $data['lap'] = $this->Mod_laporan->get_laporan_tb($id_supplier,$tglrange,$faktur);
+        $this->load->view('laporan/cetak_tb',$data);
+    }
+    
+
        public function lap_excel()
     {
         $id_supplier=$this->input->post('supplier');

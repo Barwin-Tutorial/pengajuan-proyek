@@ -214,9 +214,14 @@ class Mod_penerimaan extends CI_Model
 
     function delete_detail($id, $table)
     {
-        $this->db->where('id_penerimaan', $id);
-        $this->db->delete($table);
+    	$id_user = $this->session->userdata['id_user'];
+
+    	$this->db->where('id_penerimaan', $id);
+    	$this->db->where('id_user', $id_user);
+    	$this->db->delete($table);
     }
+
+
 
     function get_stok($id_transaksi)
     {   

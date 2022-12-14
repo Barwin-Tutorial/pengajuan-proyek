@@ -35,7 +35,7 @@ class Penerimaan extends MY_Controller
        
 
         if ($akses=="Y") {
-            
+            $this->hapus_all_cart();
             $this->template->load('layoutbackend','penerimaan/penerimaan',$data);
         }else{
             $data['page']=$link;
@@ -374,5 +374,10 @@ public function getAllSupplier()
 
          $this->Mod_penerimaan->update_detail($id_detail, $save_detail);
          $this->load_cart($id_penerimaan);
+    }
+
+      function hapus_all_cart(){ //fungsi untuk menghapus item cart
+        $id_penerimaan='0';
+        $this->Mod_penerimaan->delete_detail($id_penerimaan, 'penerimaan_detail');
     }
 }

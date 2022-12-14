@@ -66,7 +66,7 @@ header('Content-Disposition: attachment; filename="'.$filename.'.xls"');
 		</thead>
 		<tbody>
 			<?php $no=1; foreach ($lap->result() as $row): 
-				$sisa= ($row->masuk-$row->keluar);
+				/*$sisa= ($row->masuk-$row->keluar);*/
 			?>
 				<tr>
 					<td><?=$no++;?></td>
@@ -79,7 +79,7 @@ header('Content-Disposition: attachment; filename="'.$filename.'.xls"');
 					<td><?php echo $row->faktur; ?></td>
 					<td><?php echo $row->masuk; ?></td>
 					<td><?php echo $row->keluar; ?></td>
-					<td><?php echo $sisa; ?></td>
+					<!-- <td><?php echo $sisa; ?></td> -->
 					
 					
 				</tr>

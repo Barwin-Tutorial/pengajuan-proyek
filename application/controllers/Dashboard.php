@@ -33,6 +33,9 @@ class Dashboard extends MY_Controller {
             }
 
             $data['jmluser'] =  $this->Mod_dashboard->JmlUser();
+            $data['jmlbarang'] =  $this->Mod_dashboard->Jmlbarang();
+            $data['masuk'] =  $this->Mod_dashboard->Jmlmasuk();
+            $data['keluar'] =  $this->Mod_dashboard->Jmlkeluar();
             if ($akses=="Y") {
                  $this->template->load('layoutbackend','dashboard/dashboard_data',$data);
              }else{

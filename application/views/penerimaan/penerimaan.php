@@ -339,7 +339,7 @@ function simpan_det(row_id, no)
 
 $(document).ready(function(){
 
-         $( "#vsup").autocomplete({
+     $( "#vsup").autocomplete({
         source: 'penerimaan/get_supplier/?', 
         select : function (event, ui) {
         
@@ -375,13 +375,13 @@ $(document).ready(function(){
 
     }
     })
-        });
+});
 
  function batal() {
        $.ajax({
         url : "penerimaan/hapus_all_cart",
         success :function(data){
-           
+           location.reload();
         }
     });
  }
@@ -390,7 +390,7 @@ $(document).ready(function(){
 
 
 <!-- Bootstrap modal -->
-<div class="modal hide fade" id="modal_form" role="dialog" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal hide fade" id="modal_form" role="dialog" tabindex="1550" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content ">
 
@@ -424,7 +424,7 @@ $(document).ready(function(){
                             <div class="form-group row ">
                                 <label for="nama" class="col-sm-3 col-form-label">Supplier</label>
                                 <div class="col-sm-9 kosong">
-                                    <input type="hidden" class="form-control"  name="supplier" id="supplier" placeholder="Supplier" autocomplete="off" autofocus="">
+                                    <input type="hidden" class="form-control"  name="supplier" id="supplier" placeholder="Supplier" autocomplete="off" >
                                     <input type="text" class="form-control"  name="vsup" id="vsup" placeholder="Supplier" autocomplete="off" >
                                     <span class="help-block" ></span>
                                 </div>
@@ -434,7 +434,7 @@ $(document).ready(function(){
                              <div class="form-group row ">
                                 <label for="nama" class="col-sm-2 col-form-label">Barcode</label>
                                 <div class="col-sm-4 kosong" >
-                                    <input type="text" class="form-control" name="scanbar" id="scanbar" placeholder="Scan Barcode" autofocus>
+                                    <input type="text" class="form-control" name="scanbar" id="scanbar" autofocus autocomplete="off" placeholder="Scan Barcode" >
                                     <input type="hidden" class="form-control" name="produk_id" id="produk_id" value=""  >
                                     <input type="hidden" class="form-control" name="produk_harga" id="produk_harga" value=""  >
                                     <input type="hidden" class="form-control" name="kemasan" id="kemasan" placeholder="Kemasan" value="">
@@ -512,7 +512,7 @@ $(document).ready(function(){
     </div>
     <div class="modal-footer">
         <button type="button" id="btnSave" onclick="save()" class="btn btn-primary">Save</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal" >Cancel</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="batal()">Cancel</button>
     </div>
 </div><!-- /.modal-content -->
 </div><!-- /.modal-dialog -->

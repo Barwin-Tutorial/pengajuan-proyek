@@ -37,5 +37,40 @@ class Mod_dashboard extends CI_Model
 		$this->db->from('tbl_user');
         return $this->db->count_all_results();
 	}
+	
+	function Jmlbarang()
+	{
+		$level = $this->session->userdata['id_level'];
+		 $id_gudang = $this->session->userdata['id_gudang'];
+		 if ($level!=1) {
+			$this->db->where('id_gudang', $id_gudang);
+		} 
+		$this->db->from('barang');
+        return $this->db->count_all_results();
+	}
+
+		function Jmlmasuk()
+	{
+		$level = $this->session->userdata['id_level'];
+		 $id_gudang = $this->session->userdata['id_gudang'];
+		 if ($level!=1) {
+			$this->db->where('id_gudang', $id_gudang);
+		} 
+		$this->db->select('SUM(masuk) as total');
+		$this->db->from('stok_opname');
+        return $this->db->get()->row();
+	}
+
+		function Jmlkeluar()
+	{
+		$level = $this->session->userdata['id_level'];
+		 $id_gudang = $this->session->userdata['id_gudang'];
+		 if ($level!=1) {
+			$this->db->where('id_gudang', $id_gudang);
+		} 
+		$this->db->select('SUM(keluar) as total');
+		$this->db->from('stok_opname');
+        return $this->db->get()->row();
+	}
 
 }

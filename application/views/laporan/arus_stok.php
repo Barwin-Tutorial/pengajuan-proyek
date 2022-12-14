@@ -62,6 +62,20 @@
 </section>
 
 <script >
+    function cetak() {
+        $.ajax({
+        url : 'arus_stok/cetak',
+        data : $('#form_lap').serialize(),
+        type : 'post',
+        dataType : 'html',
+        success : function (respon) {
+            /*$("#load").html(respon);*/
+            var doc = window.open();
+            doc.document.write(respon);
+            doc.print();
+        }
+    })
+    }
    $(function () {
        $('.select2').select2();
          

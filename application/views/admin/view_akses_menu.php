@@ -1,4 +1,4 @@
-<div class="card-body">
+<div class="card-body table-responsive p-0">
   <table class="table table-bordered table-hover" id="vakses"> 
     <thead>
       <tr class="bg-primary">

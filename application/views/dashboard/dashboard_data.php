@@ -5,9 +5,9 @@
             <!-- small box -->
             <div class="small-box bg-teal">
               <div class="inner">
-                <h3><?php echo $jmluser; ?></h3>
+                <h3><?php echo $jmlbarang; ?></h3>
 
-                <p>Total User</p>
+                <p>Total Barang</p>
               </div>
               <div class="icon">
                 <i class="ion ion-person"></i>
@@ -18,32 +18,32 @@
           <!-- ./col -->
           <div class="col-lg-3 col-6">
             <!-- small box -->
-            <!-- <div class="small-box bg-teal">
+            <div class="small-box bg-teal">
               <div class="inner">
-                <h3>53<sup style="font-size: 20px">%</sup></h3>
+                <h3><?php $total_masuk = (isset($masuk->total)) ? $masuk->total : 0 ; echo $total_masuk; ?></h3>
 
-                <p>Bounce Rate</p>
+                <p>Barang Masuk</p>
               </div>
               <div class="icon">
                 <i class="ion ion-stats-bars"></i>
               </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div> -->
+              <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
+            </div>
           </div>
           <!-- ./col -->
           <div class="col-lg-3 col-6">
             <!-- small box -->
-            <!-- <div class="small-box bg-warning">
+            <div class="small-box bg-warning">
               <div class="inner">
-                <h3>44</h3>
+                <h3><?php $total_keluar = (isset($keluar->total)) ? $keluar->total : 0 ; echo $total_keluar; ?></h3>
 
-                <p>User Registrations</p>
+                <p>Barang Keluar</p>
               </div>
               <div class="icon">
                 <i class="ion ion-person-add"></i>
               </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div> -->
+             <!--  <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
+            </div>
           </div>
           <!-- ./col -->
           <div class="col-lg-3 col-6">
