@@ -218,6 +218,8 @@ function edit(id){
     });
 }
 
+
+
 function save()
 {
     $('#btnSave').text('saving...'); //change button text
@@ -244,6 +246,7 @@ function save()
             {
 
                 $('#modal_form').modal('hide');
+                $("#modal_form").removeData();
                 reload_table();
                 Toast.fire({
                     icon: 'success',
@@ -396,7 +399,7 @@ $(document).ready(function(){
        $.ajax({
         url : "penerimaan/hapus_all_cart",
         success :function(data){
-           location.reload();
+           // location.reload();
         }
     });
  }

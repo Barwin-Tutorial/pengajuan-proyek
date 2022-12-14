@@ -52,9 +52,9 @@ class Pelanggan extends MY_Controller
             $row = array();
             $row[] = $pel->nama;
             $row[] = $pel->notelp;
-            $row[] = $pel->alamat;
             $row[] = $pel->kp_instalasi;
             $row[] = $pel->admin_farmasi;
+             $row[] = $pel->alamat;
             $row[] = "<a class=\"btn btn-xs btn-outline-primary edit\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit('$pel->id')\"><i class=\"fas fa-edit\"></i></a><a class=\"btn btn-xs btn-outline-danger delete\" href=\"javascript:void(0)\" title=\"Delete\"  onclick=\"hapus('$pel->id')\"><i class=\"fas fa-trash\"></i></a>";
             $data[] = $row;
         }

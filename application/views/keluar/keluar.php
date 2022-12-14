@@ -372,7 +372,7 @@ $(function(){
        $.ajax({
         url : "keluar/hapus_all_cart",
         success :function(data){
-           location.reload();
+           // location.reload();
         }
     });
  }

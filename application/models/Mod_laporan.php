@@ -69,7 +69,7 @@ class Mod_laporan extends CI_Model
 			LEFT JOIN supplier e ON d.`id_supplier`=e.`id` where a.`transaksi`='Penerimaan'
 			union all
 			SELECT a.*,b.`nama` AS nama_barang, '' AS nama_supplier, 
-			e.`nama` AS nama_pelanggan, d faktur, b.`perundangan` FROM `stok_opname` a 
+			e.`nama` AS nama_pelanggan, d.faktur, b.`perundangan` FROM `stok_opname` a 
 			LEFT JOIN barang b ON a.`id_barang`=b.`id`
 			left JOIN keluar_detail c ON a.`id_transaksi`=c.`id`
 			left JOIN keluar d ON c.`id_keluar`=d.`id`

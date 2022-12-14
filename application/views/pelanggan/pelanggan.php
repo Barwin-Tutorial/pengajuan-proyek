@@ -204,6 +204,7 @@ function save()
             if(data.status) //if success close modal and reload ajax table
             {
                 $('#modal_form').modal('hide');
+                 $("#modal_form").removeData();
                 reload_table();
                 Toast.fire({
                     icon: 'success',
