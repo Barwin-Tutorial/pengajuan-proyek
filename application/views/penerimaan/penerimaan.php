@@ -59,13 +59,7 @@
 }
 var save_method; //for save method string
 var table;
-function hanyaAngka(evt) {
-  var charCode = (evt.which) ? evt.which : event.keyCode
-  if (charCode > 31 && (charCode < 48 || charCode > 57))
 
-    return false;
-  return true;
-}
 $(document).ready(function() {
 
     //datatables
@@ -247,6 +241,7 @@ function save()
 
                 $('#modal_form').modal('hide');
                 $("#modal_form").removeData();
+                $("#detail_cart").empty();
                 reload_table();
                 Toast.fire({
                     icon: 'success',
@@ -377,7 +372,7 @@ $(document).ready(function(){
     })
     
 
-    
+    setTimeout(function() { $('input[name="scanbar"]').focus() }, 3000);
     $( "#scanbar").autocomplete({
         source: 'penerimaan/get_brg/?', 
         select : function (event, ui) {
@@ -399,7 +394,7 @@ $(document).ready(function(){
        $.ajax({
         url : "penerimaan/hapus_all_cart",
         success :function(data){
-           // location.reload();
+           $("#modal_form").removeData();
         }
     });
  }

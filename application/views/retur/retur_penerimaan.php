@@ -2,96 +2,41 @@
 <!-- Main content -->
 <section class="content">
     <div class="container-fluid">
-        <div class="row">
-          <div class="col-12">
-            <!-- Custom Tabs -->
+     <div class="row">
+        <div class="col-12">
             <div class="card">
-              <div class="card-header d-flex p-0">
-                <h3 class="card-title p-3">Retur</h3>
-                <ul class="nav nav-pills ml-auto p-2">
-                  <li class="nav-item"><a class="nav-link active" href="#tab_1" data-toggle="tab">Penerimaan</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#tab_2" data-toggle="tab">Keluar Barang</a></li>
-              </ul>
-          </div><!-- /.card-header -->
-          <div class="card-body">
-            <div class="tab-content">
-              <div class="tab-pane active" id="tab_1">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header bg-light">
-                                <h3 class="card-title"><i class="fa fa-list text-blue"></i> Data Retur</h3>
-                                <div class="text-right">
-                                    <button type="button" class="btn btn-sm btn-outline-primary  add" onclick="add()" title="Add Data" ><i class="fas fa-plus" ></i> Add</button>
-                                </div>
-                            </div>
-                            <!-- /.card-header -->
-                            <div class="card-body">
-                                <table id="tbl_retur" class="table table-bordered table-striped table-hover">
-                                    <thead>
-                                        <tr class="bg-info">
-                                            <th>Tanggal</th>
-                                            <th>Supplier</th>
-                                            <th>Nama Barang</th>
-                                            <th>Kemasan</th>
-                                            <th>ED</th>
-                                            <th>Jumlah</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- /.card-body -->
-                        </div>
-                        <!-- /.card -->
+                <div class="card-header bg-light">
+                    <h3 class="card-title"><i class="fa fa-list text-blue"></i> Data Retur Penerimaan</h3>
+                    <div class="text-right">
+                        <button type="button" class="btn btn-sm btn-outline-primary  add" onclick="add()" title="Add Data" ><i class="fas fa-plus" ></i> Add</button>
                     </div>
-                    <!-- /.col -->
                 </div>
-                <!-- /.row -->
-            </div>
-        </div>
-        <!-- /.tab-pane -->
-        <div class="tab-pane" id="tab_2">
-         <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header bg-light">
-                        <h3 class="card-title"><i class="fa fa-list text-blue"></i> Data Retur</h3>
-                        <div class="text-right">
-                            <button type="button" class="btn btn-sm btn-outline-primary  add" onclick="add()" title="Add Data" ><i class="fas fa-plus" ></i> Add</button>
-                        </div>
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                        <table id="tbl_retur" class="table table-bordered table-striped table-hover">
-                            <thead>
-                                <tr class="bg-info">
-                                    <th>Tanggal</th>
-                                    <th>Supplier</th>
-                                    <th>Nama Barang</th>
-                                    <th>Kemasan</th>
-                                    <th>ED</th>
-                                    <th>Jumlah</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- /.card-body -->
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <table id="tbl_retur" class="table table-bordered table-striped table-hover">
+                        <thead>
+                            <tr class="bg-info">
+                                <th>Tanggal</th>
+                                <th>Supplier</th>
+                                <th>Nama Barang</th>
+                                <th>Kemasan</th>
+                                <th>ED</th>
+                                <th>Jumlah</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
-                <!-- /.card -->
+                <!-- /.card-body -->
             </div>
-            <!-- /.col -->
+            <!-- /.card -->
         </div>
-        <!-- /.row -->
+        <!-- /.col -->
     </div>
-</div>
 
-<!-- /.tab-pane -->
+    <!-- /.tab-pane -->
 </div>
 <!-- /.tab-content -->
 </div><!-- /.card-body -->
@@ -124,7 +69,7 @@ $(document).ready(function() {
 
         // Load data for the table's content from an Ajax source
         "ajax": {
-            "url": "<?php echo site_url('retur/ajax_list')?>",
+            "url": "<?php echo site_url('retur_penerimaan/ajax_list')?>",
             "type": "POST"
         },
         
@@ -176,7 +121,7 @@ function hapus(id){
   }).then((result) => {
 
     $.ajax({
-        url:"<?php echo site_url('retur/delete');?>",
+        url:"<?php echo site_url('retur_penerimaan/delete');?>",
         type:"POST",
         data:"id="+id,
         cache:false,
@@ -209,7 +154,7 @@ function add()
     $('.form-group').removeClass('has-error'); // clear error class
     $('.help-block').empty(); // clear error string
     $('#modal_form').modal({backdrop: 'static', keyboard: false}); // show bootstrap modal
-    $('.modal-title').text('Add retur'); // Set Title to Bootstrap modal title
+    $('.modal-title').text('Add Retur Penerimaan'); // Set Title to Bootstrap modal title
 }
 
 function edit(id){
@@ -220,21 +165,28 @@ function edit(id){
 
     //Ajax Load data from ajax
     $.ajax({
-        url : "<?php echo site_url('retur/edit')?>/" + id,
+        url : "<?php echo site_url('retur_penerimaan/edit')?>/" + id,
         type: "GET",
         dataType: "JSON",
         success: function(data)
         {
+         $('[name="id"]').val(data.id);
+         $('[name="faktur"]').val(data.faktur);
+         $('[name="tanggal"]').val(data.tanggal);
+         $('[name="supplier"]').val(data.id_supplier);
+         $('[name="vsup"]').val(data.nama_supplier);
+         $.ajax({
+            url : "retur_penerimaan/edit_to_cart",
+            method : "POST",
+            data : {id:data.id},
+            dataType : 'html',
+            success: function(data){
+                $('#detail_cart').html(data);
+            }
+        });
 
-            $('[name="id"]').val(data.id);
-            $('[name="nama"]').val(data.nama);
-            $('[name="notelp"]').val(data.notelp);
-            $('[name="kp_instalasi"]').val(data.kp_instalasi);
-            $('[name="admin_farmasi"]').val(data.admin_farmasi);
-            $('[name="alamat"]').val(data.alamat);
-            
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
-            $('.modal-title').text('Edit retur'); // Set title to Bootstrap modal title
+            $('.modal-title').text('Edit Retur Penerimaan'); // Set title to Bootstrap modal title
 
         },
         error: function (jqXHR, textStatus, errorThrown)
@@ -249,9 +201,9 @@ function save()
     $('#btnSave').text('saving...'); //change button text
     $('#btnSave').attr('disabled',true); //set button disable 
     if(save_method == 'add') {
-        url = "<?php echo site_url('retur/insert')?>";
+        url = "<?php echo site_url('retur_penerimaan/insert')?>";
     } else {
-        url = "<?php echo site_url('retur/update')?>";
+        url = "<?php echo site_url('retur_penerimaan/update')?>";
     }
     var formdata = new FormData($('#form')[0]);
     // ajax adding data to database
@@ -269,6 +221,8 @@ function save()
             if(data.status) //if success close modal and reload ajax table
             {
                 $('#modal_form').modal('hide');
+                $("#modal_form").removeData();
+                $('#detail_cart').empty();
                 reload_table();
                 Toast.fire({
                     icon: 'success',
@@ -277,17 +231,15 @@ function save()
             }
             else
             {
-                Swal.fire({
-                    title : 'Error!',
-                    text : data.pesan,
-                    icon : 'error',
-                    showConfirmButton : true,
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Error!!.'
                 });
-               /* for (var i = 0; i < data.inputerror.length; i++) 
+                for (var i = 0; i < data.inputerror.length; i++) 
                 {
                     $('[name="'+data.inputerror[i]+'"]').addClass('is-invalid');
                     $('[name="'+data.inputerror[i]+'"]').next().text(data.error_string[i]).addClass('invalid-feedback');
-                }*/
+                }
             }
             $('#btnSave').text('save'); //change button text
             $('#btnSave').attr('disabled',false); //set button enable 
@@ -309,12 +261,86 @@ var loadFile = function(event) {
 };
 
 
+$(function () {
+    $("#jumlah").change(function () {
+        var formdata = $('#form').serialize();
+        $.ajax({
+            url : "retur_penerimaan/add_to_cart",
+            method : "POST",
+            data : formdata,
+            dataType : 'html',
+            success: function(data){
+                $('#detail_cart').html(data);
+            }
+        });
+    })
+
+    $(document).on('click','.hapus_cart',function(){
+            var id=$(this).attr("id_retur_penerimaan"); //mengambil row_id dari artibut id
+            var id_detail=$(this).attr("id_detail");
+            
+            $.ajax({
+                url : "retur_penerimaan/hapus_cart",
+                method : "POST",
+                data : {id : id,id_detail:id_detail},
+                success :function(data){
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Success!!.'
+                    });
+                    $('#detail_cart').html(data);
+                }
+            });
+        });
+    $(document).on('click','.simpan_cart',function(){
+        var id=$(this).attr("id_retur_penerimaan");
+            var id_detail=$(this).attr("id_detail"); //mengambil row_id dari artibut id
+            var no = $(this).attr("no");
+            var jumlah = $('.item'+no).val();
+            var ed = $('.ed'+no).val();
+
+            $.ajax({
+                url : "retur_penerimaan/update_cart",
+                method : "POST",
+                data : {id : id,id_detail : id_detail,jumlah : jumlah,ed : ed},
+                success :function(data){
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Success!!.'
+                    });
+                    $('#detail_cart').html(data);
+                }
+            });
+        });
+
+
+});
+function simpan_det(row_id, no)
+{
+    var item = $('.item'+no).val();
+    var nobatch = $('.nobatch'+no).val();
+    var ed = $('.ed'+no).val();
+    var jumlah = $('.item'+no).val();
+    $.ajax({
+        url : "retur_penerimaan/update_cart",
+        method : "POST",
+        data : {row_id : row_id,item : item,ed : ed},
+        success :function(data){
+            Toast.fire({
+                icon: 'success',
+                title: 'Success!!.'
+            });
+            $('#detail_cart').html(data);
+        }
+    });
+
+}
 $(document).ready(function(){
 
    $( "#vsup").autocomplete({
-    source: 'penerimaan/get_supplier/?', 
+    source: 'retur_penerimaan/get_supplier/?', 
     select : function (event, ui) {
-        
+
          // display the selected text
          var value = ui.item.value;
         $("#supplier").val(value); // save selected id to hidden input
@@ -329,13 +355,13 @@ $(document).ready(function(){
         return false;
     }
 })
-   
 
-   
+// setTimeout(function() { $('input[name="scanbar"]').focus() }, 3000);
+ // $('#scanbar').focus();
    $( "#scanbar").autocomplete({
-    source: 'penerimaan/get_brg/?', 
+    source: 'retur_penerimaan/get_brg/?', 
     select : function (event, ui) {
-        
+
         $("#produk_nama").val(ui.item.label); // display the selected text
         $("#produk_nama").val(ui.item.produk_nama);
         $("#produk_id").val(ui.item.produk_id); // save selected id to hidden input
@@ -350,13 +376,18 @@ $(document).ready(function(){
 });
 
 function batal() {
+    $('#modal_form').modal('hide');
+    $("#modal_form").removeData();
+    $("#detail_cart").empty();
  $.ajax({
-    url : "penerimaan/hapus_all_cart",
+    url : "retur_penerimaan/hapus_all_cart",
     success :function(data){
-           // location.reload();
+           
        }
    });
 }
+
+setTimeout(function() { $('input[name="scanbar"]').focus() }, 3000);
 </script>
 
 
@@ -398,78 +429,66 @@ function batal() {
                         <div class="col-md-8">
                            <div class="form-group row ">
                             <label for="nama" class="col-sm-2 col-form-label">Nama Barang</label>
-                            <div class="col-sm-4 kosong">
+                            <div class="col-sm-5 kosong">
                                <input type="hidden" class="form-control" name="produk_id" id="produk_id" value=""  >
                                <input type="hidden" class="form-control" name="produk_harga" id="produk_harga" value=""  >
                                <input type="hidden" class="form-control" name="kemasan" id="kemasan" placeholder="Kemasan" value="">
-                               <input type="text" class="form-control" name="scanbar" id="scanbar" autofocus autocomplete="off" placeholder="Scan / " >
-                               <!--  <input type="text" class="form-control" name="produk_nama" id="produk_nama" placeholder="Nama" value="" readonly=""> -->
+                               <input type="text" class="form-control" name="scanbar" id="scanbar" autofocus autocomplete="off" placeholder="Scan Barcode / Ketik Manual" >
+
+                               <span class="help-block"></span>
+                           </div>
+                           <label for="nama" class="col-sm-2 col-form-label">Kemasan</label>
+                           <div class="col-sm-3 kosong">
+                               <input type="text" class="form-control" name="nama_satuan" id="nama_satuan"  value="" readonly="" placeholder="Kemasan">
                                <span class="help-block"></span>
                            </div>
                        </div>
-                            <!-- <div class="form-group row">
-                                <label for="nama" class="col-sm-2 col-form-label">Nama</label>
-                                <div class="col-sm-10 kosong">
-                                    <input type="text" class="form-control" name="produk_nama" id="produk_nama" placeholder="Nama" value="" readonly="">
-                                    <span class="help-block"></span>
-                                </div>
-                            </div> -->
-                            <div class="form-group row ">
-                                <label for="nama" class="col-sm-2 col-form-label">Expired</label>
-                                <div class="col-sm-4 kosong">
-                                    <input type="date" class="form-control"  name="ed" id="ed" placeholder="Expired"  value="<?php echo date("Y-m-d") ?>">
-                                    <span class="help-block"></span>
-                                </div>
-                                <label for="nama" class="col-sm-2 col-form-label">Kemasan</label>
-                                <div class="col-sm-4 kosong">
-                                   <input type="text" class="form-control" name="nama_satuan" id="nama_satuan"  value="" readonly="" placeholder="Kemasan">
-                                   <span class="help-block"></span>
-                               </div>
-                               
-                               
-                           </div>
-                           <div class="form-group row ">
-                            <label for="nama" class="col-sm-2 col-form-label">Jumlah</label>
-                            <div class="col-sm-4 kosong">
-                                <input type="text" class="form-control" onkeypress="return hanyaAngka(event)" name="jumlah" id="jumlah" placeholder="Jumlah" >
-                                <span class="help-block"></span>
-                            </div>
-                            <!-- <button type="button" class="btn btn-primary " onclick="simpan_det()">Simpan</button> -->
+
+                       <div class="form-group row ">
+                        <label for="nama" class="col-sm-2 col-form-label">Expired</label>
+                        <div class="col-sm-5 kosong">
+                            <input type="date" class="form-control"  name="ed" id="ed" placeholder="Expired"  value="<?php echo date("Y-m-d") ?>">
+                            <span class="help-block"></span>
                         </div>
+                        <label for="nama" class="col-sm-2 col-form-label">Jumlah</label>
+                        <div class="col-sm-3 kosong">
+                            <input type="text" class="form-control" onkeypress="return hanyaAngka(event)" name="jumlah" id="jumlah" placeholder="Jumlah" >
+                            <span class="help-block"></span>
+                        </div>
+
                     </div>
+
                 </div>
+            </div>
 
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                          
-                          <div class="card-body table-responsive p-0">
-                            <table class="table table-hover text-nowrap table-bordered">
-                                <thead class="bg-info">
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Nama Barang</th>
-                                        <th>Kemasan</th>
-                                        <th>Jumlah</th>
-                                        <th>No Batch</th>
-                                        <th>ED</th>
-                                        <th>Harga</th>
-                                        <th>Subtotal</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="detail_cart">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
 
-                                </tbody>
+                      <div class="card-body table-responsive p-0">
+                        <table class="table table-hover text-nowrap table-bordered">
+                            <thead class="bg-info">
+                                <tr>
+                                    <th>No</th>
+                                    <th>Nama Barang</th>
+                                    <th>Kemasan</th>
+                                    <th>Jumlah</th>
+                                    <th>ED</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="detail_cart">
 
-                            </table>
+                            </tbody>
 
-                        </div>
+                        </table>
+
                     </div>
                 </div>
             </div>
         </div>
-    </form>
+    </div>
+</form>
 </div>
 <div class="modal-footer">
     <button type="button" id="btnSave" onclick="save()" class="btn btn-primary">Save</button>

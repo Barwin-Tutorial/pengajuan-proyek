@@ -154,11 +154,12 @@ function hapus(id){
 function add()
 {
     save_method = 'add';
-    $('#form')[0].reset(); // reset form on modals
+    // $('#form')[0].reset(); // reset form on modals
     $('.form-group').removeClass('has-error'); // clear error class
     $('.help-block').empty(); // clear error string
     $('#modal_form').modal({backdrop: 'static', keyboard: false}); // show bootstrap modal
     $('.modal-title').text('Add keluar'); // Set Title to Bootstrap modal title
+    $('input[name="produk_nama"]').focus()
 }
 
 function edit(id){
@@ -225,6 +226,7 @@ function save()
             if(data.status) //if success close modal and reload ajax table
             {
                 $('#modal_form').modal('hide');
+                $("#detail_cart").empty();
                 reload_table();
                 Toast.fire({
                     icon: 'success',
@@ -268,6 +270,7 @@ function hanyaAngka(evt) {
 
 
 $(function () {
+
     $("#jumlah").change(function () {
         var jumlah = $(this).val();
         var jmlstok = $('#jmlstok').val();
@@ -350,6 +353,7 @@ $(function(){
         return false;
     }
     })
+     setTimeout(function() { $('input[name="produk_nama"]').focus() }, 3000);
     $( "#produk_nama").autocomplete({
         source: 'keluar/get_brg/?', 
         select: function (event, ui) {
@@ -369,19 +373,22 @@ $(function(){
 });
 
  function batal() {
+    $("#detail_cart").empty();
        $.ajax({
         url : "keluar/hapus_all_cart",
         success :function(data){
-           // location.reload();
+           $("#modal_form").removeData();
         }
     });
  }
+
+
 </script>
 
 
 
 <!-- Bootstrap modal -->
-<div class="modal fade" id="modal_form" role="dialog">
+<div class="modal fade" id="modal_form" role="dialog" tabindex="1500" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content " id="content">
             <div class="modal-header">
@@ -401,7 +408,7 @@ $(function(){
                                     <label for="nama" class="col-sm-4 col-form-label">Nama Pelanggan</label>
                                     <div class="col-sm-8 kosong">
                                         <input type="hidden" class="form-control" name="pelanggan" id="pelanggan" placeholder="Nama Pelanggan" >
-                                        <input type="text" class="form-control" name="vpel" id="vpel" autofocus autocomplete="off" placeholder="Nama Pelanggan" >
+                                        <input type="text" class="form-control" name="vpel" id="vpel"  autocomplete="off" placeholder="Nama Pelanggan" >
                                         
                                         <span class="help-block"></span>
                                     </div>
@@ -418,7 +425,7 @@ $(function(){
                                 <div class="form-group row ">
                                     <label for="nama" class="col-sm-3 col-form-label">Barang</label>
                                      <div class="col-sm-9 kosong" >
-                                    <input type="text" class="form-control" name="produk_nama" id="produk_nama" placeholder="Scan Barcode / Input Manual" autofocus>
+                                    <input type="text" class="form-control " name="produk_nama" id="produk_nama" autofocus="focus"  placeholder="Scan Barcode / Input Manual" >
                                     <input type="hidden" class="form-control" name="produk_id" id="produk_id" value=""  >
                                     <input type="hidden" class="form-control" name="produk_harga" id="produk_harga" value=""  >
                                     <input type="hidden" class="form-control" name="kemasan" id="kemasan" value=""  >

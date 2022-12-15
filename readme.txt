@@ -4,3 +4,10 @@ Penambahan Sub Menu
 
 Penambahan field di tabel keluar (faktur)
 
+
+Update Database
+1. Penambahan Tabel Retur Penerimaan dan retur detail penerimaan
+2. Stok Opname -> Penambahan di field transaksi Retur Penerimaan & Retur Keluar
+3. Sub Menu Transaksi -> Retur Keluar & Retur Penerimaan
+
+
