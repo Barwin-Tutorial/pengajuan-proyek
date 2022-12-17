@@ -1,6 +1,6 @@
 <?php 
 defined('BASEPATH') OR exit('No direct script access allowed');
- 
+
 /**
  * Create BY : Aryo
  * Youtube : Aryo Coding
@@ -37,42 +37,64 @@ class Mod_dashboard extends CI_Model
 	function JmlUser()
 	{
 		$this->db->from('tbl_user');
-        return $this->db->count_all_results();
+		return $this->db->count_all_results();
 	}
 	
 	function Jmlbarang()
 	{
 		$level = $this->session->userdata['id_level'];
-		 $id_gudang = $this->session->userdata['id_gudang'];
-		 if ($level!=1) {
+		$id_gudang = $this->session->userdata['id_gudang'];
+		if ($level!=1) {
 			$this->db->where('id_gudang', $id_gudang);
 		} 
 		$this->db->from('barang');
-        return $this->db->count_all_results();
+		return $this->db->count_all_results();
 	}
 
-		function Jmlmasuk()
+	function Jmlmasuk()
 	{
 		$level = $this->session->userdata['id_level'];
-		 $id_gudang = $this->session->userdata['id_gudang'];
-		 if ($level!=1) {
+		$id_gudang = $this->session->userdata['id_gudang'];
+		if ($level!=1) {
 			$this->db->where('id_gudang', $id_gudang);
 		} 
 		$this->db->select('SUM(masuk) as total');
 		$this->db->from('stok_opname');
-        return $this->db->get()->row();
+		return $this->db->get()->row();
 	}
 
-		function Jmlkeluar()
+	function Jmlkeluar()
 	{
 		$level = $this->session->userdata['id_level'];
-		 $id_gudang = $this->session->userdata['id_gudang'];
-		 if ($level!=1) {
+		$id_gudang = $this->session->userdata['id_gudang'];
+		if ($level!=1) {
 			$this->db->where('id_gudang', $id_gudang);
 		} 
 		$this->db->select('SUM(keluar) as total');
 		$this->db->from('stok_opname');
-        return $this->db->get()->row();
+		return $this->db->get()->row();
+	}
+
+
+	function terlaris($id, $tgl)
+	{
+		$and="";
+		if (!empty($id)) {
+			$and .= " AND b.`perundangan`='$id'";
+		}
+
+		$sql=$this->db->query("SELECT b.`nama` , COUNT(a.id_barang) AS total FROM keluar_detail a 
+			JOIN barang b ON a.`id_barang`=b.`id`
+			JOIN keluar c ON a.`id_keluar`=c.`id` WHERE 1=1 $and AND c.`tanggal`='$tgl' GROUP BY a.`id_barang` ORDER BY total LIMIT 10 ");
+		return $sql;
+	}
+
+	function chart_pelanggan($tgl)
+	{
+		$sql=$this->db->query("SELECT c.`nama`, COUNT(b.id_pelanggan) AS total FROM keluar_detail a 
+			JOIN keluar b ON a.`id_keluar`=b.`id`
+			JOIN pelanggan c ON b.`id_pelanggan`=c.`id` WHERE 1=1  AND b.`tanggal`='$tgl' GROUP BY b.`id_pelanggan` ORDER BY total LIMIT 10  ");
+		return $sql;
 	}
 
 }

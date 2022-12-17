@@ -11,3 +11,6 @@ Update Database
 3. Sub Menu Transaksi -> Retur Keluar & Retur Penerimaan
 
 
+2022-12-16
+Penambahan Menu Grafik 
+

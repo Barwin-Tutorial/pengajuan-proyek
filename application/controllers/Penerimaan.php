@@ -340,9 +340,17 @@ public function getAllSupplier()
          </tr>
          ';
      }
+     $persentasi=round($total * 0.11);
+        $total += $persentasi;
         $output .= '
             <tr>
-                <th colspan="7" style="text-align : center;">Total</th>
+                <th colspan="7" style="text-align : right;">Pajak 11%</th>
+                <th colspan="2">'.'Rp '.number_format($persentasi).'</th>
+            </tr>
+        ';
+        $output .= '
+            <tr>
+                <th colspan="7" style="text-align : right;">Total</th>
                 <th colspan="2">'.'Rp '.number_format($total).'</th>
             </tr>
         ';

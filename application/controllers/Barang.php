@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+// require 'vendor/autoload.php';
+use Zend\Barcode\Barcode;
 /**
  * Create By : Aryo
  * Youtube : Aryo Coding
@@ -61,7 +62,7 @@ class Barang extends MY_Controller
             $row[] = $pel->harga;
             $row[] = $pel->rak;
             $row[] = $pel->aktivasi;
-            $row[] = "<a class=\"btn btn-xs btn-outline-primary edit\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit('$pel->id')\"><i class=\"fas fa-edit\"></i></a><a class=\"btn btn-xs btn-outline-danger delete\" href=\"javascript:void(0)\" title=\"Delete\"  onclick=\"hapus('$pel->id')\"><i class=\"fas fa-trash\"></i></a>";
+            $row[] = "<a class=\"btn btn-xs btn-outline-primary edit\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit('$pel->id')\"><i class=\"fas fa-edit\"></i></a><a class=\"btn btn-xs btn-outline-danger delete\" href=\"javascript:void(0)\" title=\"Delete\"  onclick=\"hapus('$pel->id')\"><i class=\"fas fa-trash\"></i></a> <a class=\"btn btn-xs btn-outline-danger barcode\" href=\"javascript:void(0)\" title=\"Barcode\"  onclick=\"barcode('$pel->id')\"><i class=\"fas fa-barcode\"></i></a>";
             $data[] = $row;
         }
 
@@ -77,7 +78,7 @@ class Barang extends MY_Controller
 
     public function insert()
     {
-        $trx= $this->Mod_barang->max_no();
+        /*$trx= $this->Mod_barang->max_no();
        if ($trx[0]['kode']==NULL) {
             $n="00001";
             $kode='B'.$n;
@@ -85,7 +86,7 @@ class Barang extends MY_Controller
             $n=$trx[0]['kode']+1;
             $x='00000'.$n;
             $kode='B'.substr($x, -5);
-        }
+        }*/
         $level = $this->session->userdata['id_level'];
         $id_user = $this->session->userdata['id_user'];
         $id_gudang = $this->session->userdata['id_gudang'];
@@ -174,5 +175,36 @@ class Barang extends MY_Controller
             echo json_encode($data);
             exit();
         }
+
+
+        
     }
+
+    public function print_barcode()
+    {
+
+
+        /*$p=$this->input->post('heigth');
+        $t=$this->input->post('width');*/
+        $barcode=$this->input->post('barcode');
+        $data['jumlah']=$this->input->post('jumlah');
+        $data['code']=$this->input->post('barcode');
+        $data['barcode'] = $this->set_barcode($barcode);
+
+        $this->load->view('barang/print_barcode',$data);
+    }
+
+    public function set_barcode($code)
+    {
+     $generator = new Picqer\Barcode\BarcodeGeneratorHTML();
+     return $generator->getBarcode($code, $generator::TYPE_CODE_128, 2, 42);
+ }
+
+  public function set_barcodePNG($code,$h,$w)
+    {
+     $generator = new Picqer\Barcode\BarcodeGeneratorPNG();
+     echo '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($code, $generator::TYPE_CODE_128, 1, 42)) . '">';
+     // return $generator->getBarcode($code, $generator::TYPE_EAN_13, 2, 42);
+ }
+   
 }

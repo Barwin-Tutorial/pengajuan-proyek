@@ -44,7 +44,7 @@
 <script type="text/javascript">
 
     function cetak(id) {
-   $.ajax({
+     $.ajax({
         url : 'penerimaan/cetak',
         data : {id:id},
         type : 'post',
@@ -56,7 +56,7 @@
             doc.print();
         }
     })
-}
+ }
 var save_method; //for save method string
 var table;
 
@@ -257,15 +257,18 @@ function save()
                       title: 'Data Penerimaan Masih Kosong'
                   });
                 }else{
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Error!!.',
+                    });
+                    for (var i = 0; i < data.inputerror.length; i++) 
 
-                 for (var i = 0; i < data.inputerror.length; i++) 
-                
-                {
-                    $('[name="'+data.inputerror[i]+'"]').addClass('is-invalid');
-                    $('[name="'+data.inputerror[i]+'"]').next().text(data.error_string[i]).addClass('invalid-feedback');
+                    {
+                        $('[name="'+data.inputerror[i]+'"]').addClass('is-invalid');
+                        $('[name="'+data.inputerror[i]+'"]').next().text(data.error_string[i]).addClass('invalid-feedback');
+                    }
                 }
-            }
-             
+
             }
             $('#btnSave').text('save'); //change button text
             $('#btnSave').attr('disabled',false); //set button enable 
@@ -290,14 +293,14 @@ $(function () {
     $("#jumlah").change(function () {
         var formdata = $('#form').serialize();
         $.ajax({
-                url : "penerimaan/add_to_cart",
-                method : "POST",
-                data : formdata,
-                dataType : 'html',
-                success: function(data){
-                    $('#detail_cart').html(data);
-                }
-            });
+            url : "penerimaan/add_to_cart",
+            method : "POST",
+            data : formdata,
+            dataType : 'html',
+            success: function(data){
+                $('#detail_cart').html(data);
+            }
+        });
     })
 
     $(document).on('click','.hapus_cart',function(){
@@ -309,12 +312,16 @@ $(function () {
                 method : "POST",
                 data : {id : id,id_detail:id_detail},
                 success :function(data){
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Success!!.'
+                    });
                     $('#detail_cart').html(data);
                 }
             });
         });
     $(document).on('click','.simpan_cart',function(){
-            var id=$(this).attr("id_penerimaan");
+        var id=$(this).attr("id_penerimaan");
             var id_detail=$(this).attr("id_detail"); //mengambil row_id dari artibut id
             var no = $(this).attr("no");
             var jumlah = $('.item'+no).val();
@@ -326,57 +333,46 @@ $(function () {
                 method : "POST",
                 data : {id : id,id_detail : id_detail,jumlah : jumlah,nobatch : nobatch,ed : ed},
                 success :function(data){
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Success!!.'
+                    });
                     $('#detail_cart').html(data);
                 }
             });
         });
 
-   
+
 });
-function simpan_det(row_id, no)
-{
-    var item = $('.item'+no).val();
-    var nobatch = $('.nobatch'+no).val();
-    var ed = $('.ed'+no).val();
-  
-    $.ajax({
-        url : "penerimaan/update_cart",
-        method : "POST",
-        data : {row_id : row_id,item : item,nobatch : nobatch,ed : ed},
-        success :function(data){
-            $('#detail_cart').html(data);
-        }
-    });
-  
-}
+
 
 $(document).ready(function(){
 
-     $( "#vsup").autocomplete({
-        source: 'penerimaan/get_supplier/?', 
-        select : function (event, ui) {
-        
+   $( "#vsup").autocomplete({
+    source: 'penerimaan/get_supplier/?', 
+    select : function (event, ui) {
+
          // display the selected text
-        var value = ui.item.value;
+         var value = ui.item.value;
         $("#supplier").val(value); // save selected id to hidden input
         $("#vsup").val(ui.item.label);
         return false;
     },
     change : function (event, ui) {
          // display the selected text
-        var value = ui.item.value;
+         var value = ui.item.value;
         $("#supplier").val(value); // save selected id to hidden input
         $("#vsup").val(ui.item.label);
         return false;
     }
-    })
-    
+})
 
-    setTimeout(function() { $('input[name="scanbar"]').focus() }, 3000);
-    $( "#scanbar").autocomplete({
-        source: 'penerimaan/get_brg/?', 
-        select : function (event, ui) {
-        
+
+   setTimeout(function() { $('input[name="scanbar"]').focus() }, 3000);
+   $( "#scanbar").autocomplete({
+    source: 'penerimaan/get_brg/?', 
+    select : function (event, ui) {
+
         $("#produk_nama").val(ui.item.label); // display the selected text
         $("#produk_nama").val(ui.item.produk_nama);
         $("#produk_id").val(ui.item.produk_id); // save selected id to hidden input
@@ -387,18 +383,19 @@ $(document).ready(function(){
         return false;
 
     }
-    })
+})
 });
 
- function batal() {
-       $.ajax({
-        url : "penerimaan/hapus_all_cart",
-        success :function(data){
-           $("#modal_form").removeData();
-        }
-    });
+function batal() {
+ $.ajax({
+    url : "penerimaan/hapus_all_cart",
+    success :function(data){
+     $("#modal_form").removeData();
+     $("#detail_cart").empty();
  }
-    
+});
+}
+
 </script>
 
 
@@ -419,7 +416,7 @@ $(document).ready(function(){
                     <input type="hidden" value="0" name="id"/> 
                     <div class="card-body">
                         <div class="row">
-                           <div class="col-md-4">
+                         <div class="col-md-4">
                             <div class="form-group row ">
                                 <label for="nama" class="col-sm-3 col-form-label">Faktur</label>
                                 <div class="col-sm-9 kosong">
@@ -444,22 +441,22 @@ $(document).ready(function(){
                             </div>
                         </div>
                         <div class="col-md-8">
-                             <div class="form-group row ">
-                                <label for="nama" class="col-sm-2 col-form-label">Barcode</label>
-                                <div class="col-sm-4 kosong" >
-                                    <input type="text" class="form-control" name="scanbar" id="scanbar" autofocus autocomplete="off" placeholder="Scan Barcode" >
-                                    <input type="hidden" class="form-control" name="produk_id" id="produk_id" value=""  >
-                                    <input type="hidden" class="form-control" name="produk_harga" id="produk_harga" value=""  >
-                                    <input type="hidden" class="form-control" name="kemasan" id="kemasan" placeholder="Kemasan" value="">
-                                    <input type="hidden" class="form-control" name="nama_satuan" id="nama_satuan"  value="" >
-                                    <span class="help-block"></span>
-                                </div>
-                                <label for="nama" class="col-sm-2 col-form-label">Nama</label>
-                                <div class="col-sm-4 kosong">
-                                    <input type="text" class="form-control" name="produk_nama" id="produk_nama" placeholder="Nama" value="" readonly="">
-                                    <span class="help-block"></span>
-                                </div>
+                           <div class="form-group row ">
+                            <label for="nama" class="col-sm-2 col-form-label">Barcode</label>
+                            <div class="col-sm-4 kosong" >
+                                <input type="text" class="form-control" name="scanbar" id="scanbar" autofocus autocomplete="off" placeholder="Scan Barcode" >
+                                <input type="hidden" class="form-control" name="produk_id" id="produk_id" value=""  >
+                                <input type="hidden" class="form-control" name="produk_harga" id="produk_harga" value=""  >
+                                <input type="hidden" class="form-control" name="kemasan" id="kemasan" placeholder="Kemasan" value="">
+                                <input type="hidden" class="form-control" name="nama_satuan" id="nama_satuan"  value="" >
+                                <span class="help-block"></span>
                             </div>
+                            <label for="nama" class="col-sm-2 col-form-label">Nama</label>
+                            <div class="col-sm-4 kosong">
+                                <input type="text" class="form-control" name="produk_nama" id="produk_nama" placeholder="Nama" value="" readonly="">
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
                             <!-- <div class="form-group row">
                                 <label for="nama" class="col-sm-2 col-form-label">Nama</label>
                                 <div class="col-sm-10 kosong">
@@ -480,7 +477,7 @@ $(document).ready(function(){
                                 </div>
                                 
                             </div>
-                           <div class="form-group row ">
+                            <div class="form-group row ">
                                 <label for="nama" class="col-sm-2 col-form-label">Jumlah</label>
                                 <div class="col-sm-4 kosong">
                                     <input type="text" class="form-control" onkeypress="return hanyaAngka(event)" name="jumlah" id="jumlah" placeholder="Jumlah" >
@@ -494,7 +491,7 @@ $(document).ready(function(){
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
-                              
+
                               <div class="card-body table-responsive p-0">
                                 <table class="table table-hover text-nowrap table-bordered">
                                     <thead class="bg-info">

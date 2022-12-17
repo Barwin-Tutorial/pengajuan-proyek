@@ -159,7 +159,7 @@ function add()
     $('.help-block').empty(); // clear error string
     $('#modal_form').modal({backdrop: 'static', keyboard: false}); // show bootstrap modal
     $('.modal-title').text('Add keluar'); // Set Title to Bootstrap modal title
-    $('input[name="produk_nama"]').focus()
+    setTimeout(function() { $('input[name="produk_nama"]').focus() }, 3000);
 }
 
 function edit(id){
@@ -167,7 +167,7 @@ function edit(id){
     $('#form')[0].reset(); // reset form on modals
     $('.form-group').removeClass('has-error'); // clear error class
     $('.help-block').empty(); // clear error string
-
+    setTimeout(function() { $('input[name="produk_nama"]').focus() }, 3000);
     //Ajax Load data from ajax
     $.ajax({
         url : "<?php echo site_url('keluar/edit')?>/" + id,
@@ -175,7 +175,7 @@ function edit(id){
         dataType: "JSON",
         success: function(data)
         {
-
+            setTimeout(function() { $('input[name="produk_nama"]').focus() }, 3000);
             $('[name="id"]').val(data.id);
             $('[name="tanggal"]').val(data.tanggal);
             $('[name="vpel"]').val(data.nama_pel);
@@ -187,6 +187,7 @@ function edit(id){
                 data : {id:data.id},
                 dataType : 'html',
                 success: function(data){
+                    
                     $('#detail_cart').html(data);
                 }
             });
@@ -227,6 +228,7 @@ function save()
             {
                 $('#modal_form').modal('hide');
                 $("#detail_cart").empty();
+                setTimeout(function() { $('input[name="produk_nama"]').focus() }, 3000);
                 reload_table();
                 Toast.fire({
                     icon: 'success',
@@ -235,7 +237,10 @@ function save()
             }
             else
             {
-               
+               Toast.fire({
+                    icon: 'error',
+                    title: 'Error!!.'
+                });
                 for (var i = 0; i < data.inputerror.length; i++) 
                 {
                     $('[name="'+data.inputerror[i]+'"]').addClass('is-invalid');
@@ -272,8 +277,9 @@ function hanyaAngka(evt) {
 $(function () {
 
     $("#jumlah").change(function () {
-        var jumlah = $(this).val();
-        var jmlstok = $('#jmlstok').val();
+        let jumlah = parseInt($(this).val());
+        let jmlstok =parseInt($('#jmlstok').val());
+        
         if (jumlah > jmlstok) {
             Swal.fire({
                   icon: 'warning',
@@ -289,7 +295,12 @@ $(function () {
                 data : formdata,
                 dataType : 'html',
                 success: function(data){
+                    Toast.fire({
+                    icon: 'success',
+                    title: 'Success!!.'
+                });
                     $('#detail_cart').html(data);
+                     setTimeout(function() { $('input[name="produk_nama"]').focus() }, 3000);
                 }
             });
     })
@@ -303,6 +314,11 @@ $(function () {
                 method : "POST",
                 data : {id : id,id_detail:id_detail},
                 success :function(data){
+                    Toast.fire({
+                    icon: 'success',
+                    title: 'Success!!.'
+                });
+                    setTimeout(function() { $('input[name="produk_nama"]').focus() }, 3000);
                     $('#detail_cart').html(data);
                 }
             });
@@ -319,6 +335,11 @@ $(function () {
                 method : "POST",
                 data : {id : id,item : item,nobatch : nobatch,ed : ed},
                 success :function(data){
+                    Toast.fire({
+                    icon: 'success',
+                    title: 'Success!!.'
+                });
+                     setTimeout(function() { $('input[name="produk_nama"]').focus() }, 3000);
                     $('#detail_cart').html(data);
                 }
             });
@@ -440,8 +461,8 @@ $(function(){
                                     <input type="text" class="form-control" name="nobatch" id="nobatch" placeholder="No Batch" value="" readonly="">
                                     <span class="help-block"></span>
                                 </div>
-                                <label for="nama" class="col-sm-3 col-form-label">Expired</label>
-                                <div class="col-sm-3 kosong">
+                                <label for="nama" class="col-sm-2 col-form-label">Expired</label>
+                                <div class="col-sm-4 kosong">
                                     <input type="date" class="form-control"  name="ed" id="ed" placeholder="Expired"  value="" readonly="">
                                     <span class="help-block"></span>
                                 </div>

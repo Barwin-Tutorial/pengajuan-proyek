@@ -6,7 +6,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header bg-light">
-                        <h3 class="card-title"><i class="fa fa-list text-blue"></i> Data barang</h3>
+                        <h3 class="card-title"><i class="fa fa-list text-blue"></i> Data Barang</h3>
                         <div class="text-right">
                             <button type="button" class="btn btn-sm btn-outline-primary  add" onclick="add()" title="Add Data" ><i class="fas fa-plus" ></i> Add</button>
                         </div>
@@ -48,7 +48,7 @@ var save_method; //for save method string
 var table;
 
 $(document).ready(function() {
-
+    setTimeout(function() { $('input[name="barcode"]').focus() }, 3000);
     //datatables
     table =$("#tbl_barang").DataTable({
         "responsive": true,
@@ -248,7 +248,7 @@ function save()
     });
 }
 var loadFile = function(event) {
-  var image = document.getElementById('v_image');
+  var image = document.getElementById('vbarcode');
   image.src = URL.createObjectURL(event.target.files[0]);
 };
 
@@ -259,10 +259,48 @@ function hanyaAngka(evt) {
     return false;
 return true;
 }
-$('.modal').on('shown.bs.modal', function() {
-  $(this).find('[autofocus]').focus();
-});
 
+function barcode(id) {
+    $('#form1')[0].reset(); // reset form on modals
+    $('.form-group').removeClass('has-error'); // clear error class
+    $('.help-block').empty(); // clear error string
+
+    //Ajax Load data from ajax
+    $.ajax({
+        url : "<?php echo site_url('barang/edit')?>/" + id,
+        type: "GET",
+        dataType: "JSON",
+        success: function(data)
+        {
+            $('[name="id"]').val(data.id);
+            $('[name="barcode"]').val(data.barcode);
+            $('#vcode').text(data.barcode)
+            var image = "<?php echo base_url('barang/set_barcodePNG/')?>"+data.barcode+'/'+2+'/'+42;
+             $("#vbarcode").load(image);
+            $('#modal_form1').modal('show'); // show bootstrap modal when complete loaded
+
+        },
+        error: function (jqXHR, textStatus, errorThrown)
+        {
+            alert('Error get data from ajax');
+        }
+    });
+}
+
+    function print_barcode() {
+     $.ajax({
+        url : 'barang/print_barcode',
+        data : $('#form1').serialize(),
+        type : 'post',
+        dataType : 'html',
+        success : function (respon) {
+            /*$("#load").html(respon);*/
+            var doc = window.open();
+            doc.document.write(respon);
+            doc.print();
+        }
+    })
+ }
 </script>
 
 
@@ -331,7 +369,7 @@ $('.modal').on('shown.bs.modal', function() {
                         </div>
                     </div>
                     <div class="col-md-6">
-                       <div class="form-group row ">
+                     <div class="form-group row ">
                         <label for="nama" class="col-sm-3 col-form-label">Berat</label>
                         <div class="col-sm-9 kosong">
                             <input type="text" class="form-control" name="berat" id="berat" placeholder="Berat" >
@@ -380,5 +418,77 @@ $('.modal').on('shown.bs.modal', function() {
 </div>
 </div><!-- /.modal-content -->
 </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- End Bootstrap modal -->
+
+
+
+
+<!-- Bootstrap modal -->
+<div class="modal fade" id="modal_form1" role="dialog" tabindex="-1" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content ">
+
+            <div class="modal-header">
+                <h3 class="modal-title">Barcode</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+            </div>
+            <div class="modal-body form">
+                <form action="#" id="form1" class="form-horizontal" >
+                    <input type="hidden" value="" name="id"/> 
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group row ">
+                                    <label for="nama" class="col-sm-4 col-form-label">Barcode</label>
+                                    <div class="col-sm-8 kosong">
+                                        <input type="text" class="form-control" autofocus  name="barcode" id="barcode" placeholder="Barcode" >
+                                        <span class="help-block"></span>
+                                    </div>
+                                </div>
+                                <!-- <div class="form-group row ">
+                                    <label for="nama" class="col-sm-4 col-form-label">Width</label>
+                                    <div class="col-sm-8 kosong">
+                                        <input type="text" class="form-control" name="width" id="width" placeholder="Width" >
+                                        <span class="help-block"></span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row ">
+                                    <label for="nama" class="col-sm-4 col-form-label">Height</label>
+                                    <div class="col-sm-8 kosong">
+                                        <input type="text" class="form-control" name="height" id="height" placeholder="Height" >
+                                        <span class="help-block"></span>
+                                    </div>
+                                </div> -->
+                                <div class="form-group row ">
+                                    <label for="nama" class="col-sm-4 col-form-label">Jumlah</label>
+                                    <div class="col-sm-8 kosong">
+                                        <input type="text" class="form-control" name="jumlah" id="jumlah" placeholder="Jumlah" >
+                                        <span class="help-block"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group row ">
+                                    <label for="nama" class="col-sm-4 col-form-label">View Barcode</label>
+                                    <div class="col-sm-8 kosong">
+                                       <div id="vbarcode" >
+                                        <span class="vcode"></span>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div> 
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnSave" onclick="print_barcode()" class="btn btn-primary"><i class="fas fa-print"></i> Cetak Barcode </button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <!-- End Bootstrap modal -->
