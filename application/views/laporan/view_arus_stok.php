@@ -70,12 +70,13 @@ header('Content-Disposition: attachment; filename="'.$filename.'.xls"');
 			$tanggal = $row->tanggal;
 			$id_barang = $row->id_barang;
 			$a= $this->db->select('(sum(masuk)-sum(keluar)) as awal, (sum(masuk)-sum(keluar)) as sisa');
-			$a= $this->db->where('id_barang','$id_barang');
+			$a= $this->db->where('id_barang',$id_barang);
 			$a= $this->db->where('date(tanggal) <',$tanggal);
 			$a= $this->db->get('stok_opname')->row();
 
 			$awal = (isset($a->awal)) ? $a->awal : '0' ;
-			$sisa = (isset($a->sisa)) ? $a->sisa : '0' ;
+			$sisa = $awal-$row->keluar ;
+
 			?>
 				<tr>
 					<td><?=$no++;?></td>
