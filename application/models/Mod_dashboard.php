@@ -78,7 +78,13 @@ class Mod_dashboard extends CI_Model
 
 	function terlaris($id, $tgl)
 	{
+
+		$level = $this->session->userdata['id_level'];
+		$id_gudang = $this->session->userdata['id_gudang'];
 		$and="";
+		if ($level==1) {
+			$and .= " AND b.id_gudang='$id_gudang'";
+		} 
 		if (!empty($id)) {
 			$and .= " AND b.`perundangan`='$id'";
 		}
@@ -91,9 +97,15 @@ class Mod_dashboard extends CI_Model
 
 	function chart_pelanggan($tgl)
 	{
+		$level = $this->session->userdata['id_level'];
+		$id_gudang = $this->session->userdata['id_gudang'];
+		$and="";
+		if ($level!=1) {
+			$and= ' AND b.id_gudang=$id_gudang ';
+		} 
 		$sql=$this->db->query("SELECT c.`nama`, COUNT(b.id_pelanggan) AS total FROM keluar_detail a 
 			JOIN keluar b ON a.`id_keluar`=b.`id`
-			JOIN pelanggan c ON b.`id_pelanggan`=c.`id` WHERE 1=1  AND b.`tanggal`='$tgl' GROUP BY b.`id_pelanggan` ORDER BY total LIMIT 10  ");
+			JOIN pelanggan c ON b.`id_pelanggan`=c.`id` WHERE 1=1  AND b.`tanggal`='$tgl' $and GROUP BY b.`id_pelanggan` ORDER BY total LIMIT 10  ");
 		return $sql;
 	}
 

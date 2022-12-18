@@ -10,7 +10,7 @@ class Mod_stok extends CI_Model
 	var $table = 'stok_opname';
 	var $column_search = array('b.nama'); 
 	var $column_order = array('b.nama');
-	var $order = array('id' => 'desc'); 
+	var $order = array('a.id' => 'desc'); 
 	function __construct()
 	{
 		parent::__construct();
@@ -24,8 +24,9 @@ class Mod_stok extends CI_Model
 		 if ($level!=1) {
 			$this->db->where('a.id_gudang', $id_gudang);
 		} 
-		$this->db->select('a.*,b.nama as nama_barang');
+		$this->db->select('a.id,a.nobatch,a.ed,b.nama as nama_barang, sum(a.masuk) as masuk, sum(a.keluar) as keluar, (sum(a.masuk)-sum(a.keluar)) as sisa');
 		$this->db->join('barang b', 'a.id_barang=b.id');
+		$this->db->group_by('a.id_barang,a.nobatch');
 		$this->db->from('stok_opname a');
 		$i = 0;
 
@@ -82,9 +83,12 @@ class Mod_stok extends CI_Model
 		$level = $this->session->userdata['id_level'];
 		 $id_gudang = $this->session->userdata['id_gudang'];
 		 if ($level!=1) {
-			$this->db->where('id_gudang', $id_gudang);
+			$this->db->where('a.id_gudang', $id_gudang);
 		} 
-		$this->db->from('stok_opname');
+		$this->db->select('b.nama as nama_barang, sum(a.masuk) as masuk, sum(a.keluar) as keluar, (sum(a.masuk)-sum(a.keluar)) as sisa');
+		$this->db->join('barang b', 'a.id_barang=b.id');
+		$this->db->group_by('a.id_barang,a.nobatch');
+		$this->db->from('stok_opname a');
 		return $this->db->count_all_results();
 	}
 

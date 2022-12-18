@@ -105,7 +105,7 @@ function hapus(id){
   cancelButtonColor: '#d33',
   confirmButtonText: 'Yes, delete it!'
 }).then((result) => {
-
+if (result.value) {
         $.ajax({
         url:"<?php echo site_url('perundangan/delete');?>",
         type:"POST",
@@ -128,6 +128,7 @@ function hapus(id){
         }
         }
     });
+    }
 })
 }
 

@@ -119,7 +119,7 @@ function hapus(id){
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!'
   }).then((result) => {
-
+if (result.value) {
     $.ajax({
         url:"<?php echo site_url('retur_keluar/delete');?>",
         type:"POST",
@@ -142,6 +142,7 @@ function hapus(id){
           }
       }
   });
+}
 })
 }
 
@@ -372,6 +373,7 @@ function batal() {
     $('#modal_form').modal('hide');
     $("#modal_form").removeData();
     $("#detail_cart").empty();
+    $('[name="id"]').val('0');
  $.ajax({
     url : "retur_keluar/hapus_all_cart",
     success :function(data){

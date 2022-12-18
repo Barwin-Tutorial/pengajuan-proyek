@@ -10,7 +10,7 @@ class Mod_keluar extends CI_Model
     var $table = 'keluar';
     var $column_search = array('nama'); 
     var $column_order = array('nama');
-    var $order = array('id' => 'desc'); 
+    var $order = array('a.tanggal' => 'asc'); 
     function __construct()
     {
         parent::__construct();
@@ -25,9 +25,9 @@ class Mod_keluar extends CI_Model
             $this->db->where('a.id_gudang', $id_gudang);
         } 
         $this->db->select('a.*,b.nama as nama_pel, d.nama as nama_barang,c.jumlah');
-        $this->db->join('pelanggan b', 'a.id_pelanggan=b.id');
-        $this->db->join('keluar_detail c', 'a.id=c.id_keluar');
-        $this->db->join('barang d', 'c.id_barang=d.id');
+        $this->db->join('pelanggan b', 'a.id_pelanggan=b.id','left');
+        $this->db->join('keluar_detail c', 'a.id=c.id_keluar','left');
+        $this->db->join('barang d', 'c.id_barang=d.id','left');
         $this->db->from('keluar a');
         $i = 0;
 
@@ -87,9 +87,9 @@ class Mod_keluar extends CI_Model
             $this->db->where('a.id_gudang', $id_gudang);
         } 
         $this->db->select('a.*,b.nama as nama_pel');
-        $this->db->join('pelanggan b', 'a.id_pelanggan=b.id');
-        $this->db->join('keluar_detail c', 'a.id=c.id_keluar');
-        $this->db->join('barang d', 'c.id_barang=d.id');
+        $this->db->join('pelanggan b', 'a.id_pelanggan=b.id','left');
+        $this->db->join('keluar_detail c', 'a.id=c.id_keluar','left');
+        $this->db->join('barang d', 'c.id_barang=d.id','left');
         $this->db->from('keluar a');
         return $this->db->count_all_results();
     }
@@ -115,8 +115,8 @@ class Mod_keluar extends CI_Model
 
     function get_batch($nobatch)
     {
+        $this->db->select('ed,sum(masuk) as masuk, sum(keluar) as keluar,(sum(masuk)-sum(keluar)) as sisa ');
         $this->db->where('nobatch', $nobatch);
-        $this->db->where('masuk > 0');
         return $this->db->get('stok_opname')->row();
     }
 
@@ -183,35 +183,22 @@ class Mod_keluar extends CI_Model
     {   
         $level = $this->session->userdata['id_level'];
          $id_gudang = $this->session->userdata['id_gudang'];
+         $and="";
          if ($level!=1) {
-            $sql= $this->db->where('a.id_gudang', $id_gudang);
+            $and = " AND a.id_gudang='$id_gudang'";
         } 
         $date = date("Y-m-d");
 
-        /*$sql=$this->db->select('a.*,c.nama as nama_satuan, b.nama as nama_barang, b.harga, b.kemasan');
-        $sql=$this->db->order_by('a.ed','asc');*/
-        // $sql=$this->db->or_like('sa.nama', $id);
-        /*$sql=$this->db->join('barang b', 'a.id_barang=b.id');
-        $sql=$this->db->join('satuan c', 'b.kemasan=c.id');*/
-        // $sql=$this->db->where('');
-        // $sql=$this->db->where('aa.ed >= "'.$date.'"');
-        /*$sql=$this->db->limit(10);
-        $sql= $this->db->get('stok_opname a')->result();
-        
-        $sql1=$this->db->order_by('id_barang');
-        $sql1=$this->db->get($sql)->result();*/
-        // return $sql1;
-        $sql=$this->db->query("SELECT * FROM(
-        SELECT `a`.*, `c`.`nama` AS `nama_satuan`, `b`.`nama` AS `nama_barang`, `b`.`harga`, `b`.`kemasan`
-        FROM `stok_opname` `a`
-        JOIN `barang` `b` ON `a`.`id_barang`=`b`.`id`
-        JOIN `satuan` `c` ON `b`.`kemasan`=`c`.`id`
-        WHERE`a`.`masuk` >0
-        AND `a`.`ed` >= '$date'
-        AND (`b`.`nama` LIKE '%$params%' ESCAPE '!' OR b.barcode LIKE '%$params%' ESCAPE '!')
-        ORDER  BY ABS( DATEDIFF( a.ed, NOW() ) )
-        LIMIT 10)
-        AS sa GROUP BY sa.`id_barang`");
+        $sql=$this->db->query("SELECT * FROM (
+            SELECT a.`id`, a.`id_transaksi`,a.`id_barang`,a.`ed`,a.`nobatch`,`c`.`nama` AS `nama_satuan`, `b`.`nama` AS `nama_barang`, 
+            `b`.`harga`, `b`.`kemasan`, SUM(a.`masuk`) AS masuk, SUM(keluar) AS keluar, (SUM(a.`masuk`)-SUM(keluar)) AS sisa
+            FROM `stok_opname` `a`
+            JOIN `barang` `b` ON `a`.`id_barang`=`b`.`id`
+            JOIN `satuan` `c` ON `b`.`kemasan`=`c`.`id`
+            WHERE `a`.`ed` >= '$date' $and
+            AND (`b`.`nama` LIKE '%$params%' ESCAPE '!' OR b.barcode LIKE '%$params%' ESCAPE '!') GROUP BY a.`id_barang`, a.`nobatch` HAVING sisa > 0
+            ORDER  BY ABS( DATEDIFF( a.ed, NOW() ) ) 
+        ) AS ab GROUP BY ab.id_barang LIMIT 10");
 
         return $sql->result();
 
@@ -231,14 +218,34 @@ class Mod_keluar extends CI_Model
 
     function get_stok_opname($id_barang)
     {   
-        $level = $this->session->userdata['id_level'];
+        /*$level = $this->session->userdata['id_level'];
          $id_gudang = $this->session->userdata['id_gudang'];
          if ($level!=1) {
             $this->db->where('id_gudang', $id_gudang);
         } 
         $this->db->where('transaksi', 'Penerimaan');
         $this->db->where('id_barang', $id_barang);
-        return $this->db->get('stok_opname')->result();
+        return $this->db->get('stok_opname')->result();*/
+
+        $level = $this->session->userdata['id_level'];
+         $id_gudang = $this->session->userdata['id_gudang'];
+         $and="";
+         if ($level!=1) {
+            $and = " AND a.id_gudang='$id_gudang'";
+        } 
+        $date = date("Y-m-d");
+
+        $sql=$this->db->query("SELECT * FROM (
+            SELECT a.`id`, a.`id_barang`,a.`ed`,a.`nobatch`,`c`.`nama` AS `nama_satuan`, `b`.`nama` AS `nama_barang`, 
+            `b`.`harga`, `b`.`kemasan`, SUM(a.`masuk`) AS masuk, SUM(keluar) AS keluar, (SUM(a.`masuk`)-SUM(keluar)) AS sisa
+            FROM `stok_opname` `a`
+            JOIN `barang` `b` ON `a`.`id_barang`=`b`.`id`
+            JOIN `satuan` `c` ON `b`.`kemasan`=`c`.`id`
+            WHERE `a`.`ed` >= '$date'
+            AND a.`id_barang`='$id_barang' GROUP BY a.`nobatch`
+        ) AS ab");
+
+        return $sql->result();
     }
         function del_stok($id, $table)
     {
@@ -271,4 +278,47 @@ class Mod_keluar extends CI_Model
         $this->db->join('satuan c', 'a.kemasan=c.id');
         return $this->db->get('keluar_detail a')->result();
     }
+
+        function cek_barang($id_barang,$nobatch,$id_keluar)
+    {
+        $id_user = $this->session->userdata['id_user'];
+        $this->db->where('nobatch',$nobatch);
+        $this->db->where('id_keluar',$id_keluar);
+        $this->db->where('id_barang', $id_barang);
+        $this->db->where('id_user', $id_user);
+        return $this->db->get('keluar_detail');
+    }
+
+    function get_sisa_stok($id_barang,$nobatch)
+    {   
+    
+
+        $level = $this->session->userdata['id_level'];
+         $id_gudang = $this->session->userdata['id_gudang'];
+         $and="";
+         if ($level!=1) {
+            $and = " AND a.id_gudang='$id_gudang'";
+        } 
+        $date = date("Y-m-d");
+
+        $sql=$this->db->query("SELECT * FROM (
+            SELECT  SUM(a.`masuk`) AS masuk, SUM(keluar) AS keluar, (SUM(a.`masuk`)-SUM(keluar)) AS sisa
+            FROM `stok_opname` `a`
+            JOIN `barang` `b` ON `a`.`id_barang`=`b`.`id`
+            JOIN `satuan` `c` ON `b`.`kemasan`=`c`.`id`
+            WHERE `a`.`ed` >= '$date'
+            AND a.`id_barang`='$id_barang' AND a.nobatch='$nobatch'
+        ) AS ab");
+
+        return $sql;
+    }
+
+    function get_detail_keluar($id,$nobatch)
+    {   
+        
+        $this->db->where('id',$id);
+        $this->db->where('nobatch',$nobatch);
+        return $this->db->get('keluar_detail');
+    }
+
 }

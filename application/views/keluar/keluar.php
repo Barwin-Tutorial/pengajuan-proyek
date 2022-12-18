@@ -16,6 +16,7 @@
                         <table id="tbl_keluar" class="table table-bordered table-striped table-hover">
                             <thead>
                                 <tr class="bg-info">
+                                    <th>Faktur</th>
                                     <th>Tanggal</th>
                                     <th>Pelangcgan</th>
                                     <th>Nama Barang</th>
@@ -41,8 +42,8 @@
 
 <script type="text/javascript">
 
-function cetak(id) {
-   $.ajax({
+    function cetak(id) {
+     $.ajax({
         url : 'keluar/cetak',
         data : {id:id},
         type : 'post',
@@ -54,7 +55,7 @@ function cetak(id) {
             doc.print();
         }
     })
-}
+ }
 var save_method; //for save method string
 var table;
 
@@ -123,29 +124,30 @@ function hapus(id){
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!'
   }).then((result) => {
-
-    $.ajax({
-        url:"<?php echo site_url('keluar/delete');?>",
-        type:"POST",
-        data:"id="+id,
-        cache:false,
-        dataType: 'json',
-        success:function(respone){
-            if (respone.status == true) {
-                reload_table();
-                Swal.fire(
-                  'Deleted!',
-                  'Your file has been deleted.',
-                  'success'
-                  );
-            }else{
-              Toast.fire({
-                  icon: 'error',
-                  title: 'Delete Error!!.'
-              });
+    if (result.value) {
+        $.ajax({
+            url:"<?php echo site_url('keluar/delete');?>",
+            type:"POST",
+            data:"id="+id,
+            cache:false,
+            dataType: 'json',
+            success:function(respone){
+                if (respone.status == true) {
+                    reload_table();
+                    Swal.fire(
+                      'Deleted!',
+                      'Your file has been deleted.',
+                      'success'
+                      );
+                }else{
+                  Toast.fire({
+                      icon: 'error',
+                      title: 'Delete Error!!.'
+                  });
+              }
           }
-      }
-  });
+      });
+    }
 })
 }
 
@@ -154,7 +156,7 @@ function hapus(id){
 function add()
 {
     save_method = 'add';
-    // $('#form')[0].reset(); // reset form on modals
+    $('#form')[0].reset(); // reset form on modals
     $('.form-group').removeClass('has-error'); // clear error class
     $('.help-block').empty(); // clear error string
     $('#modal_form').modal({backdrop: 'static', keyboard: false}); // show bootstrap modal
@@ -178,7 +180,7 @@ function edit(id){
             setTimeout(function() { $('input[name="produk_nama"]').focus() }, 3000);
             $('[name="id"]').val(data.id);
             $('[name="tanggal"]').val(data.tanggal);
-            $('[name="vpel"]').val(data.nama_pel);
+            $('[name="vpel"]').val(data.nama_pelanggan);
             $('[name="pelanggan"]').val(data.id_pelanggan);
 
             $.ajax({
@@ -187,7 +189,7 @@ function edit(id){
                 data : {id:data.id},
                 dataType : 'html',
                 success: function(data){
-                    
+
                     $('#detail_cart').html(data);
                 }
             });
@@ -237,16 +239,16 @@ function save()
             }
             else
             {
-               Toast.fire({
-                    icon: 'error',
-                    title: 'Error!!.'
-                });
-                for (var i = 0; i < data.inputerror.length; i++) 
-                {
-                    $('[name="'+data.inputerror[i]+'"]').addClass('is-invalid');
-                    $('[name="'+data.inputerror[i]+'"]').next().text(data.error_string[i]).addClass('invalid-feedback');
-                }
+             Toast.fire({
+                icon: 'error',
+                title: 'Error!!.'
+            });
+             for (var i = 0; i < data.inputerror.length; i++) 
+             {
+                $('[name="'+data.inputerror[i]+'"]').addClass('is-invalid');
+                $('[name="'+data.inputerror[i]+'"]').next().text(data.error_string[i]).addClass('invalid-feedback');
             }
+        }
             $('#btnSave').text('save'); //change button text
             $('#btnSave').attr('disabled',false); //set button enable 
 
@@ -270,39 +272,58 @@ function hanyaAngka(evt) {
   if (charCode > 31 && (charCode < 48 || charCode > 57))
 
     return false;
-  return true;
+return true;
 }
 
 
 $(function () {
 
     $("#jumlah").change(function () {
-        let jumlah = parseInt($(this).val());
+        /*let jumlah = parseInt($(this).val());
         let jmlstok =parseInt($('#jmlstok').val());
         
         if (jumlah > jmlstok) {
             Swal.fire({
                   icon: 'warning',
                   title : 'Peringatan',
-                  text: 'Jumlah Tidak Boleh Lebih dari Jumlah Stok!!. '+jmlstok,
+                  text: 'Jumlah Tidak Boleh Lebih dari Sisa Stok!!. '+jmlstok,
               });
+            // $('#jumlah').val(jmlstok)
             return false;
-        }
+        }*/
         var formdata = $('#form').serialize();
         $.ajax({
-                url : "keluar/add_to_cart",
-                method : "POST",
-                data : formdata,
-                dataType : 'html',
-                success: function(data){
-                    Toast.fire({
-                    icon: 'success',
-                    title: 'Success!!.'
-                });
-                    $('#detail_cart').html(data);
-                     setTimeout(function() { $('input[name="produk_nama"]').focus() }, 3000);
+            url : "keluar/add_to_cart",
+            method : "POST",
+            data : formdata,
+            dataType : 'json',
+            success: function(data){
+                if (data.status) {
+                    $.ajax({
+                        url : "keluar/load_cart/"+data.id_keluar,
+                        method : "POST",
+                        dataType : 'html',
+                        success: function(data){
+                            Toast.fire({
+                                icon: 'success',
+                                title: 'Success!!.'
+                            });
+                            $('#detail_cart').html(data);
+                            setTimeout(function() { $('input[name="produk_nama"]').focus() }, 3000);
+                        }
+                    });
+                }else{
+                    Swal.fire({
+                      icon: 'warning',
+                      title : 'Peringatan',
+                      html: data.pesan,
+                  });
                 }
-            });
+            }
+        });
+        
+
+        
     })
 
     $(document).on('click','.hapus_cart',function(){
@@ -315,93 +336,163 @@ $(function () {
                 data : {id : id,id_detail:id_detail},
                 success :function(data){
                     Toast.fire({
-                    icon: 'success',
-                    title: 'Success!!.'
-                });
+                        icon: 'success',
+                        title: 'Success!!.'
+                    });
                     setTimeout(function() { $('input[name="produk_nama"]').focus() }, 3000);
                     $('#detail_cart').html(data);
                 }
             });
         });
     $(document).on('click','.simpan_cart',function(){
-            var row_id=$(this).attr("id"); //mengambil row_id dari artibut id
+       var id=$(this).attr("id_keluar");
+            var id_detail=$(this).attr("id_detail"); //mengambil row_id dari artibut id
             var no = $(this).attr("no");
-            var item = $('.item'+no).val();
+            var item = parseInt($('.item'+no).val());
+            var id_barang = $('.id_barang'+no).val();
             var nobatch = $('.nobatch'+no).val();
             var ed = $('.ed'+no).val();
+            let sisa = parseInt($('.sisa'+no).val());
 
             $.ajax({
                 url : "keluar/update_cart",
                 method : "POST",
-                data : {id : id,item : item,nobatch : nobatch,ed : ed},
+                data : {id : id,id_detail:id_detail,item : item,nobatch : nobatch,ed : ed,id_barang:id_barang},
+                dataType : 'json',
                 success :function(data){
-                    Toast.fire({
-                    icon: 'success',
-                    title: 'Success!!.'
-                });
-                     setTimeout(function() { $('input[name="produk_nama"]').focus() }, 3000);
-                    $('#detail_cart').html(data);
+                 if (data.status) {
+                    $.ajax({
+                        url : "keluar/load_cart/"+data.id_keluar,
+                        method : "POST",
+                        dataType : 'html',
+                        success: function(data){
+                            Toast.fire({
+                                icon: 'success',
+                                title: 'Success!!.'
+                            });
+                            $('#detail_cart').html(data);
+                            setTimeout(function() { $('input[name="produk_nama"]').focus() }, 3000);
+                        }
+                    });
+                }else{
+                    Swal.fire({
+                      icon: 'warning',
+                      title : 'Peringatan',
+                      html: data.pesan,
+                  });
                 }
-            });
+            }
         });
-    $(document).on('change','.selbatch',function(){
+            
+        });
+    $(document).on('change','.barang',function(){
+       var no = $(this).attr("no");
+       var id=$(this).attr("id_keluar");
+            var id_detail=$(this).attr("id_detail"); //mengambil row_id dari artibut id
             var no = $(this).attr("no");
+            var item = parseInt($('.item'+no).val());
+            var id_barang = $('.id_barang'+no).val();
             var nobatch = $('.nobatch'+no).val();
-
+            var ed = $('.ed'+no).val();
             $.ajax({
-                url : "keluar/cek_nobatch",
+                url : "keluar/validasi_stok",
                 method : "POST",
-                data : {nobatch : nobatch},
+                data : {id : id,id_detail:id_detail,item : item,nobatch : nobatch,ed : ed,id_barang:id_barang},
                 dataType : 'JSON',
                 success :function(data){
-                    $('.item'+no).attr('masuk', data.masuk);
-                    $('.ed'+no).val(data.ed);
-                }
-            });
+
+                    if (data.status) {
+
+                    }else{
+                       Swal.fire({
+                          icon: 'warning',
+                          title : 'Peringatan',
+                          html: data.pesan,
+                      });  
+                       $('.item'+no).val(data.sisa)
+                   }
+
+               }
+           });
+            
         });
-   
+    $(document).on('change','.selbatch',function(){
+        var no = $(this).attr("no");
+        var id=$(this).attr("id_keluar");
+            var id_detail=$(this).attr("id_detail"); //mengambil row_id dari artibut id
+            var no = $(this).attr("no");
+            var item = parseInt($('.item'+no).val());
+            var id_barang = $('.id_barang'+no).val();
+            var nobatch = $('.nobatch'+no).val();
+            var ed = $('.ed'+no).val();
+            $.ajax({
+                url : "keluar/validasi_stok",
+                method : "POST",
+                data : {id : id,id_detail:id_detail,item : item,nobatch : nobatch,ed : ed,id_barang:id_barang},
+                dataType : 'JSON',
+                success :function(data){
+
+                    if (data.status) {
+
+                    }else{
+                       Swal.fire({
+                          icon: 'warning',
+                          title : 'Peringatan',
+                          html: data.pesan,
+                      });  
+                       $('.item'+no).val(data.sisa)
+                   }
+
+               }
+           });
+        });
+
 });
 
 $(function(){
 
-     $( "#vpel").autocomplete({
-        source: 'keluar/get_pelanggan/?', 
-        select: function (event, ui) {
-        
+   $( "#vpel").autocomplete({
+    source: 'keluar/get_pelanggan/?', 
+    select: function (event, ui) {
+
         $("#vpel").val(ui.item.label); // display the selected text
         var value = ui.item.value;
         $("#pelanggan").val(value); // save selected id to hidden input
         return false;
     }
-    })
-     setTimeout(function() { $('input[name="produk_nama"]').focus() }, 3000);
-    $( "#produk_nama").autocomplete({
-        source: 'keluar/get_brg/?', 
-        select: function (event, ui) {
-        
+})
+   setTimeout(function() { $('input[name="produk_nama"]').focus() }, 3000);
+   $( "#produk_nama").autocomplete({
+    source: 'keluar/get_brg/?', 
+    select: function (event, ui) {
+
        $("#produk_nama").val(ui.item.label); // display the selected text
-        $("#produk_nama").val(ui.item.produk_nama);
+       $("#produk_nama").val(ui.item.produk_nama);
         $("#produk_id").val(ui.item.produk_id); // save selected id to hidden input
         $("#produk_harga").val(ui.item.produk_harga);
         $("#nama_satuan").val(ui.item.nama_satuan);
         $("#kemasan").val(ui.item.id_kemasan);
         $("#ed").val(ui.item.ed);
         $("#nobatch").val(ui.item.nobatch);
-        $("#jmlstok").val(ui.item.jumlah);
+        $("#jmlstok").val(ui.item.sisa);
         return false;
     }
-    })
+})
 });
 
- function batal() {
+function batal() {
+    $('#form')[0].reset();
+    $("#modal_form").removeData();
     $("#detail_cart").empty();
-       $.ajax({
+    $('[name="id"]').val('0');
+    $.ajax({
         url : "keluar/hapus_all_cart",
         success :function(data){
-           $("#modal_form").removeData();
-        }
-    });
- }
+         $("#modal_form").removeData();
+         $("#detail_cart").empty();
+     }
+ });
+}
 
 
 </script>
@@ -445,29 +536,29 @@ $(function(){
                             <div class="col-md-6">
                                 <div class="form-group row ">
                                     <label for="nama" class="col-sm-3 col-form-label">Barang</label>
-                                     <div class="col-sm-9 kosong" >
-                                    <input type="text" class="form-control " name="produk_nama" id="produk_nama" autofocus="focus"  placeholder="Scan Barcode / Input Manual" >
-                                    <input type="hidden" class="form-control" name="produk_id" id="produk_id" value=""  >
-                                    <input type="hidden" class="form-control" name="produk_harga" id="produk_harga" value=""  >
-                                    <input type="hidden" class="form-control" name="kemasan" id="kemasan" value=""  >
-                                    <input type="hidden" class="form-control" name="nama_satuan" id="nama_satuan" value=""  >
-                                    <input type="hidden" class="form-control" name="jmlstok" id="jmlstok" value=""  >
-                                    <span class="help-block"></span>
-                                </div>
+                                    <div class="col-sm-9 kosong" >
+                                        <input type="text" class="form-control " name="produk_nama" id="produk_nama" autofocus="focus"  placeholder="Scan Barcode / Input Manual" >
+                                        <input type="hidden" class="form-control" name="produk_id" id="produk_id" value=""  >
+                                        <input type="hidden" class="form-control" name="produk_harga" id="produk_harga" value=""  >
+                                        <input type="hidden" class="form-control" name="kemasan" id="kemasan" value=""  >
+                                        <input type="hidden" class="form-control" name="nama_satuan" id="nama_satuan" value=""  >
+                                        <input type="hidden" class="form-control" name="jmlstok" id="jmlstok" value=""  >
+                                        <span class="help-block"></span>
+                                    </div>
                                 </div>
                                 <div class="form-group row ">
-                                <label for="nama" class="col-sm-3 col-form-label">No Batch</label>
-                                <div class="col-sm-3 kosong">
-                                    <input type="text" class="form-control" name="nobatch" id="nobatch" placeholder="No Batch" value="" readonly="">
-                                    <span class="help-block"></span>
+                                    <label for="nama" class="col-sm-3 col-form-label">No Batch</label>
+                                    <div class="col-sm-3 kosong">
+                                        <input type="text" class="form-control" name="nobatch" id="nobatch" placeholder="No Batch" value="" readonly="">
+                                        <span class="help-block"></span>
+                                    </div>
+                                    <label for="nama" class="col-sm-2 col-form-label">Expired</label>
+                                    <div class="col-sm-4 kosong">
+                                        <input type="date" class="form-control"  name="ed" id="ed" placeholder="Expired"  value="" readonly="">
+                                        <span class="help-block"></span>
+                                    </div>
+
                                 </div>
-                                <label for="nama" class="col-sm-2 col-form-label">Expired</label>
-                                <div class="col-sm-4 kosong">
-                                    <input type="date" class="form-control"  name="ed" id="ed" placeholder="Expired"  value="" readonly="">
-                                    <span class="help-block"></span>
-                                </div>
-                                
-                            </div>
                                 <div class="form-group row ">
                                     <label for="nama" class="col-sm-3 col-form-label">Jumlah</label>
                                     <div class="col-sm-9 kosong">
@@ -476,47 +567,47 @@ $(function(){
                                     </div>
                                 </div>
                                 
-                               
+
                             </div>
                         </div>
 
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card">
-                              
-                              <div class="card-body table-responsive p-0">
-                                <table class="table table-hover text-nowrap">
-                                    <thead class="bg-info">
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Nama Barang</th>
-                                            <th>Kemasan</th>
-                                            <th>Jumlah</th>
-                                            <th>ED</th>
-                                            <th>No Batch</th>
-                                            <th>Sisa Stok</th>
-                                            <th>Harga Jual</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="detail_cart">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
 
-                                    </tbody>
+                                  <div class="card-body table-responsive p-0">
+                                    <table class="table table-hover text-nowrap table-bordered">
+                                        <thead class="bg-info">
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Nama Barang</th>
+                                                <th>Kemasan</th>
+                                                <th>Jumlah</th>
+                                                <th>ED</th>
+                                                <th>No Batch</th>
+                                                <th>Sisa Stok</th>
+                                                <th>Harga Jual</th>
+                                                <th>Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="detail_cart">
 
-                                </table>
+                                        </tbody>
 
+                                    </table>
+
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="btnSave" onclick="save()" class="btn btn-primary">Save</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="batal()">Cancel</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" id="btnSave" onclick="save()" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="batal()">Cancel</button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <!-- End Bootstrap modal -->
