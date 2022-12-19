@@ -113,7 +113,7 @@ class retur_keluar extends MY_Controller
             'id_transaksi'         => $items->id,
             'id_barang'         => $items->id_barang,
             'tanggal'         => $tanggal,
-            'transaksi'         => 'Retur Penerimaan',
+            'transaksi'         => 'Retur Keluar',
             'keluar'         => $items->jumlah,
             'ed'         => $items->ed,
             'user_input'  => $id_user,

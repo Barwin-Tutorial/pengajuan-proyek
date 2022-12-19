@@ -113,7 +113,7 @@ class Mod_laporan extends CI_Model
 
 		$sql = $this->db->query("
 			SELECT a.*,b.`nama` AS nama_barang, (SUM(masuk)-SUM(keluar)) AS sisa, b.berat  FROM `stok_opname` a 
-			LEFT JOIN barang b ON a.`id_barang`=b.`id` $gdg GROUP BY a.`id_barang`,a.ed");
+			LEFT JOIN barang b ON a.`id_barang`=b.`id` $gdg GROUP BY a.`id_barang`,a.nobatch");
 		return $sql;
 	}
 
