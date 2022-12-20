@@ -262,18 +262,7 @@ var loadFile = function(event) {
 
 
 $(function () {
-    $("#jumlah").change(function () {
-        var formdata = $('#form').serialize();
-        $.ajax({
-            url : "retur_keluar/add_to_cart",
-            method : "POST",
-            data : formdata,
-            dataType : 'html',
-            success: function(data){
-                $('#detail_cart').html(data);
-            }
-        });
-    })
+
 
     $(document).on('click','.hapus_cart',function(){
             var id=$(this).attr("id_retur_keluar"); //mengambil row_id dari artibut id
@@ -350,6 +339,45 @@ $(document).ready(function(){
     }
 })
 
+$( "#vfaktur").autocomplete({
+        source: 'retur_keluar/get_faktur/?', 
+        select: function (event, ui) {
+
+        $("#vfaktur").val(ui.item.label); // display the selected text
+        var value = ui.item.value;
+        $("#id_keluar").val(value); // save selected id to hidden input
+         $("#pelanggan").val(ui.item.pelanggan);
+         $("#vpel").val(ui.item.nama_pelanggan);
+        return false;
+    },
+
+    change : function (event, ui) {
+     var formdata = $('#form').serialize();
+     $.ajax({
+        url : "retur_keluar/add_to_cart",
+        method : "POST",
+        data : formdata,
+        dataType : 'html',
+        success: function(data){
+            $('#detail_cart').html(data);
+        }
+    });
+     return false;
+ }
+})
+
+    /*$("#jumlah").change(function () {
+        var formdata = $('#form').serialize();
+        $.ajax({
+            url : "retur_keluar/add_to_cart",
+            method : "POST",
+            data : formdata,
+            dataType : 'html',
+            success: function(data){
+                $('#detail_cart').html(data);
+            }
+        });
+    })*/
 // setTimeout(function() { $('input[name="scanbar"]').focus() }, 3000);
  // $('#scanbar').focus();
  $( "#scanbar").autocomplete({
@@ -382,7 +410,7 @@ function batal() {
     });
 }
 
-setTimeout(function() { $('input[name="scanbar"]').focus() }, 3000);
+// setTimeout(function() { $('input[name="scanbar"]').focus() }, 3000);
 </script>
 
 
@@ -431,7 +459,8 @@ setTimeout(function() { $('input[name="scanbar"]').focus() }, 3000);
                             <div class="form-group row ">
                                 <label for="nama" class="col-sm-3 col-form-label">No Faktur</label>
                                 <div class="col-sm-9 kosong">
-                                    <input type="text" class="form-control" name="faktur" id="faktur" placeholder="Faktur" >
+                                    <input type="hidden" class="form-control" name="id_keluar" id="id_keluar" placeholder="Faktur" >
+                                    <input type="text" class="form-control" name="vfaktur" id="vfaktur" placeholder="Faktur" >
                                     <span class="help-block"></span>
                                 </div>
                             </div>

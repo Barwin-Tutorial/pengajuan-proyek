@@ -11,7 +11,7 @@ class retur_keluar extends MY_Controller
     function __construct()
     {
         parent::__construct();
-        $this->load->model('Mod_retur_keluar');
+        $this->load->model(array('Mod_retur_keluar','Mod_keluar'));
         // $this->load->model('dashboard/Mod_dashboard');
     }
 
@@ -95,6 +95,7 @@ class retur_keluar extends MY_Controller
        $save  = array(
         'tanggal'         => $tanggal,
         'id_pelanggan'         => $this->input->post('pelanggan'),
+        'id_keluar'         => $this->input->post('id_keluar'),
         'user_input'  => $id_user,
         'id_gudang'   =>  $id_gudang
     );
@@ -114,8 +115,9 @@ class retur_keluar extends MY_Controller
             'id_barang'         => $items->id_barang,
             'tanggal'         => $tanggal,
             'transaksi'         => 'Retur Keluar',
-            'keluar'         => $items->jumlah,
+            'masuk'         => $items->jumlah,
             'ed'         => $items->ed,
+             'nobatch'         => $items->nobatch,
             'user_input'  => $id_user,
             'id_gudang'   =>  $id_gudang
         );
@@ -268,7 +270,7 @@ private function _validate()
 
 
 
-        function edit_to_cart(){ //fungsi Edit To Cart
+    function edit_to_cart(){ //fungsi Edit To Cart
             $id = $this->input->post('id');
         $this->load_cart($id); //tampilkan cart setelah added
     }
@@ -276,16 +278,26 @@ private function _validate()
     function add_to_cart(){ //fungsi Add To Cart
      $id_user = $this->session->userdata['id_user'];
      $id_retur_keluar = $this->input->post('id');
-     $save_detail  = array(
-        'id_barang'         => $this->input->post('produk_id'),
-        'id_kemasan'         => $this->input->post('kemasan'),
-        'jumlah'         => $this->input->post('jumlah'),
-        'ed'         => $this->input->post('ed'),
-        'id_retur_keluar' => $id_retur_keluar,
-        'id_user'   => $id_user
+     $id_keluar = $this->input->post('id_keluar');
+     $list = $this->Mod_keluar->get_detail($id_keluar);
+    foreach ($list as $items) {
 
-    );
-     $this->Mod_retur_keluar->insert("retur_keluar_detail", $save_detail);
+        $save_detail  = array(
+            'id_barang'         => $items->id_barang,
+            'id_kemasan'         => $items->kemasan,
+            'id_keluar_detail'         => $items->id,
+            'jumlah'         => $items->jumlah,
+            'ed'         => $items->ed,
+            'nobatch'  => $items->nobatch,
+            'id_retur_keluar' => $id_retur_keluar,
+            'id_user'   => $id_user
+
+        );
+        $this->Mod_retur_keluar->insert("retur_keluar_detail", $save_detail);
+
+    }
+     
+     
 
          $this->load_cart($id_retur_keluar); //tampilkan cart setelah added
      }
@@ -304,7 +316,7 @@ private function _validate()
             <td>'.$items->nama_barang.'</td>
             <td>'.$items->nama_satuan.'</td>';
             $output .= '<td><input type="text" size="5" class=" form-control item'.$no.'" onkeypress="return hanyaAngka(event)" value='.$items->jumlah.'></td>
-            <td><input type="date" class="form-control ed'.$no.'" value='.$items->ed.'></td>
+            <td>'.$items->ed.'</td>
             <td>
             <button type="button" id_retur_keluar="'.$items->id_retur_keluar.'" no="'.$no.'"  id_detail="'.$items->id.'" class="hapus_cart btn btn-danger btn-xs">Hapus</button>
             <button type="button" id_retur_keluar="'.$items->id_retur_keluar.'" id_detail="'.$items->id.'" no="'.$no.'" class="simpan_cart btn btn-success btn-xs">simpan</button>
@@ -336,7 +348,7 @@ private function _validate()
         $id_detail = $this->input->post('id_detail');
         $save_detail  = array(
             'jumlah'         => $this->input->post('jumlah'),
-            'ed'         => $this->input->post('ed'),
+            
         );
 
         $this->Mod_retur_keluar->update_detail($id_detail, $save_detail);
@@ -356,4 +368,21 @@ private function _validate()
         $this->load->view('penerimaan/cetak_penerimaan',$data);
 
     }
+
+    public function get_faktur()
+    {
+     $faktur = $this->input->get('term');
+     $data = $this->Mod_retur_keluar->get_faktur($faktur);
+     if (count($data) > 0) {
+
+        foreach ($data as $row){
+            $arr_result[] = array( 'value' => $row->id, 'label'  => $row->faktur,'pelanggan' => $row->id_pelanggan, 'nama_pelanggan' => $row->nama_pelanggan );
+
+        } 
+        echo json_encode($arr_result);
+    }else{
+        $arr_result = array( 'label'  => "Data Tidak di Temukan" );
+        echo json_encode($arr_result);
+    }
+}
 }

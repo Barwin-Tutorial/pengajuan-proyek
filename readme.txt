@@ -14,3 +14,9 @@ Update Database
 2022-12-16
 Penambahan Menu Grafik 
 
+2022-12-20
+tambah field 
+retur_keluar -> id_keluar
+retur_keluar_detail -> id_keluar_detail, nobatch
+
+

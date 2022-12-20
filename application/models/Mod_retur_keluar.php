@@ -246,4 +246,19 @@ class Mod_retur_keluar extends CI_Model
         $this->db->join('satuan c', 'a.id_kemasan=c.id');
         return $this->db->get('retur_keluar_detail a')->result();
     }
+
+     function get_faktur($faktur)
+    {   
+        $level = $this->session->userdata['id_level'];
+         $id_gudang = $this->session->userdata['id_gudang'];
+         if ($level!=1) {
+            $this->db->where('id_gudang', $id_gudang);
+        } 
+        
+        $this->db->select('a.*,b.nama as nama_pelanggan');
+        $this->db->like('a.faktur', $faktur);
+        $this->db->join('pelanggan b', 'a.id_pelanggan=b.id');
+        $this->db->limit(10);
+        return $this->db->get('keluar a')->result();
+    }
 }
