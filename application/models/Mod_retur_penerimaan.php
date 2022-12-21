@@ -129,7 +129,8 @@ class Mod_retur_penerimaan extends CI_Model
 			$this->db->where('a.id_gudang', $id_gudang);
 		} 
         $this->db->where('a.id',$id);
-        $this->db->select('a.*, d.nama as nama_supplier,d.alamat');
+        $this->db->select('a.*, d.nama as nama_supplier,d.alamat,b.faktur');
+        $this->db->join('penerimaan b','a.id_penerimaan=b.id');
 		$this->db->join('supplier d', 'a.id_supplier=d.id');
         return $this->db->get('retur_penerimaan a')->row();
     }
@@ -245,5 +246,20 @@ class Mod_retur_penerimaan extends CI_Model
         $this->db->join('barang b', 'a.id_barang=b.id');
         $this->db->join('satuan c', 'a.id_kemasan=c.id');
         return $this->db->get('retur_penerimaan_detail a')->result();
+    }
+
+         function get_faktur($faktur)
+    {   
+        $level = $this->session->userdata['id_level'];
+         $id_gudang = $this->session->userdata['id_gudang'];
+         if ($level!=1) {
+            $this->db->where('id_gudang', $id_gudang);
+        } 
+        
+        $this->db->select('a.*,b.nama as nama_supplier');
+        $this->db->like('a.faktur', $faktur);
+        $this->db->join('supplier b', 'a.id_supplier=b.id');
+        $this->db->limit(10);
+        return $this->db->get('penerimaan a')->result();
     }
 }

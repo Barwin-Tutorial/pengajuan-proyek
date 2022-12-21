@@ -20,3 +20,7 @@ retur_keluar -> id_keluar
 retur_keluar_detail -> id_keluar_detail, nobatch
 
 
+2022-12-21
+penambahan field 
+retur_penerimaan -> id_penerimaan
+retur_penerimaan_detail -> id_detail_penerimaan, nobatch

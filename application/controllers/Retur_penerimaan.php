@@ -11,7 +11,7 @@ class Retur_penerimaan extends MY_Controller
     function __construct()
     {
         parent::__construct();
-        $this->load->model('Mod_retur_penerimaan');
+        $this->load->model(array('Mod_retur_penerimaan','Mod_penerimaan'));
         // $this->load->model('dashboard/Mod_dashboard');
     }
 
@@ -95,6 +95,7 @@ class Retur_penerimaan extends MY_Controller
        $save  = array(
         'tanggal'         => $tanggal,
         'id_supplier'         => $this->input->post('supplier'),
+        'id_penerimaan'         => $this->input->post('id_penerimaan'),
         'user_input'  => $id_user,
         'id_gudang'   =>  $id_gudang
     );
@@ -116,6 +117,7 @@ class Retur_penerimaan extends MY_Controller
             'transaksi'         => 'Retur Penerimaan',
             'keluar'         => $items->jumlah,
             'ed'         => $items->ed,
+            'nobatch'         => $items->nobatch,
             'user_input'  => $id_user,
             'id_gudang'   =>  $id_gudang
         );
@@ -166,6 +168,7 @@ public function update()
                     'transaksi'         => 'Retur Penerimaan',
                     'keluar'         => $items->jumlah,
                     'ed'         => $items->ed,
+                    'nobatch'         => $items->nobatch,
                     'user_input'  => $id_user,
                     'id_gudang'   =>  $id_gudang
                 );
@@ -276,17 +279,22 @@ private function _validate()
     function add_to_cart(){ //fungsi Add To Cart
      $id_user = $this->session->userdata['id_user'];
      $id_retur_penerimaan = $this->input->post('id');
-     $save_detail  = array(
-        'id_barang'         => $this->input->post('produk_id'),
-        'id_kemasan'         => $this->input->post('kemasan'),
-        'jumlah'         => $this->input->post('jumlah'),
-        'ed'         => $this->input->post('ed'),
+      $id_penerimaan = $this->input->post('id_penerimaan');
+     $list = $this->Mod_penerimaan->get_detail($id_penerimaan);
+     foreach ($list as $items) {
+       $save_detail  = array(
+        'id_barang'         => $items->id_barang,
+        'id_kemasan'         => $items->kemasan,
+        'jumlah'         => $items->jumlah,
+        'ed'         => $items->ed,
+        'nobatch'         => $items->nobatch,
         'id_retur_penerimaan' => $id_retur_penerimaan,
+        'id_detail_penerimaan' => $items->id,
         'id_user'   => $id_user
 
     );
-     $this->Mod_retur_penerimaan->insert("retur_penerimaan_detail", $save_detail);
-
+       $this->Mod_retur_penerimaan->insert("retur_penerimaan_detail", $save_detail);
+   }
          $this->load_cart($id_retur_penerimaan); //tampilkan cart setelah added
      }
 
@@ -304,7 +312,7 @@ private function _validate()
             <td>'.$items->nama_barang.'</td>
             <td>'.$items->nama_satuan.'</td>';
             $output .= '<td><input type="text" size="5" class=" form-control item'.$no.'" onkeypress="return hanyaAngka(event)" value='.$items->jumlah.'></td>
-            <td><input type="date" class="form-control ed'.$no.'" value='.$items->ed.'></td>
+            <td>'.$items->ed.'</td>
             <td>
             <button type="button" id_retur_penerimaan="'.$items->id_retur_penerimaan.'" no="'.$no.'"  id_detail="'.$items->id.'" class="hapus_cart btn btn-danger btn-xs">Hapus</button>
             <button type="button" id_retur_penerimaan="'.$items->id_retur_penerimaan.'" id_detail="'.$items->id.'" no="'.$no.'" class="simpan_cart btn btn-success btn-xs">simpan</button>
@@ -356,4 +364,21 @@ private function _validate()
         $this->load->view('penerimaan/cetak_penerimaan',$data);
 
     }
+
+    public function get_faktur()
+    {
+     $faktur = $this->input->get('term');
+     $data = $this->Mod_retur_penerimaan->get_faktur($faktur);
+     if (count($data) > 0) {
+
+        foreach ($data as $row){
+            $arr_result[] = array( 'value' => $row->id, 'label'  => $row->faktur,'supplier' => $row->id_supplier, 'nama_supplier' => $row->nama_supplier );
+
+        } 
+        echo json_encode($arr_result);
+    }else{
+        $arr_result = array( 'label'  => "Data Tidak di Temukan" );
+        echo json_encode($arr_result);
+    }
+}
 }
