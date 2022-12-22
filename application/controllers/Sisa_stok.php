@@ -13,7 +13,7 @@ class Sisa_stok extends MY_Controller
     function __construct()
     {
         parent::__construct();
-        $this->load->model('Mod_arus_stok');
+        $this->load->model(array('Mod_arus_stok','Mod_laporan'));
         // $this->load->model('dashboard/Mod_dashboard');
     }
 
@@ -34,7 +34,7 @@ class Sisa_stok extends MY_Controller
             $akses=$a_submenu->view;
         }
         if ($akses=="Y") {
-          $data['lap'] = $this->Mod_arus_stok->get_laporan_sisa();
+          $data['lap'] = $this->Mod_laporan->get_laporan_sisa();
             $this->template->load('layoutbackend','stok/sisa_stok',$data);
         }else{
             $data['page']=$link;
@@ -67,7 +67,7 @@ class Sisa_stok extends MY_Controller
         $tglrange =$this->input->post('tanggal');
         $perundangan =$this->input->post('perundangan');
         $data['act'] = "";
-        $data['lap'] = $this->Mod_arus_stok->get_laporan($id_barang,$tglrange,$perundangan);
+        $data['lap'] = $this->Mod_laporan->get_laporan($id_barang,$tglrange,$perundangan);
         $this->load->view('stok/laporan',$data);
     }
 
@@ -77,7 +77,7 @@ class Sisa_stok extends MY_Controller
         $id_barang=$this->input->post('id_barang');
         $tglrange =$this->input->post('tanggal');
         $perundangan =$this->input->post('perundangan');
-        $list = $this->Mod_arus_stok->get_laporan($id_barang,$tglrange,$perundangan)->result();
+        $list = $this->Mod_laporan->get_laporan($id_barang,$tglrange,$perundangan)->result();
       $spreadsheet = new Spreadsheet();
       $sheet = $spreadsheet->getActiveSheet();
       $sheet->setCellValue('A1', 'No');

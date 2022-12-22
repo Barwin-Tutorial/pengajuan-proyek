@@ -8,7 +8,7 @@
             </div>
             <div class="card-body">
                 <form class="form" id="form_lap" action="<?php echo base_url('arus_stok/laporan_xls') ?>"  method="post">
-               <div class="row">
+               <div class="form-group row">
                     <div class="col-md-6">
                         <div class="input-group input-group-sm">
                             <label class="col-md-6">Range Tanggal</label>
@@ -16,7 +16,7 @@
                         </div>
                     </div>
                   </div>
-                  <div class="row">
+                  <div class="form-group row">
                     <div class="col-md-6">
                         <div class="input-group input-group-sm">
                             <label class="col-md-6">Barang</label>
@@ -25,7 +25,7 @@
                         </div>
                     </div>
                   </div>
-                <div class="row">
+                <div class="form-group row">
                     <div class="col-md-6">
                         <div class="input-group input-group-sm">
                             <label class="aria-label col-md-6">Perundangan</label>
@@ -40,7 +40,7 @@
                     </div>
                   </div>
                   
-                  <div class="row">
+                  <div class="form-group row">
                     <div class="col-md-4">
                         <div class="form-group input-group-sm">
                             <button type="button" class="btn btn-primary btn-xs" onclick="sortir()">Tampilkan</button>

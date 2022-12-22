@@ -8,7 +8,7 @@
       </div>
       <div class="card-body">
         <form class="form" id="form_lap" action="<?php echo base_url('lap_kb/lap_excel') ?>" method="post">
-          <div class="row">
+          <div class="form-group row">
 
             <div class="col-md-8">
               <div class="input-group input-group-sm">
@@ -17,7 +17,7 @@
               </div>
             </div>
           </div>
-          <div class="row">
+          <div class="form-group row">
            <div class="col-md-8">
             <div class="input-group input-group-sm">
               <label class="aria-label col-md-5">Nama Pelanggan</label>
@@ -26,10 +26,10 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="form-group row">
          <div class="col-md-8">
           <div class="form-group input-group-sm">
-            <label class="aria-label col-md-5">Nama Pelanggan</label>
+            <label class="aria-label col-md-5"> </label>
             <input  type="radio"  name="customRadio" value="Group" checked="">Group
             <input type="radio"  name="customRadio" value="Detail">Detail
 
@@ -38,8 +38,6 @@
 
         </div>
       </div>
-    </div>
-      <div class="col-md-12">
         <div class="form-group input-group-sm">
           <button type="button" class="btn btn-primary btn-xs" onclick="sortir()">Tampilkan</button>
           <button type="button" class="btn btn-primary btn-xs" onclick="reset()">Reset</button>
@@ -47,8 +45,7 @@
           <button class="btn btn-success btn-xs" type="submit" >Export Excel <i class="fa fa-file-excel"></i></button>
           <!-- <button class="btn btn-warning btn-xs" type="button" onclick="download_pdf()">Download <i class="fa fa-file-pdf"></i></button> -->
         </div>
-
-    </div>
+      
   </form>
   <div id="tampil"></div>
 </div>

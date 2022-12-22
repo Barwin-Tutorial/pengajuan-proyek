@@ -8,7 +8,7 @@
       </div>
       <div class="card-body">
         <form class="form" id="form_lap" action="<?php echo base_url('lap_tb/lap_excel') ?>" method="post">
-          <div class="row">
+          <div class="form-group row">
 
             <div class="col-md-8">
               <div class="input-group input-group-sm">
@@ -17,7 +17,7 @@
               </div>
             </div>
           </div>
-          <div class="row">
+          <div class="form-group row">
            <div class="col-md-8">
             <div class="input-group input-group-sm">
               <label class="aria-label col-md-5">Nama Supplier</label>
@@ -26,7 +26,7 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="form-group row">
          <div class="col-md-8">
           <div class="input-group input-group-sm">
             <label class="aria-label col-md-5">Faktur</label>
@@ -34,7 +34,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="form-group row">
         <div class="col-md-4">
           <div class="form-group input-group-sm">
             <button type="button" class="btn btn-primary btn-xs" onclick="sortir()">Tampilkan</button>

@@ -58,7 +58,7 @@ header('Content-Disposition: attachment; filename="'.$filename.'.xls"');
 			<th>Pelanggan</th>
 			<th>Supplier</th>
 			<th>No. Batch</th>
-			<th>Faktur Penerimaan</th>
+			<th>Faktur</th>
 			<td>Awal</td>
 			<th>Masuk</th>
 			<th>Keluar</th>
