@@ -2,10 +2,11 @@
     <thead class="bg-primary">
     	<tr >
     		<th >No.</th>
+    		<th>NO. SBBK</th>
     		<th >Tanggal</th>
     		<th >Pelanggan</th>
     		<th >Nama Barang</th>
-    		<th >Kemasan</th>
+    		<th >Satuan</th>
     		<th>Ed</th>
     		<th>No Batch</th>
     		<th >Jumlah</th>
@@ -19,6 +20,7 @@
 			?>
 				<tr>
 					<td><?=$no++;?></td>
+					<td><?php echo $row->faktur; ?></td>
 					<td><?php echo date("d/m/Y", strtotime($row->tanggal)); ?></td>
 					<td><?php echo $row->nama_pelanggan; ?></td>
 					<td><?php echo $row->nama_barang; ?></td>

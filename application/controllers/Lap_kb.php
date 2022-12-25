@@ -63,8 +63,9 @@ class Lap_kb extends MY_Controller
         $group=$this->input->post('group');
         $tglrange =$this->input->post('tgl');
         $id_pelanggan =$this->input->post('id_pelanggan');
+        
         $data['act'] = $group;
-        $data['lap'] = $this->Mod_laporan->get_laporan_kb($tglrange,$id_pelanggan);
+        $data['lap'] = $this->Mod_laporan->get_laporan_kb($tglrange,$id_pelanggan,$group);
         $this->load->view('laporan/vlap_kb',$data);
     }
 
@@ -91,7 +92,7 @@ class Lap_kb extends MY_Controller
       $sheet->setCellValue('B1', 'Tanggal');
       $sheet->setCellValue('C1', 'Pelanggan');
       $sheet->setCellValue('D1', 'Nama Barang');
-      $sheet->setCellValue('E1', 'Kemasan');
+      $sheet->setCellValue('E1', 'Satuan');
       $sheet->setCellValue('F1', 'Ed');
       $sheet->setCellValue('G1', 'No Batch');
       $sheet->setCellValue('H1', 'Jumlah');

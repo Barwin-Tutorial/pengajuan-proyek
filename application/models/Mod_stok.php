@@ -135,5 +135,33 @@ class Mod_stok extends CI_Model
     	$this->db->limit(10);
         return $this->db->get('barang a')->result();
     }
+
+        function get_sisa_stok($id_barang,$nobatch)
+    {   
+    
+    	
+        $level = $this->session->userdata['id_level'];
+         $id_gudang = $this->session->userdata['id_gudang'];
+         $and="";
+         if ($level!=1) {
+            $and = " AND a.id_gudang='$id_gudang'";
+        } 
+        $date = date("Y-m-d");
+        if (!empty($id_barang)) {
+    		$andb=" AND id_barang='$id_barang'";
+    	}
+    	if (!empty($nobatch)) {
+    		$and2=" AND nobatch='$nobatch'";
+    	}
+        $sql=$this->db->query("SELECT * FROM (
+            SELECT  SUM(a.`masuk`) AS masuk, SUM(keluar) AS keluar, (SUM(a.`masuk`)-SUM(keluar)) AS sisa, a.ed
+            FROM `stok_opname` `a`
+            JOIN `barang` `b` ON `a`.`id_barang`=`b`.`id`
+            JOIN `satuan` `c` ON `b`.`kemasan`=`c`.`id`
+            WHERE 1=1   $and2 $and $andb
+        ) AS ab");
+
+        return $sql;
+    }
  
 }

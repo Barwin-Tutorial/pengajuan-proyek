@@ -49,6 +49,7 @@ public function ajax_list()
         $row[] = $submenu->icon;
         $row[] = $submenu->nama_menu;
         $row[] = $submenu->is_active;
+        $row[] = $submenu->urutan;
         if ($submenu->is_active=="N") {
          $row[] ="<a class=\"btn btn-xs btn-outline-info\" href=\"javascript:void(0)\" title=\"View\" onclick=\"vsubmenu('$submenu->id_submenu')\"><i class=\"fas fa-eye\"></i></a> <a class=\"btn btn-xs btn-outline-primary\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit_submenu('$submenu->id_submenu')\"><i class=\"fas fa-edit\"></i></a><a class=\"btn btn-xs btn-outline-danger\" href=\"javascript:void(0)\" title=\"Delete\"   onclick=\"delsubmenu('$submenu->id_submenu')\"><i class=\"fas fa-trash\"></i></a>";
         }else{
@@ -102,7 +103,8 @@ public function insert()
     'link'      => $this->input->post('link'),
     'icon'      => $this->input->post('icon'),
     'id_menu'   => $this->input->post('id_menu'),
-    'is_active' => $this->input->post('is_active')
+    'is_active' => $this->input->post('is_active'),
+    'urutan'   => $this->input->post('urutan'),
 );
  $this->Mod_submenu->insertsubmenu("tbl_submenu", $save);
  $insert_id = $this->db->insert_id();
@@ -129,7 +131,8 @@ public function update()
         'link'      => $this->input->post('link'),
         'icon'      => $this->input->post('icon'),
         'id_menu'    => $this->input->post('id_menu'),
-        'is_active' => $this->input->post('is_active')
+        'is_active' => $this->input->post('is_active'),
+        'urutan'   => $this->input->post('urutan'),
     );
     $this->Mod_submenu->updatesubmenu($id, $data);
     echo json_encode(array("status" => TRUE));

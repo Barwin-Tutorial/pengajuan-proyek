@@ -20,10 +20,10 @@
                                     <th>Nama</th>
                                     <th>Satuan</th>
                                     <th>Berat</th>
-                                    <th>Perundangan</th>
+                                    <th>Golongan</th>
                                     <th>Harga</th>
                                     <th>Lokasi Rak</th>
-                                    <th>Aktivasi</th>
+                                    <th>Batch</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -148,7 +148,7 @@ function add()
     $('.form-group').removeClass('has-error'); // clear error class
     $('.help-block').empty(); // clear error string
     $('#modal_form').modal({backdrop: 'static', keyboard: false}); // show bootstrap modal
-    $('.modal-title').text('Add barang'); // Set Title to Bootstrap modal title
+    $('.modal-title').text('Add Barang'); // Set Title to Bootstrap modal title
 }
 
 function edit(id){
@@ -173,13 +173,18 @@ function edit(id){
             $('[name="perundangan"]').val(data.perundangan);
             $('[name="harga"]').val(data.harga);
             $('[name="rak"]').val(data.rak);
-            $('[name="view"]').val(data.view);
-            
+            $('[name="batch"]').val(data.batch);
+            $('[name="thn_pengadaan"]').val(data.thn_pengadaan);
+            $('[name="no_ijin_edar"]').val(data.no_ijin_edar);
+            $('[name="manufaktur_date"]').val(data.manufaktur_date);
+            $('[name="nosbbk"]').val(data.nosbbk);
+            $('[name="sumber_dana"]').val(data.sumber_dana);
+            $('[name="ed"]').val(data.ed);
              /*var image = "<?php echo base_url('assets/barang/')?>";
              $("#v_image").attr("src",image+data.image);*/
 
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
-            $('.modal-title').text('Edit barang'); // Set title to Bootstrap modal title
+            $('.modal-title').text('Edit Barang'); // Set title to Bootstrap modal title
 
         },
         error: function (jqXHR, textStatus, errorThrown)
@@ -325,22 +330,22 @@ function barcode(id) {
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group row ">
-                                    <label for="nama" class="col-sm-3 col-form-label">Barcode</label>
-                                    <div class="col-sm-9 kosong">
+                                    <label for="nama" class="col-sm-4 col-form-label">Barcode</label>
+                                    <div class="col-sm-8 kosong">
                                         <input type="text" class="form-control" autofocus  name="barcode" id="barcode" placeholder="Barcode" >
                                         <span class="help-block"></span>
                                     </div>
                                 </div>
                                 <div class="form-group row ">
-                                    <label for="nama" class="col-sm-3 col-form-label">Nama</label>
-                                    <div class="col-sm-9 kosong">
+                                    <label for="nama" class="col-sm-4 col-form-label">Nama</label>
+                                    <div class="col-sm-8 kosong">
                                         <input type="text" class="form-control" name="nama" id="nama" placeholder="Nama" >
                                         <span class="help-block"></span>
                                     </div>
                                 </div>
                                 <div class="form-group row ">
-                                    <label for="nama" class="col-sm-3 col-form-label">Satuan</label>
-                                    <div class="col-sm-9 kosong">
+                                    <label for="nama" class="col-sm-4 col-form-label">Satuan</label>
+                                    <div class="col-sm-8 kosong">
                                         <select class="form-control" name="kemasan" >
                                           <option value="">Pilih Satuan...</option>
                                           <?php 
@@ -354,8 +359,8 @@ function barcode(id) {
                             </div>
 
                             <div class="form-group row ">
-                                <label for="nama" class="col-sm-3 col-form-label">Perundangan</label>
-                                <div class="col-sm-9 kosong">
+                                <label for="nama" class="col-sm-4 col-form-label">Golongan</label>
+                                <div class="col-sm-8 kosong">
 
                                     <select class="form-control" name="perundangan" >
                                       <option value="">Pilih...</option>
@@ -368,43 +373,77 @@ function barcode(id) {
                                 <span class="help-block"></span>
                             </div>
                         </div>
+                        <div class="form-group row ">
+                        <label for="nama_owner" class="col-sm-4 col-form-label">Tahun Pengadaan</label>
+                        <div class="col-sm-8 kosong">
+                           <input type="text" class="form-control" name="thn_pengadaan" id="thn_pengadaan" placeholder="Tahun Pengadaan" >
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                     <div class="form-group row ">
+                        <label for="nama_owner" class="col-sm-4 col-form-label">NIE</label>
+                        <div class="col-sm-8 kosong">
+                           <input type="text" class="form-control" name="no_ijin_edar" id="no_ijin_edar" placeholder="No Ijin Edar" >
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row ">
+                        <label for="nama_owner" class="col-sm-4 col-form-label">Sumber Dana</label>
+                        <div class="col-sm-8 kosong">
+                           <input type="text" class="form-control" name="sumber_dana" id="sumber_dana" placeholder="Sumber Dana" >
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
                     </div>
                     <div class="col-md-6">
                      <div class="form-group row ">
-                        <label for="nama" class="col-sm-3 col-form-label">Berat</label>
-                        <div class="col-sm-9 kosong">
+                        <label for="nama" class="col-sm-4 col-form-label">Berat</label>
+                        <div class="col-sm-8 kosong">
                             <input type="text" class="form-control" name="berat" id="berat" placeholder="Berat" >
                             <span class="help-block"></span>
                         </div>
                     </div>
                     <div class="form-group row ">
-                        <label for="nama" class="col-sm-3 col-form-label">Harga</label>
-                        <div class="col-sm-9 kosong">
+                        <label for="nama" class="col-sm-4 col-form-label">Harga</label>
+                        <div class="col-sm-8 kosong">
                             <input type="text" class="form-control" onkeypress="return hanyaAngka(event)"  name="harga" id="harga" placeholder="Harga" >
                             <span class="help-block"></span>
                         </div>
                     </div>
                     <div class="form-group row ">
-                        <label for="nama" class="col-sm-3 col-form-label">Lokasi Rak</label>
-                        <div class="col-sm-9 kosong">
+                        <label for="nama" class="col-sm-4 col-form-label">Lokasi Rak</label>
+                        <div class="col-sm-8 kosong">
                             <input type="text" class="form-control" name="rak" id="rak" placeholder="Lokasi Rak" >
                             <span class="help-block"></span>
                         </div>
                     </div>
-                        <!-- <div class="form-group row ">
-                            <label for="logo" class="col-sm-3 col-form-label">Foto</label>
-                            <div class="col-sm-9 kosong">
-                              <img  id="v_image" width="100px" height="100px">
-                              <input type="file" class="form-control btn-file" onchange="loadFile(event)" name="imagefile" id="imagefile" placeholder="Image" value="UPLOAD">
-                          </div>
-                      </div> -->
+                      
                       <div class="form-group row ">
-                        <label for="nama_owner" class="col-sm-3 col-form-label">Aktivasi</label>
-                        <div class="col-sm-9 kosong">
-                            <select class="form-control select" name="aktivasi">
-                                <option value="Ya">Ya</option>
-                                <option value="Tidak">Tidak</option>
-                            </select>
+                        <label for="nama_owner" class="col-sm-4 col-form-label">Batch</label>
+                        <div class="col-sm-8 kosong">
+                           <input type="text" class="form-control" name="batch" id="batch" placeholder="Batch" >
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                     
+                     <div class="form-group row ">
+                        <label for="nama_owner" class="col-sm-4 col-form-label">MD</label>
+                        <div class="col-sm-8 kosong">
+                           <input type="date" class="form-control" name="manufaktur_date" id="manufaktur_date" placeholder="Manufaktur Date" value="<?php echo date("d/m/Y") ?>">
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                     <div class="form-group row ">
+                        <label for="nama_owner" class="col-sm-4 col-form-label">NO. SBBK</label>
+                        <div class="col-sm-8 kosong">
+                           <input type="text" class="form-control" name="nosbbk" id="nosbbk" placeholder="NO. SBBK" >
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row ">
+                        <label for="nama_owner" class="col-sm-4 col-form-label">Expired Date</label>
+                        <div class="col-sm-8 kosong">
+                           <input type="date" class="form-control" name="ed" id="ed" placeholder="Expired Date" value="<?php echo date("d/m/Y") ?>">
                             <span class="help-block"></span>
                         </div>
                     </div>

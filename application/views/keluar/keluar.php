@@ -16,9 +16,9 @@
                         <table id="tbl_keluar" class="table table-bordered table-striped table-hover">
                             <thead>
                                 <tr class="bg-info">
-                                    <th>Faktur</th>
+                                    <th>NO. SBBK</th>
                                     <th>Tanggal</th>
-                                    <th>Pelangcgan</th>
+                                    <th>Pelanggan</th>
                                     <th>Nama Barang</th>
                                     <th>Jumlah</th>
                                     <th>Aksi</th>
@@ -160,8 +160,16 @@ function add()
     $('.form-group').removeClass('has-error'); // clear error class
     $('.help-block').empty(); // clear error string
     $('#modal_form').modal({backdrop: 'static', keyboard: false}); // show bootstrap modal
-    $('.modal-title').text('Add keluar'); // Set Title to Bootstrap modal title
+    $('.modal-title').text('Add Barang Keluar'); // Set Title to Bootstrap modal title
     setTimeout(function() { $('input[name="produk_nama"]').focus() }, 3000);
+    $.ajax({
+        url : "keluar/no_faktur",
+        method : "POST",
+        dataType : 'json',
+        success :function(data){
+            $('#faktur').val(data.kode);
+        }
+    });
 }
 
 function edit(id){
@@ -182,6 +190,7 @@ function edit(id){
             $('[name="tanggal"]').val(data.tanggal);
             $('[name="vpel"]').val(data.nama_pelanggan);
             $('[name="pelanggan"]').val(data.id_pelanggan);
+            $('[name="faktur"]').val(data.faktur);
 
             $.ajax({
                 url : "keluar/edit_to_cart",
@@ -194,7 +203,7 @@ function edit(id){
                 }
             });
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
-            $('.modal-title').text('Edit Keluar Barang'); // Set title to Bootstrap modal title
+            $('.modal-title').text('Edit Barang Keluar'); // Set title to Bootstrap modal title
 
         },
         error: function (jqXHR, textStatus, errorThrown)
@@ -493,8 +502,18 @@ function batal() {
      }
  });
 }
-
-
+/*$('#tanggal').datetimepicker({
+        format: 'L'
+    });*/
+$(function () {
+    // setDatePicker("#tanggal")
+ $('#tanggal').datetimepicker({
+     format: "DD-MM-YYYY hh:mm:ss",    
+     useCurrent: false 
+ })
+})
+// function setDatePicker(input){  $(input).datetimepicker({    format: "DD-MM-YYYY H:i:s",    useCurrent: false  })}
+// $('input[name="dates"]').daterangepicker({ startDate: moment(), endDate: moment().add(2, 'day')});
 </script>
 
 
@@ -517,7 +536,7 @@ function batal() {
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group row ">
-                                    <label for="nama" class="col-sm-4 col-form-label">Nama Pelanggan</label>
+                                    <label for="nama" class="col-sm-4 col-form-label">Pelanggan</label>
                                     <div class="col-sm-8 kosong">
                                         <input type="hidden" class="form-control" name="pelanggan" id="pelanggan" placeholder="Nama Pelanggan" >
                                         <input type="text" class="form-control" name="vpel" id="vpel"  autocomplete="off" placeholder="Nama Pelanggan" >
@@ -527,8 +546,17 @@ function batal() {
                                 </div>
                                 <div class="form-group row ">
                                     <label for="nama" class="col-sm-4 col-form-label">Tanggal</label>
-                                    <div class="col-sm-8 kosong">
-                                        <input type="date" class="form-control" name="tanggal" id="tanggal" placeholder="Tanggal Keluar" value="<?php echo date("Y-m-d") ?>">
+                                    <div class="col-sm-8 kosong" >
+                                        <input type="text" class="form-control datetimepicker-input"  name="tanggal" id="tanggal" placeholder="Tanggal Keluar" data-toggle="datetimepicker" data-target="#tanggal">
+
+                                        <span class="help-block"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group row ">
+                                    <label for="nama" class="col-sm-4 col-form-label">NO. SBBK</label>
+                                    <div class="col-sm-8 kosong" >
+                                       <input type="text" class="form-control" name="faktur" id="faktur" placeholder="No SBBK" value="" >
+
                                         <span class="help-block"></span>
                                     </div>
                                 </div>
@@ -581,12 +609,12 @@ function batal() {
                                             <tr>
                                                 <th>No</th>
                                                 <th>Nama Barang</th>
-                                                <th>Kemasan</th>
+                                                <th>Satuan</th>
                                                 <th>Jumlah</th>
                                                 <th>ED</th>
                                                 <th>No Batch</th>
                                                 <th>Sisa Stok</th>
-                                                <th>Harga Jual</th>
+                                                <th>Harga</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>

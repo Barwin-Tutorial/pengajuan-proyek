@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * Create By : Aryo
  * Youtube : Aryo Coding
  */
-class Mod_penerimaan extends CI_Model
+class Mod_masuk extends CI_Model
 {
 	var $table = 'penerimaan';
 	var $column_search = array('faktur'); 
@@ -119,7 +119,7 @@ class Mod_penerimaan extends CI_Model
          function update_stok_opname($id, $data)
     {
         $this->db->where('id_transaksi', $id);
-        $this->db->where('transaksi', 'Penerimaan');
+        $this->db->where('transaksi', 'Barang Masuk');
         $this->db->update('stok_opname', $data);
     }
 
@@ -225,7 +225,7 @@ class Mod_penerimaan extends CI_Model
 
     function get_stok($id_transaksi)
     {   
-    	$this->db->where('transaksi', 'Penerimaan');
+    	$this->db->where('transaksi', 'Barang Masuk');
     	$this->db->where('id_transaksi', $id_transaksi);
         return $this->db->get('stok_opname')->result();
     }
@@ -233,7 +233,7 @@ class Mod_penerimaan extends CI_Model
         function del_stok($id, $table)
     {
         $this->db->where('id_transaksi', $id);
-        $this->db->where('transaksi' , 'Penerimaan');
+        $this->db->where('transaksi' , 'Barang Masuk');
         $this->db->delete($table);
     }
 

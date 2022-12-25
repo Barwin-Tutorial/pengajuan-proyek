@@ -6,7 +6,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header bg-light">
-                        <h3 class="card-title"><i class="fa fa-list text-blue"></i> Data Perundangan</h3>
+                        <h3 class="card-title"><i class="fa fa-list text-blue"></i> Data Golongan</h3>
                         <div class="text-right">
                             <button type="button" class="btn btn-sm btn-outline-primary  add" onclick="add()" title="Add Data" ><i class="fas fa-plus" ></i> Add</button>
                         </div>
@@ -47,7 +47,7 @@ $(document).ready(function() {
         "responsive": true,
         "autoWidth": false,
         "language": {
-            "sEmptyTable": "Data Perundangan Belum Ada"
+            "sEmptyTable": "Data Golongan Belum Ada"
         },
         "processing": true, //Feature control the processing indicator.
         "serverSide": true, //Feature control DataTables' server-side processing mode.
@@ -141,7 +141,7 @@ function add()
     $('.form-group').removeClass('has-error'); // clear error class
     $('.help-block').empty(); // clear error string
     $('#modal_form').modal({backdrop: 'static', keyboard: false}); // show bootstrap modal
-    $('.modal-title').text('Add Perundangan'); // Set Title to Bootstrap modal title
+    $('.modal-title').text('Add Golongan'); // Set Title to Bootstrap modal title
 }
 
 function edit(id){
@@ -162,7 +162,7 @@ function edit(id){
             $('[name="nama"]').val(data.nama);
            
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
-            $('.modal-title').text('Edit perundangan'); // Set title to Bootstrap modal title
+            $('.modal-title').text('Edit Golongan'); // Set title to Bootstrap modal title
 
         },
         error: function (jqXHR, textStatus, errorThrown)
@@ -245,7 +245,7 @@ var loadFile = function(event) {
         <div class="modal-content ">
 
             <div class="modal-header">
-                <h3 class="modal-title">Perundangan Form</h3>
+                <h3 class="modal-title">Golongan Form</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -257,7 +257,7 @@ var loadFile = function(event) {
                     <div class="card-body">
                        
                         <div class="form-group row ">
-                            <label for="nama" class="col-sm-3 col-form-label">Nama Perundangan</label>
+                            <label for="nama" class="col-sm-3 col-form-label">Nama Golongan</label>
                             <div class="col-sm-9 kosong">
                                 <input type="text" class="form-control" name="nama" id="nama" placeholder="Nama" >
                                 <span class="help-block"></span>

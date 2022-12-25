@@ -78,6 +78,9 @@ class Mod_dashboard extends CI_Model
 
 	function terlaris($id, $tgl)
 	{
+		$date=explode(" - ", $tgl);
+ 		$p1=date("Y-m-d", strtotime($date[0]));
+		$p2=date("Y-m-d", strtotime($date[1]));
 
 		$level = $this->session->userdata['id_level'];
 		$id_gudang = $this->session->userdata['id_gudang'];
@@ -91,12 +94,16 @@ class Mod_dashboard extends CI_Model
 
 		$sql=$this->db->query("SELECT b.`nama` , COUNT(a.id_barang) AS total FROM keluar_detail a 
 			JOIN barang b ON a.`id_barang`=b.`id`
-			JOIN keluar c ON a.`id_keluar`=c.`id` WHERE 1=1 $and AND c.`tanggal`='$tgl' GROUP BY a.`id_barang` ORDER BY total LIMIT 10 ");
+			JOIN keluar c ON a.`id_keluar`=c.`id` WHERE 1=1 $and AND date(c.`tanggal`) BETWEEN '$p1' AND '$p2'  GROUP BY a.`id_barang` ORDER BY total LIMIT 10 ");
 		return $sql;
 	}
 
 	function chart_pelanggan($tgl)
 	{
+		$date=explode(" - ", $tgl);
+ 		$p1=date("Y-m-d", strtotime($date[0]));
+		$p2=date("Y-m-d", strtotime($date[1]));
+
 		$level = $this->session->userdata['id_level'];
 		$id_gudang = $this->session->userdata['id_gudang'];
 		$and="";
@@ -105,7 +112,7 @@ class Mod_dashboard extends CI_Model
 		} 
 		$sql=$this->db->query("SELECT c.`nama`, COUNT(b.id_pelanggan) AS total FROM keluar_detail a 
 			JOIN keluar b ON a.`id_keluar`=b.`id`
-			JOIN pelanggan c ON b.`id_pelanggan`=c.`id` WHERE 1=1  AND b.`tanggal`='$tgl' $and GROUP BY b.`id_pelanggan` ORDER BY total LIMIT 10  ");
+			JOIN pelanggan c ON b.`id_pelanggan`=c.`id` WHERE 1=1   AND date(b.`tanggal`) BETWEEN '$p1' AND '$p2' $and GROUP BY b.`id_pelanggan` ORDER BY total LIMIT 10  ");
 		return $sql;
 	}
 

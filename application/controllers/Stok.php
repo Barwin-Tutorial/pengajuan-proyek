@@ -124,59 +124,67 @@ class Stok extends MY_Controller
         echo json_encode(array("status" => TRUE));
     }
 
-        public function get_brg()
+    public function get_brg()
     {
         
-       $id = $this->input->get('term');
-        $data = $this->Mod_stok->get_brg($id);
-        if (count($data) > 0) {
-            foreach ($data as $row) {
-                $arr_result[] = array( 'label'  => $row->nama, 'produk_nama'  => $row->nama, 'produk_id' => $row->id, 'produk_harga' =>  $row->harga, 'id_kemasan' => $row->kemasan, 'nama_satuan' => $row->nama_satuan);
-            }
-            echo json_encode($arr_result);
-        }else{
-            $arr_result = array( 'produk_nama'  => "Data Tidak di Temukan" );
-            echo json_encode($arr_result);
+     $id = $this->input->get('term');
+     $data = $this->Mod_stok->get_brg($id);
+     if (count($data) > 0) {
+        foreach ($data as $row) {
+            $arr_result[] = array( 'label'  => $row->nama, 'produk_nama'  => $row->nama, 'produk_id' => $row->id, 'produk_harga' =>  $row->harga, 'id_kemasan' => $row->kemasan, 'nama_satuan' => $row->nama_satuan);
         }
-
+        echo json_encode($arr_result);
+    }else{
+        $arr_result = array( 'produk_nama'  => "Data Tidak di Temukan" );
+        echo json_encode($arr_result);
     }
-    private function _validate()
+
+}
+private function _validate()
+{
+    $data = array();
+    $data['error_string'] = array();
+    $data['inputerror'] = array();
+    $data['status'] = TRUE;
+
+    if($this->input->post('nama_barang') == '')
     {
-        $data = array();
-        $data['error_string'] = array();
-        $data['inputerror'] = array();
-        $data['status'] = TRUE;
-
-        if($this->input->post('nama_barang') == '')
-        {
-            $data['inputerror'][] = 'nama_barang';
-            $data['error_string'][] = 'Barang Tidak Boleh Kosong';
-            $data['status'] = FALSE;
-        }
-
-        if($this->input->post('transaksi') == '')
-        {
-            $data['inputerror'][] = 'transaksi';
-            $data['error_string'][] = 'Alasan Tidak Boleh Kosong';
-            $data['status'] = FALSE;
-        }
-
-         if($this->input->post('nobatch') == '')
-        {
-            $data['inputerror'][] = 'nobatch';
-            $data['error_string'][] = 'No Batch Tidak Boleh Kosong';
-            $data['status'] = FALSE;
-        }
-        if($this->input->post('ed') == '')
-        {
-            $data['inputerror'][] = 'ed';
-            $data['error_string'][] = 'Expired Date Tidak Boleh Kosong';
-            $data['status'] = FALSE;
-        }
-        if($data['status'] === FALSE)
-        {
-            echo json_encode($data);
-            exit();
-        }
+        $data['inputerror'][] = 'nama_barang';
+        $data['error_string'][] = 'Barang Tidak Boleh Kosong';
+        $data['status'] = FALSE;
     }
+
+    if($this->input->post('transaksi') == '')
+    {
+        $data['inputerror'][] = 'transaksi';
+        $data['error_string'][] = 'Alasan Tidak Boleh Kosong';
+        $data['status'] = FALSE;
+    }
+
+    if($this->input->post('nobatch') == '')
+    {
+        $data['inputerror'][] = 'nobatch';
+        $data['error_string'][] = 'No Batch Tidak Boleh Kosong';
+        $data['status'] = FALSE;
+    }
+    if($this->input->post('ed') == '')
+    {
+        $data['inputerror'][] = 'ed';
+        $data['error_string'][] = 'Expired Date Tidak Boleh Kosong';
+        $data['status'] = FALSE;
+    }
+    if($data['status'] === FALSE)
+    {
+        echo json_encode($data);
+        exit();
+    }
+}
+
+public function get_sisa_stok()
+{
+   $id_barang = $this->input->post('id_barang');
+   $nobatch = $this->input->post('nobatch');   
+   $row=$this->Mod_stok->get_sisa_stok($id_barang,$nobatch)->row();
+   echo json_encode($row);
+}
 }

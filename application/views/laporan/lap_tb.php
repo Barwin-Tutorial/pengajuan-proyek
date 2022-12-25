@@ -20,8 +20,8 @@
           <div class="form-group row">
            <div class="col-md-8">
             <div class="input-group input-group-sm">
-              <label class="aria-label col-md-5">Nama Supplier</label>
-              <input type="text" class="form-control  float-right form-control-sm" name="vsup" id="vsup" autofocus placeholder="Nama Supplier" >
+              <label class="aria-label col-md-5">Penyedia</label>
+              <input type="text" class="form-control  float-right form-control-sm" name="vsup" id="vsup" autofocus placeholder="Penyedia" >
               <input type="hidden" class="form-control  float-right form-control-sm" name="supplier" id="supplier">
             </div>
           </div>
@@ -29,8 +29,8 @@
         <div class="form-group row">
          <div class="col-md-8">
           <div class="input-group input-group-sm">
-            <label class="aria-label col-md-5">Faktur</label>
-            <input type="text" name="faktur" class="form-control" placeholder="Faktur">
+            <label class="aria-label col-md-5">NO. SBBK</label>
+            <input type="text" name="faktur" class="form-control" placeholder="NO. SBBK">
           </div>
         </div>
       </div>
@@ -119,22 +119,7 @@ function sortir() {
    })
   }
  //Date range picker
- $('#reservation').daterangepicker({
-  ranges   : {
-    'Today'       : [moment(), moment()],
-    'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-    'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
-    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-    'This Month'  : [moment().startOf('month'), moment().endOf('month')],
-    'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-  },
-  startDate: moment().subtract(29, 'days'),
-  endDate  : moment()
-},
-function (start, end) {
-  $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
-}
-)
+ $('#reservation').daterangepicker()
 
 </script>
 

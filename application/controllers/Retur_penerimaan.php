@@ -11,7 +11,7 @@ class Retur_penerimaan extends MY_Controller
     function __construct()
     {
         parent::__construct();
-        $this->load->model(array('Mod_retur_penerimaan','Mod_penerimaan'));
+        $this->load->model(array('Mod_retur_penerimaan','Mod_masuk'));
         // $this->load->model('dashboard/Mod_dashboard');
     }
 
@@ -280,7 +280,7 @@ private function _validate()
      $id_user = $this->session->userdata['id_user'];
      $id_retur_penerimaan = $this->input->post('id');
       $id_penerimaan = $this->input->post('id_penerimaan');
-     $list = $this->Mod_penerimaan->get_detail($id_penerimaan);
+     $list = $this->Mod_masuk->get_detail($id_penerimaan);
      foreach ($list as $items) {
        $save_detail  = array(
         'id_barang'         => $items->id_barang,

@@ -5,13 +5,13 @@ date_default_timezone_set('Asia/Jakarta');
  * Create By : Aryo
  * Youtube : Aryo Coding
  */
-class Penerimaan extends MY_Controller
+class Masuk extends MY_Controller
 {
 
     function __construct()
     {
         parent::__construct();
-        $this->load->model('Mod_penerimaan');
+        $this->load->model('Mod_masuk');
         // $this->load->model('dashboard/Mod_dashboard');
     }
 
@@ -36,7 +36,7 @@ class Penerimaan extends MY_Controller
 
         if ($akses=="Y") {
             $this->hapus_all_cart();
-            $this->template->load('layoutbackend','penerimaan/penerimaan',$data);
+            $this->template->load('layoutbackend','masuk/masuk',$data);
         }else{
             $data['page']=$link;
             $this->template->load('layoutbackend','admin/akses_ditolak',$data);
@@ -49,7 +49,7 @@ class Penerimaan extends MY_Controller
     {
         ini_set('memory_limit','512M');
         set_time_limit(3600);
-        $list = $this->Mod_penerimaan->get_datatables();
+        $list = $this->Mod_masuk->get_datatables();
         $data = array();
         $no = $_POST['start'];
         foreach ($list as $pel) {
@@ -71,8 +71,8 @@ class Penerimaan extends MY_Controller
 
         $output = array(
             "draw" => $_POST['draw'],
-            "recordsTotal" => $this->Mod_penerimaan->count_all(),
-            "recordsFiltered" => $this->Mod_penerimaan->count_filtered(),
+            "recordsTotal" => $this->Mod_masuk->count_all(),
+            "recordsFiltered" => $this->Mod_masuk->count_filtered(),
             "data" => $data,
         );
         //output to json format
@@ -82,7 +82,7 @@ class Penerimaan extends MY_Controller
     public function insert()
     {
         $this->_validate();
-        $list = $this->Mod_penerimaan->get_detail(0);
+        $list = $this->Mod_masuk->get_detail(0);
         if (count($list) == 0) {
              echo json_encode(array("status" => FALSE, 'pesan' => 0));
             
@@ -99,7 +99,7 @@ class Penerimaan extends MY_Controller
             'user_input'  => $id_user,
             'id_gudang'   =>  $id_gudang
         );
-        $this->Mod_penerimaan->insert("penerimaan", $save);
+        $this->Mod_masuk->insert("penerimaan", $save);
         $id_penerimaan = $this->db->insert_id();
 
         
@@ -108,20 +108,20 @@ class Penerimaan extends MY_Controller
         foreach ($list as $items) {
             $save_detail = array('id_penerimaan' => $id_penerimaan);
             $id_detail=$items->id;
-            $this->Mod_penerimaan->update_detail($id_detail, $save_detail);
+            $this->Mod_masuk->update_detail($id_detail, $save_detail);
 
              $save_stok  = array(
                 'id_transaksi'         => $items->id,
                 'id_barang'         => $items->id_barang,
                 'tanggal'         => $tanggal,
-                'transaksi'         => 'Penerimaan',
+                'transaksi'         => 'Barang Masuk',
                 'masuk'         => $items->jumlah,
                 'ed'         => $items->ed,
                 'nobatch'         => $items->nobatch,
                 'user_input'  => $id_user,
                 'id_gudang'   =>  $id_gudang
             );
-            $this->Mod_penerimaan->insert("stok_opname", $save_stok);
+            $this->Mod_masuk->insert("stok_opname", $save_stok);
         }
         
            echo json_encode(array("status" => TRUE));
@@ -133,7 +133,7 @@ class Penerimaan extends MY_Controller
     public function no_faktur()
     {
         $id_gudang = $this->session->userdata['id_gudang'];
-        $trx= $this->Mod_penerimaan->max_no();
+        $trx= $this->Mod_masuk->max_no();
         if ($trx[0]['kode']==NULL) {
             $n="00001";
             $kode='PNR-'.$n.'-'.$id_gudang.'/'.date("d-m-Y");
@@ -161,10 +161,10 @@ class Penerimaan extends MY_Controller
             'id_supplier'         => $this->input->post('supplier')
         );
 
-        $this->Mod_penerimaan->update($id, $save);
-        $list = $this->Mod_penerimaan->get_detail($id);
+        $this->Mod_masuk->update($id, $save);
+        $list = $this->Mod_masuk->get_detail($id);
         /*if (count($list)==0) {
-            $list = $this->Mod_penerimaan->get_detail(0);
+            $list = $this->Mod_masuk->get_detail(0);
         }*/
         foreach ($list as $items) {
             $id_penerimaan = $items->id_penerimaan;
@@ -172,29 +172,29 @@ class Penerimaan extends MY_Controller
             $jumlah = $items->jumlah;
 
             $save_detail = array('id_penerimaan' => $id);
-            $this->Mod_penerimaan->update_detail($id_detail, $save_detail);
+            $this->Mod_masuk->update_detail($id_detail, $save_detail);
 
-            $cek=$this->Mod_penerimaan->get_stok($id_detail);
+            $cek=$this->Mod_masuk->get_stok($id_detail);
             if (count($cek) == 0) {
                 $save_stok  = array(
                     'id_transaksi'         => $items->id,
                     'id_barang'         => $items->id_barang,
                     'tanggal'         => $tanggal,
-                    'transaksi'         => 'Penerimaan',
+                    'transaksi'         => 'Barang Masuk',
                     'masuk'         => $items->jumlah,
                     'ed'         => $items->ed,
                     'nobatch'         => $items->nobatch,
                     'user_input'  => $id_user,
                     'id_gudang'   =>  $id_gudang
                 );
-                $this->Mod_penerimaan->insert("stok_opname", $save_stok);
+                $this->Mod_masuk->insert("stok_opname", $save_stok);
             }else{
                $save_stok  = array(
                 'masuk'         => $jumlah,
                 'ed'         => $items->ed,
                 'nobatch'         => $items->nobatch,
             );
-               $this->Mod_penerimaan->update_stok_opname($id_detail, $save_stok);
+               $this->Mod_masuk->update_stok_opname($id_detail, $save_stok);
             }
             
           
@@ -207,7 +207,7 @@ class Penerimaan extends MY_Controller
 
     public function edit($id)
     {
-        $data = $this->Mod_penerimaan->get($id);
+        $data = $this->Mod_masuk->get($id);
         echo json_encode($data);
     }
 
@@ -215,7 +215,7 @@ class Penerimaan extends MY_Controller
     {
         
        $id = $this->input->get('term');
-        $data = $this->Mod_penerimaan->get_brg($id);
+        $data = $this->Mod_masuk->get_brg($id);
         if (count($data) > 0) {
             foreach ($data as $row) {
                 $arr_result[] = array( 'label'  => $row->nama, 'produk_nama'  => $row->nama, 'produk_id' => $row->id, 'produk_harga' =>  $row->harga, 'id_kemasan' => $row->kemasan, 'nama_satuan' => $row->nama_satuan);
@@ -231,7 +231,7 @@ class Penerimaan extends MY_Controller
     public function get_supplier()
     {
         $id = $this->input->get('term');
-        $data = $this->Mod_penerimaan->get_supplier($id);
+        $data = $this->Mod_masuk->get_supplier($id);
         if (count($data) > 0) {
 
             foreach ($data as $row){
@@ -246,21 +246,21 @@ class Penerimaan extends MY_Controller
 
 public function getAllSupplier()
 {
-   $data = $this->Mod_penerimaan->get_supplier_all();
+   $data = $this->Mod_masuk->get_supplier_all();
     echo json_encode($data);
 }
     public function delete()
     {
         $id = $this->input->post('id');
-        $list = $this->Mod_penerimaan->get_detail($id);
+        $list = $this->Mod_masuk->get_detail($id);
         foreach ($list as $items) {
 
             $id_detail = $items->id;
-             $this->Mod_penerimaan->del_stok($id_detail, "stok_opname");
+             $this->Mod_masuk->del_stok($id_detail, "stok_opname");
           
         }
-        $this->Mod_penerimaan->delete($id, 'penerimaan'); 
-         $this->Mod_penerimaan->delete_detail($id, 'penerimaan_detail');        
+        $this->Mod_masuk->delete($id, 'penerimaan'); 
+         $this->Mod_masuk->delete_detail($id, 'penerimaan_detail');        
         echo json_encode(array("status" => TRUE));
     }
     private function _validate()
@@ -306,7 +306,7 @@ public function getAllSupplier()
             'id_user'   => $id_user
 
         );
-        $this->Mod_penerimaan->insert("penerimaan_detail", $save_detail);
+        $this->Mod_masuk->insert("penerimaan_detail", $save_detail);
        
          $this->load_cart($id_penerimaan); //tampilkan cart setelah added
     }
@@ -316,7 +316,7 @@ public function getAllSupplier()
         $output = '';
         $no = 0;
         $total = 0;
-        $list = $this->Mod_penerimaan->get_detail($id_penerimaan);
+        $list = $this->Mod_masuk->get_detail($id_penerimaan);
         foreach ($list as $items) {
             $subtotal = ($items->harga * $items->jumlah);
             $total += $subtotal;
@@ -365,8 +365,8 @@ public function getAllSupplier()
     function hapus_cart(){ //fungsi untuk menghapus item cart
         $id_penerimaan = $this->input->post('id');
         $id_detail = $this->input->post('id_detail');
-        $this->Mod_penerimaan->delete($id_detail,'penerimaan_detail');
-        $this->Mod_penerimaan->del_stok($id_detail,'stok_opname');
+        $this->Mod_masuk->delete($id_detail,'penerimaan_detail');
+        $this->Mod_masuk->del_stok($id_detail,'stok_opname');
         $this->load_cart($id_penerimaan);
     }
 
@@ -380,21 +380,21 @@ public function getAllSupplier()
             'ed'         => $this->input->post('ed'),
         );
 
-         $this->Mod_penerimaan->update_detail($id_detail, $save_detail);
+         $this->Mod_masuk->update_detail($id_detail, $save_detail);
          $this->load_cart($id_penerimaan);
     }
 
       function hapus_all_cart(){ //fungsi untuk menghapus item cart
         $id_penerimaan='0';
-        $this->Mod_penerimaan->delete_detail($id_penerimaan, 'penerimaan_detail');
+        $this->Mod_masuk->delete_detail($id_penerimaan, 'penerimaan_detail');
     }
 
      public function cetak()
         {
             $id = $this->input->post('id');
-            $data['tb'] = $this->Mod_penerimaan->get($id);
-            $data['lap'] = $this->Mod_penerimaan->get_cetak($id);
-            $this->load->view('penerimaan/cetak_penerimaan',$data);
+            $data['tb'] = $this->Mod_masuk->get($id);
+            $data['lap'] = $this->Mod_masuk->get_cetak($id);
+            $this->load->view('masuk/cetak_penerimaan',$data);
 
         }
 }

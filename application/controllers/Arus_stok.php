@@ -95,9 +95,9 @@ public function laporan_xls()
     $sheet->setCellValue('C1', 'Tanggal');
     $sheet->setCellValue('D1', 'Nama Barang');
     $sheet->setCellValue('E1', 'Pelanggan');
-    $sheet->setCellValue('F1', 'Supplier');
+    $sheet->setCellValue('F1', 'Penyedia');
     $sheet->setCellValue('G1', 'No. Batch');
-    $sheet->setCellValue('H1', 'Faktur Penerimaan');
+    $sheet->setCellValue('H1', 'NO. SBBK');
     $sheet->setCellValue('I1', 'Awal');
     $sheet->setCellValue('J1', 'Masuk');
     $sheet->setCellValue('K1', 'Keluar');

@@ -72,9 +72,9 @@ class Lap_tb extends MY_Controller
       $sheet->setCellValue('A1', 'No');
       $sheet->setCellValue('B1', 'Faktur');
       $sheet->setCellValue('C1', 'Tanggal');
-      $sheet->setCellValue('D1', 'Supplier');
+      $sheet->setCellValue('D1', 'Penyedia');
       $sheet->setCellValue('E1', 'Nama Barang');
-      $sheet->setCellValue('F1', 'Kemasan');
+      $sheet->setCellValue('F1', 'Satuan');
       $sheet->setCellValue('G1', 'Ed');
       $sheet->setCellValue('H1', 'No Batch');
       $sheet->setCellValue('I1', 'Jumlah');

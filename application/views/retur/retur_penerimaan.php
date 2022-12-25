@@ -6,7 +6,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header bg-light">
-                    <h3 class="card-title"><i class="fa fa-list text-blue"></i> Data Retur Penerimaan</h3>
+                    <h3 class="card-title"><i class="fa fa-list text-blue"></i> Data Pengembalian Masuk</h3>
                     <div class="text-right">
                         <button type="button" class="btn btn-sm btn-outline-primary  add" onclick="add()" title="Add Data" ><i class="fas fa-plus" ></i> Add</button>
                     </div>
@@ -17,9 +17,9 @@
                         <thead>
                             <tr class="bg-info">
                                 <th>Tanggal</th>
-                                <th>Supplier</th>
+                                <th>Penyedia</th>
                                 <th>Nama Barang</th>
-                                <th>Kemasan</th>
+                                <th>Satuan</th>
                                 <th>ED</th>
                                 <th>Jumlah</th>
                                 <th>Aksi</th>
@@ -61,7 +61,7 @@ $(document).ready(function() {
         "responsive": true,
         "autoWidth": false,
         "language": {
-            "sEmptyTable": "Data Retur Belum Ada"
+            "sEmptyTable": "Data Pengembalian Masuk Belum Ada"
         },
         "processing": true, //Feature control the processing indicator.
         "serverSide": true, //Feature control DataTables' server-side processing mode.
@@ -155,7 +155,7 @@ function add()
     $('.form-group').removeClass('has-error'); // clear error class
     $('.help-block').empty(); // clear error string
     $('#modal_form').modal({backdrop: 'static', keyboard: false}); // show bootstrap modal
-    $('.modal-title').text('Add Retur Penerimaan'); // Set Title to Bootstrap modal title
+    $('.modal-title').text('Add Pengembalian Masuk'); // Set Title to Bootstrap modal title
 }
 
 function edit(id){
@@ -187,7 +187,7 @@ function edit(id){
         });
 
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
-            $('.modal-title').text('Edit Retur Penerimaan'); // Set title to Bootstrap modal title
+            $('.modal-title').text('Edit Pengembalian Masuk'); // Set title to Bootstrap modal title
 
         },
         error: function (jqXHR, textStatus, errorThrown)
@@ -455,10 +455,10 @@ function batal() {
                                 </div>
                             </div>
                             <div class="form-group row ">
-                                <label for="nama" class="col-sm-3 col-form-label">Supplier</label>
+                                <label for="nama" class="col-sm-3 col-form-label">Penyedia</label>
                                 <div class="col-sm-9 kosong">
                                     <input type="hidden" class="form-control"  name="supplier" id="supplier" placeholder="Supplier" autocomplete="off" >
-                                    <input type="text" class="form-control"  name="vsup" id="vsup" placeholder="Supplier" autocomplete="off" >
+                                    <input type="text" class="form-control"  name="vsup" id="vsup" placeholder="Penyedia" autocomplete="off" >
                                     <span class="help-block" ></span>
                                 </div>
                             </div>
@@ -478,9 +478,9 @@ function batal() {
                      </div>
 
                      <div class="form-group row ">
-                        <label for="nama" class="col-md-3 col-form-label">Kemasan</label>
+                        <label for="nama" class="col-md-3 col-form-label">Satuan</label>
                         <div class="col-md-3 kosong">
-                         <input type="text" class="form-control" name="nama_satuan" id="nama_satuan"  value="" readonly="" placeholder="Kemasan">
+                         <input type="text" class="form-control" name="nama_satuan" id="nama_satuan"  value="" readonly="" placeholder="Satuan">
                          <span class="help-block"></span>
                      </div>
                      <label for="nama" class="col-md-2 col-form-label">Expired</label>
@@ -511,7 +511,7 @@ function batal() {
                             <tr>
                                 <th>No</th>
                                 <th>Nama Barang</th>
-                                <th>Kemasan</th>
+                                <th>Satuan</th>
                                 <th>Jumlah</th>
                                 <th>ED</th>
                                 <th>Aksi</th>

@@ -6,7 +6,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header bg-light">
-                        <h3 class="card-title"><i class="fa fa-list text-blue"></i> Data Penerimaan</h3>
+                        <h3 class="card-title"><i class="fa fa-list text-blue"></i> Data Barang Masuk</h3>
                         <div class="text-right">
                             <button type="button" class="btn btn-sm btn-outline-primary  add" onclick="add()" title="Add Data" ><i class="fas fa-plus" ></i> Add</button>
                         </div>
@@ -16,9 +16,9 @@
                         <table id="tbl_penerimaan" class="table table-bordered table-striped table-hover">
                             <thead>
                                 <tr class="bg-info">
-                                    <th>Faktur</th>
+                                    <th>NO. SBBK</th>
                                     <th>Tanggal</th>
-                                    <th>Supplier</th>
+                                    <th>Penyedia</th>
                                    <!--  <th>Nama Barang</th>
                                     <th>Kemasan</th>
                                     <th>Jumlah</th> -->
@@ -45,7 +45,7 @@
 
     function cetak(id) {
      $.ajax({
-        url : 'penerimaan/cetak',
+        url : 'masuk/cetak',
         data : {id:id},
         type : 'post',
         dataType : 'html',
@@ -75,7 +75,7 @@ $(document).ready(function() {
 
         // Load data for the table's content from an Ajax source
         "ajax": {
-            "url": "<?php echo site_url('penerimaan/ajax_list')?>",
+            "url": "<?php echo site_url('masuk/ajax_list')?>",
             "type": "POST"
         },
 
@@ -127,7 +127,7 @@ function hapus(id){
   }).then((result) => {
 if (result.value) {
     $.ajax({
-        url:"<?php echo site_url('penerimaan/delete');?>",
+        url:"<?php echo site_url('masuk/delete');?>",
         type:"POST",
         data:"id="+id,
         cache:false,
@@ -162,9 +162,9 @@ function add()
     $('.form-group').removeClass('has-error'); // clear error class
     $('.help-block').empty(); // clear error string
     $('#modal_form').modal({backdrop: 'static', keyboard: false}); // show bootstrap modal
-    $('.modal-title').text('Add Penerimaan'); // Set Title to Bootstrap modal title
+    $('.modal-title').text('Add Barang Masuk'); // Set Title to Bootstrap modal title
     $.ajax({
-        url : "penerimaan/no_faktur",
+        url : "masuk/no_faktur",
         method : "POST",
         dataType : 'json',
         success :function(data){
@@ -182,7 +182,7 @@ function edit(id){
 
     //Ajax Load data from ajax
     $.ajax({
-        url : "<?php echo site_url('penerimaan/edit')?>/" + id,
+        url : "<?php echo site_url('masuk/edit')?>/" + id,
         type: "GET",
         dataType: "JSON",
         success: function(data)
@@ -194,7 +194,7 @@ function edit(id){
             $('[name="supplier"]').val(data.id_supplier);
             $('[name="vsup"]').val(data.nama_supplier);
             $.ajax({
-                url : "penerimaan/edit_to_cart",
+                url : "masuk/edit_to_cart",
                 method : "POST",
                 data : {id:data.id},
                 dataType : 'html',
@@ -203,7 +203,7 @@ function edit(id){
                 }
             });
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
-            $('.modal-title').text('Edit Penerimaan'); // Set title to Bootstrap modal title
+            $('.modal-title').text('Edit Barang Masuk'); // Set title to Bootstrap modal title
 
         },
         error: function (jqXHR, textStatus, errorThrown)
@@ -220,9 +220,9 @@ function save()
     $('#btnSave').text('saving...'); //change button text
     $('#btnSave').attr('disabled',true); //set button disable 
     if(save_method == 'add') {
-        url = "<?php echo site_url('penerimaan/insert')?>";
+        url = "<?php echo site_url('masuk/insert')?>";
     } else {
-        url = "<?php echo site_url('penerimaan/update')?>";
+        url = "<?php echo site_url('masuk/update')?>";
     }
     var formdata = new FormData($('#form')[0]);
     // ajax adding data to database
@@ -294,7 +294,7 @@ $(function () {
     $("#jumlah").change(function () {
         var formdata = $('#form').serialize();
         $.ajax({
-            url : "penerimaan/add_to_cart",
+            url : "masuk/add_to_cart",
             method : "POST",
             data : formdata,
             dataType : 'html',
@@ -309,7 +309,7 @@ $(function () {
             var id_detail=$(this).attr("id_detail");
             
             $.ajax({
-                url : "penerimaan/hapus_cart",
+                url : "masuk/hapus_cart",
                 method : "POST",
                 data : {id : id,id_detail:id_detail},
                 success :function(data){
@@ -330,7 +330,7 @@ $(function () {
             var ed = $('.ed'+no).val();
 
             $.ajax({
-                url : "penerimaan/update_cart",
+                url : "masuk/update_cart",
                 method : "POST",
                 data : {id : id,id_detail : id_detail,jumlah : jumlah,nobatch : nobatch,ed : ed},
                 success :function(data){
@@ -350,7 +350,7 @@ $(function () {
 $(document).ready(function(){
 
    $( "#vsup").autocomplete({
-    source: 'penerimaan/get_supplier/?', 
+    source: 'masuk/get_supplier/?', 
     select : function (event, ui) {
 
          // display the selected text
@@ -371,7 +371,7 @@ $(document).ready(function(){
 
    setTimeout(function() { $('input[name="scanbar"]').focus() }, 3000);
    $( "#scanbar").autocomplete({
-    source: 'penerimaan/get_brg/?', 
+    source: 'masuk/get_brg/?', 
     select : function (event, ui) {
 
         $("#produk_nama").val(ui.item.label); // display the selected text
@@ -392,7 +392,7 @@ function batal() {
      $("#detail_cart").empty();
      $('[name="id"]').val('0');
  $.ajax({
-    url : "penerimaan/hapus_all_cart",
+    url : "masuk/hapus_all_cart",
     success :function(data){
      $("#modal_form").removeData();
      $("#detail_cart").empty();
@@ -422,9 +422,9 @@ function batal() {
                         <div class="row">
                          <div class="col-md-4">
                             <div class="form-group row ">
-                                <label for="nama" class="col-sm-3 col-form-label">Faktur</label>
+                                <label for="nama" class="col-sm-3 col-form-label">NO. SBBK</label>
                                 <div class="col-sm-9 kosong">
-                                    <input type="text" class="form-control" name="faktur" id="faktur" placeholder="Faktur" value="" >
+                                    <input type="text" class="form-control" name="faktur" id="faktur" placeholder="No SBBK" value="" >
                                     <span class="help-block"></span>
                                 </div>
                             </div>
@@ -436,10 +436,10 @@ function batal() {
                                 </div>
                             </div>
                             <div class="form-group row ">
-                                <label for="nama" class="col-sm-3 col-form-label">Supplier</label>
+                                <label for="nama" class="col-sm-3 col-form-label">Penyedia</label>
                                 <div class="col-sm-9 kosong">
-                                    <input type="hidden" class="form-control"  name="supplier" id="supplier" placeholder="Supplier" autocomplete="off" >
-                                    <input type="text" class="form-control"  name="vsup" id="vsup" placeholder="Supplier" autocomplete="off" >
+                                    <input type="hidden" class="form-control"  name="supplier" id="supplier" placeholder="Penyedia" autocomplete="off" >
+                                    <input type="text" class="form-control"  name="vsup" id="vsup" placeholder="Penyedia" autocomplete="off" >
                                     <span class="help-block" ></span>
                                 </div>
                             </div>
@@ -455,9 +455,9 @@ function batal() {
                                 <input type="hidden" class="form-control" name="nama_satuan" id="nama_satuan"  value="" >
                                 <span class="help-block"></span>
                             </div>
-                            <label for="nama" class="col-sm-2 col-form-label">Nama</label>
+                            <label for="nama" class="col-sm-2 col-form-label">Nama Barang</label>
                             <div class="col-sm-4 kosong">
-                                <input type="text" class="form-control" name="produk_nama" id="produk_nama" placeholder="Nama" value="" readonly="">
+                                <input type="text" class="form-control" name="produk_nama" id="produk_nama" placeholder="Nama Barang" value="" readonly="">
                                 <span class="help-block"></span>
                             </div>
                         </div>

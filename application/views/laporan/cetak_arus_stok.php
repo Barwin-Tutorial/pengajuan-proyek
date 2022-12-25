@@ -6,9 +6,9 @@
 			<th>Tanggal</th>
 			<th>Nama Barang</th>
 			<th>Pelanggan</th>
-			<th>Supplier</th>
+			<th>Penyedia</th>
 			<th>No. Batch</th>
-			<th>Faktur Penerimaan</th>
+			<th>NO. SBBK</th>
 			<th>Awal</th>
 			<th>Masuk</th>
 			<th>Keluar</th>

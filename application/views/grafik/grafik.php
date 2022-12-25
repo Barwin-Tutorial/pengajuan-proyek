@@ -20,7 +20,7 @@
                 <div class="col-sm-4 kosong">
 
                   <select class="form-control form-control-sm" name="perundangan" >
-                    <option value="">Pilih Perundangan</option>
+                    <option value="">Pilih Golongan Obat</option>
                     <?php 
                     foreach ($perundangan as $row){
                       ?>
@@ -29,10 +29,10 @@
                   </select>
                   
                 </div>
-                <div class="col-sm-4">
-                  <input type="date" class="form-control form-control-sm" name="tanggal" value="<?=date("Y-m-d")?>">
+                <div class="col-sm-6">
+                  <input type="text" class="form-control form-control-sm" name="tanggal" id="tgl1">
                 </div>
-                <button  class="btn btn-sm btn-success" style="width: 10em" onclick="filter()" ><i class="fa fa-filter"></i>Filter</button>
+                <button  class="btn btn-sm btn-success col-sm-2"  onclick="filter()" ><i class="fa fa-filter"></i>Filter</button>
               </div>
             </div>
             <div class="card-body">
@@ -57,8 +57,8 @@
             </div>
              <div class="card-body">
               <div class="form-group row ">
-                <div class="col-sm-4">
-                  <input type="date" class="form-control form-control-sm" name="tgl" value="<?=date("Y-m-d")?>">
+                <div class="col-sm-6">
+                  <input type="text" class="form-control form-control-sm" name="tgl" id="tgl2" >
                 </div>
                 <button  class="btn btn-sm btn-success" style="width: 10em" onclick="filter_pel()" ><i class="fa fa-filter"></i>Filter</button>
               </div>
@@ -75,8 +75,8 @@
     </div>
   </section>
   <script type="text/javascript">
-
-
+ $('#tgl1').daterangepicker()
+$('#tgl2').daterangepicker()
     function filter() {
       var id=$('[name="perundangan"]').val();
       var tgl=$('[name="tanggal"]').val();

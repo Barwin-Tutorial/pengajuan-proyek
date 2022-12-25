@@ -24,3 +24,10 @@ retur_keluar_detail -> id_keluar_detail, nobatch
 penambahan field 
 retur_penerimaan -> id_penerimaan
 retur_penerimaan_detail -> id_detail_penerimaan, nobatch
+
+2022-12-25
+Database 
+tbl_submenu -> urutan (tambah field)
+
+stok_opname -> di field transaksi (Keluar -> Barang Keluar)
+									(Penerimaan -> Barang Masuk)

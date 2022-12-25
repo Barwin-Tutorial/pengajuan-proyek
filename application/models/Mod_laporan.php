@@ -155,7 +155,7 @@ class Mod_laporan extends CI_Model
  		return $sql;
  	}
 
- 	public function get_laporan_kb($tglrange,$id_pelanggan)
+ 	public function get_laporan_kb($tglrange,$id_pelanggan,$group)
  	{
 
  		$level = $this->session->userdata['id_level'];
@@ -177,13 +177,17 @@ class Mod_laporan extends CI_Model
  			$and1 = " AND date(a.tanggal) BETWEEN '$p1' AND '$p2'";
  		}
  		
-
- 		$sql = $this->db->query("SELECT b.*,a.`tanggal`,c.`nama` AS nama_pelanggan, d.`harga`,d.`perundangan`, d.`nama` AS nama_barang,  d.`berat`,d.`barcode`,d.`rak` , e.nama as nama_kemasan  FROM keluar a 
+ 		if ($group=='Group') {
+ 			$grp = "GROUP BY b.id_keluar";
+ 		}else{
+ 			$grp = "";
+ 		}
+ 		$sql = $this->db->query("SELECT b.*,a.`tanggal`,a.faktur,c.`nama` AS nama_pelanggan, d.`harga`,d.`perundangan`, d.`nama` AS nama_barang,  d.`berat`,d.`barcode`,d.`rak` , e.nama as nama_kemasan  FROM keluar a 
  			JOIN keluar_detail b ON a.`id`=b.`id_keluar`
  			JOIN pelanggan c ON a.`id_pelanggan`=c.`id`
  			JOIN barang d ON b.`id_barang`=d.`id`
  			JOIN satuan e ON d.`kemasan`=e.`id`
- 			JOIN perundangan f ON d.`perundangan`=f.`id` where 1=1 $gdg $and $and1  ");
+ 			JOIN perundangan f ON d.`perundangan`=f.`id` where 1=1 $gdg $and $and1  $grp");
  		return $sql;
  	}
 

@@ -61,7 +61,7 @@ class Barang extends MY_Controller
             $row[] = $pel->nama_perundangan;
             $row[] = $pel->harga;
             $row[] = $pel->rak;
-            $row[] = $pel->aktivasi;
+            $row[] = $pel->batch;
             $row[] = "<a class=\"btn btn-xs btn-outline-primary edit\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit('$pel->id')\"><i class=\"fas fa-edit\"></i></a><a class=\"btn btn-xs btn-outline-danger delete\" href=\"javascript:void(0)\" title=\"Delete\"  onclick=\"hapus('$pel->id')\"><i class=\"fas fa-trash\"></i></a> <a class=\"btn btn-xs btn-outline-danger barcode\" href=\"javascript:void(0)\" title=\"Barcode\"  onclick=\"barcode('$pel->id')\"><i class=\"fas fa-barcode\"></i></a>";
             $data[] = $row;
         }
@@ -99,7 +99,13 @@ class Barang extends MY_Controller
             'perundangan'         => $this->input->post('perundangan'),
             'harga'         => $this->input->post('harga'),
             'rak'         => $this->input->post('rak'),
-            'aktivasi'         => $this->input->post('aktivasi'),
+            'batch'         => $this->input->post('batch'),
+            'ed'         => $this->input->post('ed'),
+            'thn_pengadaan'         => $this->input->post('thn_pengadaan'),
+            'no_ijin_edar'         => $this->input->post('no_ijin_edar'),
+            'manufaktur_date'         => $this->input->post('manufaktur_date'),
+            'nosbbk'         => $this->input->post('nosbbk'),
+            'sumber_dana'         => $this->input->post('sumber_dana'),
             'id_gudang'   => $id_gudang,
             'user_input'  => $id_user
         );
@@ -120,7 +126,13 @@ class Barang extends MY_Controller
             'perundangan'         => $this->input->post('perundangan'),
             'harga'         => $this->input->post('harga'),
             'rak'         => $this->input->post('rak'),
-            'aktivasi'         => $this->input->post('aktivasi')
+            'batch'         => $this->input->post('batch'),
+            'ed'         => $this->input->post('ed'),
+            'thn_pengadaan'         => $this->input->post('thn_pengadaan'),
+            'no_ijin_edar'         => $this->input->post('no_ijin_edar'),
+            'manufaktur_date'         => $this->input->post('manufaktur_date'),
+            'nosbbk'         => $this->input->post('nosbbk'),
+            'sumber_dana'         => $this->input->post('sumber_dana'),
         );
 
         $this->Mod_barang->update($id, $save);

@@ -121,7 +121,7 @@ $idlevel  = $this->session->userdata['id_level'];
         $sub_menu = $this->db->where('b.id_menu', $main->id_menu);
         $sub_menu = $this->db->where('a.view', 'Y');
         $sub_menu = $this->db->where('b.is_active', 'Y');
-        $sub_menu = $this->db->order_by('b.nama_submenu', 'ASC');
+        $sub_menu = $this->db->order_by('b.urutan', 'ASC');
         $sub_menu = $this->db->get('tbl_akses_submenu a');
        
         if ($sub_menu->num_rows() > 0) {

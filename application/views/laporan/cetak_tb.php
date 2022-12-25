@@ -4,11 +4,11 @@
     <thead class="bg-primary">
     	<tr >
     		<th >No.</th>
-    		<th>Faktur</th>
+    		<th>NO. SBBK</th>
     		<th >Tanggal</th>
-    		<th >Supplier</th>
+    		<th >Penyedia</th>
     		<th >Nama Barang</th>
-    		<th >Kemasan</th>
+    		<th >Satuan</th>
     		<th>Ed</th>
     		<th>No Batch</th>
     		<th >Jumlah</th>

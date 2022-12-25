@@ -17,9 +17,9 @@
                             <thead>
                                 <tr class="bg-info">
                                     <th>Nama</th>
-                                    <th>No Telpon</th>
-                                    <th>Kepala Instalasi</th>
-                                    <th>Admin Farmasi</th>
+                                    <th>No Kontak</th>
+                                    <th>Pimpinan</th>
+                                    <th>Petugas Farmasi</th>
                                     <th>Alamat</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -273,21 +273,21 @@ var loadFile = function(event) {
                             </div>
                         </div>
                         <div class="form-group row ">
-                            <label for="nama" class="col-sm-3 col-form-label">No Telpon</label>
+                            <label for="nama" class="col-sm-3 col-form-label">No Kontak</label>
                             <div class="col-sm-9 kosong">
                                 <input type="text" class="form-control" name="notelp" id="notelp" placeholder="No Telpon" >
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="form-group row ">
-                            <label for="nama" class="col-sm-3 col-form-label">Kepala Instalasi</label>
+                            <label for="nama" class="col-sm-3 col-form-label">Pimpinan</label>
                             <div class="col-sm-9 kosong">
                                 <input type="text" class="form-control" name="kp_instalasi" id="kp_instalasi" placeholder="Kepala Instalasi" >
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="form-group row ">
-                            <label for="nama" class="col-sm-3 col-form-label">Admin Farmasi</label>
+                            <label for="nama" class="col-sm-3 col-form-label">Petugas Farmasi</label>
                             <div class="col-sm-9 kosong">
                                 <input type="text" class="form-control" name="admin_farmasi" id="admin_farmasi" placeholder="Admin Farmasi" >
                                 <span class="help-block"></span>

@@ -22,6 +22,7 @@
                   <th>Icon</th>
                   <th>Menu</th>
                   <th>Is Active</th>
+                  <th>Urutan</th>
                   <th>Aksi</th>
                 </tr>
               </thead>
@@ -235,6 +236,7 @@ function reload_table()
         $('[name="nama_submenu"]').val(data.nama_submenu);
         $('[name="link"]').val(data.link);
         $('[name="icon"]').val(data.icon);
+        $('[name="urutan"]').val(data.urutan);
         $('[name="is_active"]').val(data.is_active);
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
             $('.modal-title').text('Edit Submenu'); // Set title to Bootstrap modal title
@@ -363,6 +365,13 @@ function reload_table()
                   <option value="Y">Y</option>
                   <option value="N">N</option>
                 </select>
+                <span class="help-block"></span>
+              </div>
+            </div>
+            <div class="form-group row ">
+              <label for="icon" class="col-sm-3 col-form-label">Urutan</label>
+              <div class="col-sm-9 kosong">
+                <input type="text" class="form-control" name="urutan" id="urutan" placeholder="Urutan" >
                 <span class="help-block"></span>
               </div>
             </div>

@@ -10,7 +10,7 @@ class Mod_keluar extends CI_Model
     var $table = 'keluar';
     var $column_search = array('nama'); 
     var $column_order = array('nama');
-    var $order = array('a.tanggal' => 'asc'); 
+    var $order = array('a.id' => 'desc'); 
     function __construct()
     {
         parent::__construct();
@@ -109,7 +109,7 @@ class Mod_keluar extends CI_Model
        function update_stok_opname($id, $data)
     {
         $this->db->where('id_transaksi', $id);
-        $this->db->where('transaksi', 'Keluar');
+        $this->db->where('transaksi', 'Barang Keluar');
         $this->db->update('stok_opname', $data);
     }
 
@@ -211,7 +211,7 @@ class Mod_keluar extends CI_Model
          if ($level!=1) {
             $this->db->where('id_gudang', $id_gudang);
         } 
-        $this->db->where('transaksi', 'Keluar');
+        $this->db->where('transaksi', 'Barang Keluar');
         $this->db->where('id_transaksi', $id_transaksi);
         return $this->db->get('stok_opname')->result();
     }
@@ -245,12 +245,12 @@ class Mod_keluar extends CI_Model
             AND a.`id_barang`='$id_barang' GROUP BY a.`nobatch`
         ) AS ab");
 
-        return $sql->result();
+        return $sql;
     }
         function del_stok($id, $table)
     {
         $this->db->where('id_transaksi', $id);
-        $this->db->where('transaksi' , 'Keluar');
+        $this->db->where('transaksi' , 'Barang Keluar');
         $this->db->delete($table);
     }
    
@@ -307,7 +307,7 @@ class Mod_keluar extends CI_Model
             JOIN `barang` `b` ON `a`.`id_barang`=`b`.`id`
             JOIN `satuan` `c` ON `b`.`kemasan`=`c`.`id`
             WHERE `a`.`ed` >= '$date'
-            AND a.`id_barang`='$id_barang' AND a.nobatch='$nobatch'
+            AND a.`id_barang`='$id_barang' AND a.nobatch='$nobatch' $and
         ) AS ab");
 
         return $sql;

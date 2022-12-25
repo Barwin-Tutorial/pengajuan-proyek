@@ -53,7 +53,7 @@ $(document).ready(function() {
         "responsive": true,
         "autoWidth": false,
         "language": {
-            "sEmptyTable": "Data Stok Belum Ada"
+            "sEmptyTable": "Data Stok Opname Belum Ada"
         },
         "processing": true, //Feature control the processing indicator.
         "serverSide": true, //Feature control DataTables' server-side processing mode.
@@ -253,11 +253,28 @@ $(document).ready(function(){
         
         $("#nama_barang").val(ui.item.produk_nama);
         $("#id_barang").val(ui.item.produk_id); // save selected id to hidden input
-        
+        $("#nama_satuan").val(ui.item.nama_satuan)
         return false;
 
     }
     })
+
+$("#nobatch").change(function () {
+    var id_barang = $('#id_barang').val();
+    var nobatch = $(this).val();
+    $.ajax({
+        url : 'stok/get_sisa_stok',
+        data : {id_barang:id_barang,nobatch:nobatch},
+        dataType : 'json',
+        type : 'POST',
+        success : function (data) {
+            $('[name="masuk"]').val(data.masuk);
+            $('[name="keluar"]').val(data.keluar);
+            $('[name="ed"]').val(data.ed);
+        }
+    })
+})
+
 })
 </script>
 
@@ -304,6 +321,14 @@ $(document).ready(function(){
                                 <input type="text" class="form-control" name="nama_barang" id="nama_barang" placeholder="Nama Barang" >
                                 <span class="help-block"></span>
                                 <input type="hidden" class="form-control" name="id_barang" id="id_barang"  >
+                            </div>
+                        </div>
+                        <div class="form-group row ">
+                            <label for="nama" class="col-sm-3 col-form-label">Satuan</label>
+                            <div class="col-sm-9 kosong">
+                                <input type="text" class="form-control" name="nama_satuan" id="nama_satuan" placeholder="Satuan" readonly="">
+                                <span class="help-block"></span>
+                                <input type="hidden" class="form-control" name="id_satuan" id="id_satuan"  >
                             </div>
                         </div>
                         <div class="form-group row ">

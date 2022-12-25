@@ -6,7 +6,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header bg-light">
-                        <h3 class="card-title"><i class="fa fa-list text-blue"></i> Data supplier</h3>
+                        <h3 class="card-title"><i class="fa fa-list text-blue"></i> Data Penyedia</h3>
                         <div class="text-right">
                             <button type="button" class="btn btn-sm btn-outline-primary  add" onclick="add()" title="Add Data" ><i class="fas fa-plus" ></i> Add</button>
                         </div>
@@ -18,7 +18,7 @@
                                 <tr class="bg-info">
                                     <th>Nama</th>
                                     <th>No Telpon</th>
-                                    <th>No SIPA & NO STRA</th>
+                                    <th>Distributor & Produsen</th>
                                     <th>Alamat</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -277,9 +277,9 @@ var loadFile = function(event) {
                             </div>
                         </div>
                         <div class="form-group row ">
-                            <label for="nama" class="col-sm-3 col-form-label">No SIPA & NO STRA</label>
+                            <label for="nama" class="col-sm-3 col-form-label">Distributor & Produsen</label>
                             <div class="col-sm-9 kosong">
-                                <input type="text" class="form-control" name="sipa" id="sipa" placeholder="No SIPA & NO STRA" >
+                                <input type="text" class="form-control" name="sipa" id="sipa" placeholder="Distributor & Produsen" >
                                 <span class="help-block"></span>
                             </div>
                         </div>

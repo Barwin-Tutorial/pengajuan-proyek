@@ -51,30 +51,32 @@ class Keluar extends MY_Controller
         $list = $this->Mod_keluar->get_datatables();
         $data = array();
         $no = $_POST['start'];
+        $id="";
         foreach ($list as $pel => $r) {
-            $id=$r->id;
+            // $id=$r->id;
             $det = $this->Mod_keluar->get_detail($id);
             $count=count($det);
             $no++;
             $row = array();
-            if ($pel % $count==0) {
+            if ($id !== $r->id) {
                 $row[] = $r->faktur;
-               $row[] = $r->tanggal;
-               $row[] = $r->nama_pel;
+                $row[] = $r->tanggal;
+                $row[] = $r->nama_pel;
             }else{
                 $row[] = '';
                 $row[] = '';
-               $row[] = '';
+                $row[] = '';
             }
-           
+
             $row[] = $r->nama_barang;
             $row[] = $r->jumlah;
-            if ($pel % $count==0) {
+            if ($id !== $r->id) {
                 $row[] = "  <a class=\"btn btn-xs btn-outline-primary edit\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit('$r->id')\"><i class=\"fas fa-edit\"></i></a>  <a class=\"btn btn-xs btn-outline-danger delete\" href=\"javascript:void(0)\" title=\"Delete\"  onclick=\"hapus('$r->id')\"><i class=\"fas fa-trash\"></i></a> <a class=\"btn btn-xs btn-outline-info \" href=\"javascript:void(0)\" title=\"Print\" onclick=\"cetak('$r->id')\"><i class=\"fas fa-print\"></i></a>";
             }else{
                 $row[] = '';
             }
             $data[] = $row;
+            $id=$r->id;
         }
 
         $output = array(
@@ -92,35 +94,35 @@ class Keluar extends MY_Controller
         $this->_validate();
         $list = $this->Mod_keluar->get_detail(0);
         if (count($list) == 0) {
-           echo json_encode(array("status" => FALSE, 'pesan' => 0));
+         echo json_encode(array("status" => FALSE, 'pesan' => 0));
 
-           exit();
-       }
-       $waktu = date("H:i:s");
-       $tanggal=$this->input->post('tanggal');
-       $id_gudang = $this->session->userdata['id_gudang'];
-       $id_user = $this->session->userdata['id_user'];
-       $trx= $this->Mod_keluar->max_no();
-       if ($trx[0]['kode']==NULL) {
+         exit();
+     }
+     $waktu = date("H:i:s");
+     $tanggal=date("Y-m-d H:i:s", strtotime($this->input->post('tanggal'))) ;
+     $id_gudang = $this->session->userdata['id_gudang'];
+     $id_user = $this->session->userdata['id_user'];
+     $trx= $this->Mod_keluar->max_no();
+     /*if ($trx[0]['kode']==NULL) {
         $n="00001";
         $kode='KB-'.$n.'-'.$id_gudang.'/'.date("d-m-Y");
     }else{
         $n=$trx[0]['kode']+1;
         $x='00000'.$n;
         $kode='KB-'.substr($x,1,5).'-'.$id_gudang.'/'.date("d-m-Y");
-    }
-       $save  = array(
+    }*/
+    $save  = array(
         'tanggal'         => $tanggal,
         'id_pelanggan'         => $this->input->post('pelanggan'),
         'user_input'  => $id_user,
         'id_gudang'   =>  $id_gudang,
-        'faktur'      => $kode,
+        'faktur'      => $this->input->post('faktur'),
     );
-       $this->Mod_keluar->insert("keluar", $save);
-       $id_keluar = $this->db->insert_id();
+    $this->Mod_keluar->insert("keluar", $save);
+    $id_keluar = $this->db->insert_id();
 
 
-       foreach ($list as $items) {
+    foreach ($list as $items) {
         $save_detail = array('id_keluar' => $id_keluar);
         $id_detail=$items->id;
         $this->Mod_keluar->update_detail($id_detail, $save_detail);
@@ -145,27 +147,41 @@ class Keluar extends MY_Controller
 
 }
 
+public function no_faktur()
+{
+   $id_gudang = $this->session->userdata['id_gudang'];
+   $trx= $this->Mod_keluar->max_no();
+   if ($trx[0]['kode']==NULL) {
+    $n="00001";
+    $kode='KB-'.$n.'-'.$id_gudang.'/'.date("d-m-Y");
+}else{
+    $n=$trx[0]['kode']+1;
+    $x='00000'.$n;
+    $kode='KB-'.substr($x,1,5).'-'.$id_gudang.'/'.date("d-m-Y");
+}
 
+echo json_encode(array('kode' => $kode));
+}
 
 public function update()
 {
-   $id_gudang = $this->session->userdata['id_gudang'];
-   $id_user = $this->session->userdata['id_user'];
-   $this->_validate();
+ $id_gudang = $this->session->userdata['id_gudang'];
+ $id_user = $this->session->userdata['id_user'];
+ $this->_validate();
 
-   $id      = $this->input->post('id');
-   $waktu = date("H:i:s");
-   $tanggal=$this->input->post('tanggal');
-  
-   $save  = array(
+ $id      = $this->input->post('id');
+ $waktu = date("H:i:s");
+ $tanggal=date("Y-m-d H:i:s", strtotime($this->input->post('tanggal'))) ;
+
+ $save  = array(
     'tanggal'         => $tanggal,
     'id_pelanggan'         => $this->input->post('pelanggan')
 );
 
-   $this->Mod_keluar->update($id, $save);
-   $list = $this->Mod_keluar->get_detail($id);
+ $this->Mod_keluar->update($id, $save);
+ $list = $this->Mod_keluar->get_detail($id);
 
-   foreach ($list as $items) {
+ foreach ($list as $items) {
     $id_keluar = $items->id_keluar;
     $id_detail = $items->id;
     $jumlah = $items->jumlah;
@@ -188,13 +204,13 @@ public function update()
         );
         $this->Mod_keluar->insert("stok_opname", $save_stok);
     }else{
-     $save_stok  = array(
+       $save_stok  = array(
         'keluar'         => $jumlah,
         'ed'         => $items->ed,
         'nobatch'         => $items->nobatch,
     );
-     $this->Mod_keluar->update_stok_opname($id_detail, $save_stok);
- }
+       $this->Mod_keluar->update_stok_opname($id_detail, $save_stok);
+   }
 
 
 }
@@ -213,18 +229,18 @@ public function edit($id)
 public function validasi_stok()
 {
     $id_keluar = $this->input->post('id');
-        $id_detail = $this->input->post('id_detail');
-        $id_barang = $this->input->post('id_barang');
-        $nobatch = $this->input->post('nobatch');
-        $jml= $this->input->post('item');
-        $cek=$this->Mod_keluar->get_detail_keluar($id_detail,$nobatch)->row();
-        $jm = (isset($cek->jumlah)) ? $cek->jumlah : 0 ;
-        $r= $row=$this->Mod_keluar->get_sisa_stok($id_barang,$nobatch)->row();
-        $sisa = $r->sisa+$jm;
-        if ($jml > $sisa) {
-             echo json_encode(array('status' => FALSE, 'id_keluar' => $id_keluar, 'sisa' => $sisa, 'pesan' => 'Stok Saat Ini : '.$sisa.' <br>Anda Menginput : '.$jml.'  <br>No Batch :'. $nobatch));
-            exit();
-        }
+    $id_detail = $this->input->post('id_detail');
+    $id_barang = $this->input->post('id_barang');
+    $nobatch = $this->input->post('nobatch');
+    $jml= $this->input->post('item');
+    $cek=$this->Mod_keluar->get_detail_keluar($id_detail,$nobatch)->row();
+    $jm = (isset($cek->jumlah)) ? $cek->jumlah : 0 ;
+    $r= $row=$this->Mod_keluar->get_sisa_stok($id_barang,$nobatch)->row();
+    $sisa = $r->sisa+$jm;
+    if ($jml > $sisa) {
+       echo json_encode(array('status' => FALSE, 'id_keluar' => $id_keluar, 'sisa' => $sisa, 'pesan' => 'Stok Saat Ini : '.$sisa.' <br>Anda Menginput : '.$jml.'  <br>No Batch :'. $nobatch));
+       exit();
+   }
 
 }
 
@@ -232,9 +248,9 @@ public function validasi_stok()
 public function get_brg()
 {
 
- $id = $this->input->get('term');
- $data = $this->Mod_keluar->get_brg($id);
- if (count($data) > 0) {
+   $id = $this->input->get('term');
+   $data = $this->Mod_keluar->get_brg($id);
+   if (count($data) > 0) {
     foreach ($data as $row) {
         $arr_result[] = array( 'label'  => $row->nama_barang, 'produk_nama'  => $row->nama_barang, 'produk_id' => $row->id_barang, 'produk_harga' =>  $row->harga, 'id_kemasan' => $row->kemasan, 'nama_satuan' => $row->nama_satuan, 'ed' => $row->ed, 'nobatch' => $row->nobatch, 'sisa' => $row->sisa);
     }
@@ -264,8 +280,8 @@ public function get_pelanggan()
 
 public function getAllPelanggan()
 {
- $data = $this->Mod_keluar->get_supplier_all();
- echo json_encode($data);
+   $data = $this->Mod_keluar->get_supplier_all();
+   echo json_encode($data);
 }
 public function delete()
 {
@@ -311,29 +327,29 @@ private function _validate()
     }
 
     function add_to_cart(){ //fungsi Add To Cart
-     $id_user = $this->session->userdata['id_user'];
-     $id_keluar = $this->input->post('id');
-     $id_barang=$this->input->post('produk_id');
-     $nobatch = $this->input->post('nobatch');
-     $jmlstok = $this->input->post('jmlstok');
-     $cek=$this->Mod_keluar->cek_barang($id_barang,$nobatch,$id_keluar);
-     $num=$cek->result();
-     if (count($num) > 0) {
+       $id_user = $this->session->userdata['id_user'];
+       $id_keluar = $this->input->post('id');
+       $id_barang=$this->input->post('produk_id');
+       $nobatch = $this->input->post('nobatch');
+       $jmlstok = $this->input->post('jmlstok');
+       $cek=$this->Mod_keluar->cek_barang($id_barang,$nobatch,$id_keluar);
+       $num=$cek->result();
+       if (count($num) > 0) {
         $row=$cek->row();
         $jml = $this->input->post('jumlah');
         $jumlah = $jml + $row->jumlah;
         $id_detail = $row->id;
         if ($jumlah > $jmlstok) {
-           echo json_encode(array('status' => FALSE, 'id_keluar' => $id_keluar, 'pesan' => 'Stok Saat Ini : '.$jmlstok.' <br>Anda Menginput : '.$jumlah.'  <br>No Batch :'. $nobatch));
-           exit();
-       }
-        
-        $save_detail  = array(
-            'jumlah'         => $jumlah,
-        );
-         $this->Mod_keluar->update_detail($id_detail, $save_detail);
-     }else{
-       $save_detail  = array(
+         echo json_encode(array('status' => FALSE, 'id_keluar' => $id_keluar, 'pesan' => 'Stok Saat Ini : '.$jmlstok.' <br>Anda Menginput : '.$jumlah.'  <br>No Batch :'. $nobatch));
+         exit();
+     }
+
+     $save_detail  = array(
+        'jumlah'         => $jumlah,
+    );
+     $this->Mod_keluar->update_detail($id_detail, $save_detail);
+ }else{
+     $save_detail  = array(
         'id_barang'         => $this->input->post('produk_id'),
         'kemasan'         => $this->input->post('kemasan'),
         'nobatch'         => $this->input->post('nobatch'),
@@ -344,14 +360,14 @@ private function _validate()
         'id_user'   => $id_user
 
     );
-         $this->Mod_keluar->insert("keluar_detail", $save_detail);
-     }
-    
-     echo json_encode(array('status' => TRUE, 'id_keluar' => $id_keluar));
-         // $this->load_cart($id_keluar); //tampilkan cart setelah added
-     }
+     $this->Mod_keluar->insert("keluar_detail", $save_detail);
+ }
 
-     
+ echo json_encode(array('status' => TRUE, 'id_keluar' => $id_keluar));
+         // $this->load_cart($id_keluar); //tampilkan cart setelah added
+}
+
+
     function show_cart($id_keluar){ //Fungsi untuk menampilkan Cart
         $output = '';
         $no = 0;
@@ -362,8 +378,9 @@ private function _validate()
             $total += $subtotal;
             $no++;
             $id_barang = $items->id_barang;
+            $nobatch = $items->nobatch;
             $stokop = $this->Mod_keluar->get_stok_opname($id_barang);
-            
+            $s=$this->Mod_keluar->get_sisa_stok($id_barang,$nobatch)->row();
             $output .='
             <tr>
             <td>'.$no.'</td>
@@ -378,14 +395,14 @@ private function _validate()
             <td>';
             $output .= '
             <select class="form-control form-control-sm selbatch nobatch'.$no.'" id_keluar="'.$items->id_keluar.'"  id_detail="'.$items->id.'" no="'.$no.'">';
-            foreach ($stokop as $k) {
+            foreach ($stokop->result() as $k) {
                 $sel = ($items->nobatch==$k->nobatch) ? 'selected' : '' ;
                 $output .='<option value="'.$k->nobatch.'" '.$sel.'>'.$k->nobatch.'</option>';
             }
             $output .='</select>';
             $output .='</td>';
-            $output .= '<td>'.number_format($items->harga_jual).'</td>';
-            $output .= '<td>'.number_format($subtotal).'</td>
+            $output .= '<td>'.$s->sisa.'</td>';
+            $output .= '<td>'.number_format($items->harga_jual).'</td>
             <td>
             <button type="button" id_keluar="'.$items->id_keluar.'"  id_detail="'.$items->id.'" no="'.$no.'" class="hapus_cart btn btn-danger btn-xs">Hapus</button>
             <button type="button" id_keluar="'.$items->id_keluar.'" id_detail="'.$items->id.'"  no="'.$no.'" class="simpan_cart btn btn-success btn-xs">simpan</button>
@@ -450,7 +467,7 @@ private function _validate()
             }
         }
         
-         echo json_encode(array('status' => TRUE, 'id_keluar' => $id_keluar));
+        echo json_encode(array('status' => TRUE, 'id_keluar' => $id_keluar));
     }
 
 
@@ -472,8 +489,8 @@ private function _validate()
 
         public function get_sisa_stok($id_barang,$nobatch)
         {
-            
+
             $row=$this->Mod_keluar->get_sisa_stok($id_barang,$nobatch)->row();
             echo json_encode($row);
         }
-}
+    }

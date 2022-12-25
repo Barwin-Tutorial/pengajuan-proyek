@@ -22,7 +22,7 @@
     
     <table class="table" width="100%" cellspacing="5">
         <tr>
-            <td >No Faktur</td>
+            <td >NO. SBBK</td>
             <td >:</td>
             <td ><?php echo $tb->faktur; ?></td>
             <td >Tanggal</td>
@@ -46,7 +46,7 @@
                 <th>No</th>
                 <th>Nama Barang</th>
                 <th>Qty</th>
-                <th>Kemasan</th>
+                <th>Satuan</th>
                 <th>No. Batch</th>
                 <th>Expired Date</th>
             </tr>
