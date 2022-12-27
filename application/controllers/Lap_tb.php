@@ -99,7 +99,7 @@ class Lap_tb extends MY_Controller
         $x++;
       }
       $writer = new Xlsx($spreadsheet);
-      $filename = 'laporan_penerimaan';
+      $filename = 'laporan_barang_masuk';
 
       header('Content-Type: application/vnd.ms-excel');
       header('Content-Disposition: attachment;filename="'. $filename .'.xls"'); 

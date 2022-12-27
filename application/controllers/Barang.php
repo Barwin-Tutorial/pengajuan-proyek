@@ -91,7 +91,7 @@ class Barang extends MY_Controller
         $id_user = $this->session->userdata['id_user'];
         $id_gudang = $this->session->userdata['id_gudang'];
         $save  = array(
-            'nama'         => $this->input->post('nama'),
+            'nama'         => ucwords($this->input->post('nama')),
             'barcode'         => $this->input->post('barcode'),
             'kdbarang'         => $this->input->post('barcode'),
             'kemasan'         => $this->input->post('kemasan'),
@@ -119,7 +119,7 @@ class Barang extends MY_Controller
         // $this->_validate();
         $id      = $this->input->post('id');
         $save  = array(
-            'nama'         => $this->input->post('nama'),
+            'nama'         => ucwords($this->input->post('nama')),
             'barcode'         => $this->input->post('barcode'),
             'kemasan'         => $this->input->post('kemasan'),
             'berat'         => $this->input->post('berat'),

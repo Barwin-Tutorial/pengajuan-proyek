@@ -75,7 +75,7 @@ class Lap_kb extends MY_Controller
         $tglrange =$this->input->post('tgl');
         $id_pelanggan =$this->input->post('id_pelanggan');
         $data['act'] = $group;
-        $data['lap'] = $this->Mod_laporan->get_laporan_kb($tglrange,$id_pelanggan);
+        $data['lap'] = $this->Mod_laporan->get_laporan_kb($tglrange,$id_pelanggan,$group);
         $this->load->view('laporan/cetak_kb',$data);
     }
 
@@ -85,7 +85,7 @@ class Lap_kb extends MY_Controller
         $tglrange =$this->input->post('tgl');
         $id_pelanggan =$this->input->post('id_pelanggan');
         $data['act'] = $group;
-        $list = $this->Mod_laporan->get_laporan_kb($tglrange,$id_pelanggan)->result();
+        $list = $this->Mod_laporan->get_laporan_kb($tglrange,$id_pelanggan,$group)->result();
       $spreadsheet = new Spreadsheet();
       $sheet = $spreadsheet->getActiveSheet();
       $sheet->setCellValue('A1', 'No');

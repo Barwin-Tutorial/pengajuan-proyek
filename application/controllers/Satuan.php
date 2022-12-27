@@ -74,12 +74,8 @@ class Satuan extends MY_Controller
        
         $id_user = $this->session->userdata['id_user'];
         $save  = array(
-            'nama'         => $this->input->post('nama'),
-           /* 'notelp'         => $this->input->post('notelp'),
-            'alamat'         => $this->input->post('alamat'),
-            'kp_instalasi'         => $this->input->post('kp_instalasi'),
-            'admin_farmasi'         => $this->input->post('admin_farmasi'),
-            'user_input'  => $id_user*/
+            'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
+          
         );
         $this->Mod_satuan->insert("satuan", $save);
         echo json_encode(array("status" => TRUE));
@@ -91,11 +87,7 @@ class Satuan extends MY_Controller
         // $this->_validate();
         $id      = $this->input->post('id');
         $save  = array(
-            'nama'         => $this->input->post('nama'),
-            /*'notelp'         => $this->input->post('notelp'),
-            'alamat'         => $this->input->post('alamat'),
-            'kp_instalasi'         => $this->input->post('kp_instalasi'),
-            'admin_farmasi'         => $this->input->post('admin_farmasi'),*/
+            'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
         );
 
         $this->Mod_satuan->update($id, $save);
