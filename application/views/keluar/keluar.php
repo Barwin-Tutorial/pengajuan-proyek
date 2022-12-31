@@ -287,19 +287,28 @@ return true;
 
 $(function () {
 
-    $("#jumlah").change(function () {
-        /*let jumlah = parseInt($(this).val());
+    $("#jumlah").change(function (event) {
+        event.preventDefault();
+        let jumlah = parseInt($(this).val());
         let jmlstok =parseInt($('#jmlstok').val());
-        
+        if (jumlah <= 0) {
+            Swal.fire({
+                  icon: 'warning',
+                  title : 'Peringatan',
+                  text: 'Jumlah Minimal 1 ',
+              });
+            $('#jumlah').val('')
+            return false;
+        }
         if (jumlah > jmlstok) {
             Swal.fire({
                   icon: 'warning',
                   title : 'Peringatan',
                   text: 'Jumlah Tidak Boleh Lebih dari Sisa Stok!!. '+jmlstok,
               });
-            // $('#jumlah').val(jmlstok)
+            $('#jumlah').val('')
             return false;
-        }*/
+        }
         var formdata = $('#form').serialize();
         $.ajax({
             url : "keluar/add_to_cart",
@@ -317,11 +326,13 @@ $(function () {
                                 icon: 'success',
                                 title: 'Success!!.'
                             });
+                            $('#jumlah').val('')
                             $('#detail_cart').html(data);
                             setTimeout(function() { $('input[name="produk_nama"]').focus() }, 3000);
                         }
                     });
                 }else{
+                    $('#jumlah').val('')
                     Swal.fire({
                       icon: 'warning',
                       title : 'Peringatan',
@@ -334,6 +345,7 @@ $(function () {
 
         
     })
+  
 
     $(document).on('click','.hapus_cart',function(){
             var id=$(this).attr("id_keluar"); //mengambil row_id dari artibut id

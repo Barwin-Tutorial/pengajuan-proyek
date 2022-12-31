@@ -23,14 +23,16 @@ class Mod_masuk extends CI_Model
 		 $id_gudang = $this->session->userdata['id_gudang'];
 		
 		
-		// $this->db->select('a.*,b.jumlah,b.kemasan,b.nobatch,b.ed,b.harga,c.nama as nama_barang, d.nama as nama_supplier');
-		/*$this->db->join('penerimaan_detail b', 'a.id=b.id_penerimaan');
-		$this->db->join('barang c', 'b.id_barang=c.id');*/
+		
 		if ($level!=1) {
 			$this->db->where('a.id_gudang', $id_gudang);
 		} 
-		$this->db->select('a.*, d.nama as nama_supplier');
+        $this->db->select('a.*,b.jumlah,b.kemasan,b.nobatch,b.ed,b.harga,c.nama as nama_barang, d.nama as nama_supplier');
+        
+		// $this->db->select('a.*,b.jumlah,c.nama as nama_barang, d.nama as nama_supplier');
 		$this->db->join('supplier d', 'a.id_supplier=d.id');
+        $this->db->join('penerimaan_detail b', 'a.id=b.id_penerimaan');
+        $this->db->join('barang c', 'b.id_barang=c.id');
 		$this->db->from('penerimaan a');
 		$i = 0;
 
@@ -260,5 +262,15 @@ class Mod_masuk extends CI_Model
         $this->db->join('barang b', 'a.id_barang=b.id');
         $this->db->join('satuan c', 'a.kemasan=c.id');
         return $this->db->get('penerimaan_detail a')->result();
+    }
+
+        function cek_barang($id_barang,$nobatch,$id_penerimaan)
+    {
+        $id_user = $this->session->userdata['id_user'];
+        $this->db->where('nobatch',$nobatch);
+        $this->db->where('id_penerimaan',$id_penerimaan);
+        $this->db->where('id_barang', $id_barang);
+        $this->db->where('id_user', $id_user);
+        return $this->db->get('penerimaan_detail');
     }
 }

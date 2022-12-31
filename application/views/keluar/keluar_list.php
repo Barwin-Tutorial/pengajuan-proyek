@@ -10,7 +10,7 @@
                                             <th>No</th>
                                             <th>Nama Barang</th>
                                             <th>Jumlah</th>
-                                            <th>Kemasan</th>
+                                            <th>Satuan</th>
                                             <th>No Batch</th>
                                             <th>ED</th>
                                             <th>Sisa Stok</th>

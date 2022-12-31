@@ -6,17 +6,17 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header bg-light">
-                        <h3 class="card-title"><i class="fa fa-list text-blue"></i> Data Satuan</h3>
+                        <h3 class="card-title"><i class="fa fa-list text-blue"></i> Data Produsen</h3>
                         <div class="text-right">
                             <button type="button" class="btn btn-sm btn-outline-primary  add" onclick="add()" title="Add Data" ><i class="fas fa-plus" ></i> Add</button>
                         </div>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <table id="tbl_satuan" class="table table-bordered table-striped table-hover">
+                        <table id="tbl_produsen" class="table table-bordered table-striped table-hover">
                             <thead>
                                 <tr class="bg-info">
-                                    <th>Nama</th>
+                                    <th>Nama Produsen</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -43,11 +43,11 @@ var table;
 $(document).ready(function() {
 
     //datatables
-    table =$("#tbl_satuan").DataTable({
+    table =$("#tbl_produsen").DataTable({
         "responsive": true,
         "autoWidth": false,
         "language": {
-            "sEmptyTable": "Data Satuan Belum Ada"
+            "sEmptyTable": "Data Produsen Belum Ada"
         },
         "processing": true, //Feature control the processing indicator.
         "serverSide": true, //Feature control DataTables' server-side processing mode.
@@ -55,7 +55,7 @@ $(document).ready(function() {
 
         // Load data for the table's content from an Ajax source
         "ajax": {
-            "url": "<?php echo site_url('satuan/ajax_list')?>",
+            "url": "<?php echo site_url('produsen/ajax_list')?>",
             "type": "POST"
         },
          
@@ -107,7 +107,7 @@ function hapus(id){
 }).then((result) => {
 if (result.value) {
         $.ajax({
-        url:"<?php echo site_url('satuan/delete');?>",
+        url:"<?php echo site_url('produsen/delete');?>",
         type:"POST",
         data:"id="+id,
         cache:false,
@@ -141,7 +141,7 @@ function add()
     $('.form-group').removeClass('has-error'); // clear error class
     $('.help-block').empty(); // clear error string
     $('#modal_form').modal({backdrop: 'static', keyboard: false}); // show bootstrap modal
-    $('.modal-title').text('Add satuan'); // Set Title to Bootstrap modal title
+    $('.modal-title').text('Add Produsen'); // Set Title to Bootstrap modal title
 }
 
 function edit(id){
@@ -152,21 +152,17 @@ function edit(id){
 
     //Ajax Load data from ajax
     $.ajax({
-        url : "<?php echo site_url('satuan/edit')?>/" + id,
+        url : "<?php echo site_url('produsen/edit')?>/" + id,
         type: "GET",
         dataType: "JSON",
         success: function(data)
         {
 
             $('[name="id"]').val(data.id);
-            $('[name="nama"]').val(data.nama);
-            /*$('[name="notelp"]').val(data.notelp);
-            $('[name="kp_instalasi"]').val(data.kp_instalasi);
-            $('[name="admin_farmasi"]').val(data.admin_farmasi);
-            $('[name="alamat"]').val(data.alamat);*/
+            $('[name="nama"]').val(data.nama_produsen);
            
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
-            $('.modal-title').text('Edit satuan'); // Set title to Bootstrap modal title
+            $('.modal-title').text('Edit Produsen'); // Set title to Bootstrap modal title
 
         },
         error: function (jqXHR, textStatus, errorThrown)
@@ -181,9 +177,9 @@ function save()
     $('#btnSave').text('saving...'); //change button text
     $('#btnSave').attr('disabled',true); //set button disable 
     if(save_method == 'add') {
-        url = "<?php echo site_url('satuan/insert')?>";
+        url = "<?php echo site_url('produsen/insert')?>";
     } else {
-        url = "<?php echo site_url('satuan/update')?>";
+        url = "<?php echo site_url('produsen/update')?>";
     }
    var formdata = new FormData($('#form')[0]);
     // ajax adding data to database
@@ -209,17 +205,17 @@ function save()
             }
             else
             {
-                Swal.fire({
+                /*Swal.fire({
                     title : 'Error!',
                     text : data.pesan,
                     icon : 'error',
                     showConfirmButton : true,
-                });
-               /* for (var i = 0; i < data.inputerror.length; i++) 
+                });*/
+                for (var i = 0; i < data.inputerror.length; i++) 
                 {
                     $('[name="'+data.inputerror[i]+'"]').addClass('is-invalid');
                     $('[name="'+data.inputerror[i]+'"]').next().text(data.error_string[i]).addClass('invalid-feedback');
-                }*/
+                }
             }
             $('#btnSave').text('save'); //change button text
             $('#btnSave').attr('disabled',false); //set button enable 
@@ -249,7 +245,7 @@ var loadFile = function(event) {
         <div class="modal-content ">
 
             <div class="modal-header">
-                <h3 class="modal-title">Satuan Form</h3>
+                <h3 class="modal-title">Produsen Form</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -261,9 +257,9 @@ var loadFile = function(event) {
                     <div class="card-body">
                        
                         <div class="form-group row ">
-                            <label for="nama" class="col-sm-3 col-form-label">Nama</label>
+                            <label for="nama" class="col-sm-3 col-form-label">Nama Produsen</label>
                             <div class="col-sm-9 kosong">
-                                <input type="text" class="form-control" name="nama" id="nama" placeholder="Nama" >
+                                <input type="text" class="form-control" name="nama" id="nama" placeholder="Nama Produsen" >
                                 <span class="help-block"></span>
                             </div>
                         </div>

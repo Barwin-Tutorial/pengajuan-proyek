@@ -13,18 +13,36 @@
         </div>
         <div class="header">
             <h2><?php echo $apl->nama_owner; ?></h2>
-            <h4><?php echo $apl->alamat ?></h4>
-            <p><?php echo $apl->tlp." / ".$apl->email; ?></p>
+            <address><?php echo $apl->alamat ?><br><?php echo $apl->tlp." / ".$apl->email; ?></address>
         </div>
     </center>
 
+    <hr>
+    <div class="row">
+        <div class="col-12">
+        <h4>No SP : <?php echo $tb->nosp; ?></h4>
+        </div>
+    </div>
+    <h4>Kepada Yth :</h4>
+    <strong><?php echo $tb->nama_supplier; ?></strong>
+    <address><?php echo $tb->alamat; ?></address>
+    <br>
+    <div class="col-sm-6 invoice-col">
+        <address>
+            Dengan Hormat,
+            <br>
+            Mohon dikirim Obat-obatan Untuk keperluan Kami Sebagai Berikut :
+        </address>
 
+    </div>
     
-    <table class="table" width="100%" cellspacing="5">
+    
+   <!--  <table class="table" width="100%" cellspacing="5">
+
         <tr>
-            <td >NO. SBBK</td>
+            <td >NO. SP</td>
             <td >:</td>
-            <td ><?php echo $tb->faktur; ?></td>
+            <td ><?php echo $tb->nosp; ?></td>
             <td >Tanggal</td>
             <td >:</td>
             <td ><?php echo tanggalindo($tb->tanggal); ?></td>
@@ -38,17 +56,15 @@
             <td><?php echo $tb->alamat; ?></td>
         </tr>
         
-    </table>
-    
+    </table> -->
+    <hr>
     <table class="table table-bordered" id="tbl_laptiket" border="1" cellspacing="0" cellpadding="5" width="100%">
         <thead class="bg-primary">
             <tr>
                 <th>No</th>
                 <th>Nama Barang</th>
-                <th>Qty</th>
                 <th>Satuan</th>
-                <th>No. Batch</th>
-                <th>Expired Date</th>
+                <th>Jumlah</th>
             </tr>
         </thead>
         <tbody>
@@ -57,10 +73,8 @@
             <tr>
                 <td><?=$no++;?></td>
                 <td><?php echo $row->nama_barang; ?></td>
-                <td><?php echo $row->jumlah; ?></td>
                 <td><?php echo $row->nama_satuan; ?></td>
-                <td><?php echo $row->nobatch; ?></td>
-                <td><?php echo $row->ed; ?></td>
+                <td><?php echo $row->jumlah; ?></td>
             </tr>
         <?php endforeach; ?>
 
@@ -68,15 +82,15 @@
 </table>
 <br/>
 <br/>
-<table width="50%" align="right">
+<!-- <table width="50%" align="right">
     <tr><td align="center">Pemberi</td></tr>
     <tr><td align="center">&nbsp;</td></tr>
     <tr><td align="center">&nbsp;</td></tr>
     <tr><td align="center">&nbsp;</td></tr>
     <tr><td align="center">( ...................................... )</td></tr>
-</table>
-<table width="50%" align="left">
-    <tr><td align="center">Penerima</td></tr>
+</table> -->
+<table  align="right">
+    <tr><td align="center">Bengkulu, <?php echo tanggalindo($tb->tanggal); ?></td></tr>
     <tr><td align="center">&nbsp;</td></tr>
     <tr><td align="center">&nbsp;</td></tr>
     <tr><td align="center">&nbsp;</td></tr>

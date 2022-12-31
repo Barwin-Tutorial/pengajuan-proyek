@@ -4,7 +4,10 @@
   <div class="container-fluid">
     <div class="card card-default">
       <div class="card-header bg-light">
-        <h3 class="card-title"><i class="fa fa-list text-blue"></i> Laporan Sisa Stok</h3>
+        <h3 class="card-title"><i class="fa fa-list text-blue"></i> Laporan Barang Expired</h3>
+        <div class="text-right">
+          <a href="<?php echo base_url('expired/lap_expired_xls') ?>" type="button" class="btn btn-sm btn-outline-primary "  title="Export Excel" ><i class="fas fa-file-excel" ></i> Export Excel</a>
+        </div>
       </div>
       <div class="card-body">
         <table class="table table-bordered" id="tbl_stok" border="1" cellspacing="0" cellpadding="5" width="100%">

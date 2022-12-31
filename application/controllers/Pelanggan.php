@@ -75,7 +75,7 @@ class Pelanggan extends MY_Controller
         $id_user = $this->session->userdata['id_user'];
         $id_gudang = $this->session->userdata['id_gudang'];
         $save  = array(
-            'nama'         => $this->input->post('nama'),
+            'nama'         => ucwords($this->input->post('nama')),
             'notelp'         => $this->input->post('notelp'),
             'alamat'         => $this->input->post('alamat'),
             'kp_instalasi'         => $this->input->post('kp_instalasi'),
@@ -93,7 +93,7 @@ class Pelanggan extends MY_Controller
         // $this->_validate();
         $id      = $this->input->post('id');
         $save  = array(
-            'nama'         => $this->input->post('nama'),
+            'nama'         => ucwords($this->input->post('nama')),
             'notelp'         => $this->input->post('notelp'),
             'alamat'         => $this->input->post('alamat'),
             'kp_instalasi'         => $this->input->post('kp_instalasi'),

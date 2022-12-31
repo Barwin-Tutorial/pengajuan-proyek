@@ -18,7 +18,7 @@
                                 <tr class="bg-info">
                                     <th>Nama</th>
                                     <th>No Telpon</th>
-                                    <th>Distributor & Produsen</th>
+                                    <th>Produsen / Distributor</th>
                                     <th>Alamat</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -164,7 +164,7 @@ function edit(id){
             $('[name="id"]').val(data.id);
             $('[name="nama"]').val(data.nama);
             $('[name="notelp"]').val(data.notelp);
-            $('[name="sipa"]').val(data.sipa);
+            $('[name="produsen"]').val(data.id_produsen);
             $('[name="alamat"]').val(data.alamat);
            
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
@@ -277,9 +277,17 @@ var loadFile = function(event) {
                             </div>
                         </div>
                         <div class="form-group row ">
-                            <label for="nama" class="col-sm-3 col-form-label">Distributor & Produsen</label>
+                            <label for="nama" class="col-sm-3 col-form-label">Produsen / Distributor</label>
                             <div class="col-sm-9 kosong">
-                                <input type="text" class="form-control" name="sipa" id="sipa" placeholder="Distributor & Produsen" >
+                                <!-- <input type="text" class="form-control" name="produsen" id="produsen" placeholder="Produsen / Distributor" > -->
+                                <select class="form-control" name="produsen" >
+                                      <option value="">Pilih...</option>
+                                      <?php 
+                                      foreach ($produsen as $row){
+                                        ?>
+                                        <option value="<?=$row->id?>"><?php echo $row->nama_produsen; ?></option>
+                                    <?php } ?>
+                                </select>
                                 <span class="help-block"></span>
                             </div>
                         </div>

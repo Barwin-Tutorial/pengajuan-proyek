@@ -5,13 +5,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * Create By : Aryo
  * Youtube : Aryo Coding
  */
-class Supplier extends MY_Controller
+class Produsen extends MY_Controller
 {
 
     function __construct()
     {
         parent::__construct();
-        $this->load->model('Mod_supplier');
+        $this->load->model('Mod_produsen');
         // $this->load->model('dashboard/Mod_dashboard');
     }
 
@@ -32,8 +32,8 @@ class Supplier extends MY_Controller
             $akses=$a_submenu->view;
         }
         if ($akses=="Y") {
-            $data['produsen'] = $this->Mod_supplier->getProdusen()->result();
-            $this->template->load('layoutbackend','supplier/supplier',$data);
+             
+            $this->template->load('layoutbackend','produsen/produsen',$data);
         }else{
             $data['page']=$link;
             $this->template->load('layoutbackend','admin/akses_ditolak',$data);
@@ -44,25 +44,22 @@ class Supplier extends MY_Controller
     {
         ini_set('memory_limit','512M');
         set_time_limit(3600);
-        $list = $this->Mod_supplier->get_datatables();
+        $list = $this->Mod_produsen->get_datatables();
         $data = array();
         $no = $_POST['start'];
         foreach ($list as $pel) {
 
             $no++;
             $row = array();
-            $row[] = $pel->nama;
-            $row[] = $pel->notelp;
             $row[] = $pel->nama_produsen;
-            $row[] = $pel->alamat;
             $row[] = "<a class=\"btn btn-xs btn-outline-primary edit\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit('$pel->id')\"><i class=\"fas fa-edit\"></i></a><a class=\"btn btn-xs btn-outline-danger delete\" href=\"javascript:void(0)\" title=\"Delete\"  onclick=\"hapus('$pel->id')\"><i class=\"fas fa-trash\"></i></a>";
             $data[] = $row;
         }
 
         $output = array(
             "draw" => $_POST['draw'],
-            "recordsTotal" => $this->Mod_supplier->count_all(),
-            "recordsFiltered" => $this->Mod_supplier->count_filtered(),
+            "recordsTotal" => $this->Mod_produsen->count_all(),
+            "recordsFiltered" => $this->Mod_produsen->count_filtered(),
             "data" => $data,
         );
         //output to json format
@@ -74,13 +71,10 @@ class Supplier extends MY_Controller
        
         $id_user = $this->session->userdata['id_user'];
         $save  = array(
-            'nama'         => $this->input->post('nama'),
-            'notelp'         => $this->input->post('notelp'),
-            'alamat'         => $this->input->post('alamat'),
-            'id_produsen'         => $this->input->post('produsen'),
-            'user_input'  => $id_user
+            'nama_produsen'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
+          
         );
-        $this->Mod_supplier->insert("supplier", $save);
+        $this->Mod_produsen->insert("produsen", $save);
         echo json_encode(array("status" => TRUE));
 
     }
@@ -90,27 +84,24 @@ class Supplier extends MY_Controller
         // $this->_validate();
         $id      = $this->input->post('id');
         $save  = array(
-            'nama'         => $this->input->post('nama'),
-            'notelp'         => $this->input->post('notelp'),
-            'alamat'         => $this->input->post('alamat'),
-            'id_produsen'         => $this->input->post('produsen'),
+            'nama_produsen'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
         );
 
-        $this->Mod_supplier->update($id, $save);
+        $this->Mod_produsen->update($id, $save);
         echo json_encode(array("status" => TRUE));
 
     }
 
     public function edit($id)
     {
-        $data = $this->Mod_supplier->get($id);
+        $data = $this->Mod_produsen->get($id);
         echo json_encode($data);
     }
 
     public function delete()
     {
         $id = $this->input->post('id');
-        $this->Mod_supplier->delete($id, 'supplier');        
+        $this->Mod_produsen->delete($id, 'produsen');        
         echo json_encode(array("status" => TRUE));
     }
     private function _validate()
@@ -123,25 +114,10 @@ class Supplier extends MY_Controller
         if($this->input->post('nama') == '')
         {
             $data['inputerror'][] = 'nama';
-            $data['error_string'][] = 'Nama supplier Tidak Boleh Kosong';
+            $data['error_string'][] = 'Nama Produsen/ atau Distributor Tidak Boleh Kosong';
             $data['status'] = FALSE;
         }
-
-        if($this->input->post('harga') == '')
-        {
-            $data['inputerror'][] = 'harga';
-            $data['error_string'][] = 'Harga Tidak Boleh Kosong';
-            $data['status'] = FALSE;
-        }
-
-        if($this->input->post('satuan') == '')
-        {
-            $data['inputerror'][] = 'satuan';
-            $data['error_string'][] = 'Satuan Tidak Boleh Kosong';
-            $data['status'] = FALSE;
-        }
-
-        
+       
 
         if($data['status'] === FALSE)
         {

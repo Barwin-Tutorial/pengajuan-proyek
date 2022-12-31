@@ -6,21 +6,22 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header bg-light">
-                        <h3 class="card-title"><i class="fa fa-list text-blue"></i> Data Barang Masuk</h3>
+                        <h3 class="card-title"><i class="fa fa-list text-blue"></i> Data Pemesanan</h3>
                         <div class="text-right">
                             <button type="button" class="btn btn-sm btn-outline-primary  add" onclick="add()" title="Add Data" ><i class="fas fa-plus" ></i> Add</button>
                         </div>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <table id="tbl_penerimaan" class="table table-bordered table-striped table-hover">
+                        <table id="tbl_pemesanan" class="table table-bordered table-striped table-hover">
                             <thead>
                                 <tr class="bg-info">
-                                    <th>NO. SBBK</th>
+                                    <th>No</th>
+                                    <th>NO. SP</th>
                                     <th>Tanggal</th>
                                     <th>Penyedia</th>
                                     <th>Nama Barang</th>
-                                    <th>Kemasan</th>
+                                    <th>Satuan</th>
                                     <th>Jumlah</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -45,7 +46,7 @@
 
     function cetak(id) {
      $.ajax({
-        url : 'masuk/cetak',
+        url : 'pemesanan/cetak',
         data : {id:id},
         type : 'post',
         dataType : 'html',
@@ -63,11 +64,11 @@ var table;
 $(document).ready(function() {
 
     //datatables
-    table =$("#tbl_penerimaan").DataTable({
+    table =$("#tbl_pemesanan").DataTable({
         "responsive": true,
         "autoWidth": false,
         "language": {
-            "sEmptyTable": "Data Penerimaan Belum Ada"
+            "sEmptyTable": "Data Pemesanan Belum Ada"
         },
         "processing": true, //Feature control the processing indicator.
         "serverSide": true, //Feature control DataTables' server-side processing mode.
@@ -75,7 +76,7 @@ $(document).ready(function() {
 
         // Load data for the table's content from an Ajax source
         "ajax": {
-            "url": "<?php echo site_url('masuk/ajax_list')?>",
+            "url": "<?php echo site_url('pemesanan/ajax_list')?>",
             "type": "POST"
         },
 
@@ -127,7 +128,7 @@ function hapus(id){
   }).then((result) => {
 if (result.value) {
     $.ajax({
-        url:"<?php echo site_url('masuk/delete');?>",
+        url:"<?php echo site_url('pemesanan/delete');?>",
         type:"POST",
         data:"id="+id,
         cache:false,
@@ -162,14 +163,14 @@ function add()
     $('.form-group').removeClass('has-error'); // clear error class
     $('.help-block').empty(); // clear error string
     $('#modal_form').modal({backdrop: 'static', keyboard: false}); // show bootstrap modal
-    $('.modal-title').text('Add Barang Masuk'); // Set Title to Bootstrap modal title
+    $('.modal-title').text('Add  Pemesanan'); // Set Title to Bootstrap modal title
     setTimeout(function() { $('input[name="scanbar"]').focus() }, 3000);
     $.ajax({
-        url : "masuk/no_faktur",
+        url : "pemesanan/no_nosp",
         method : "POST",
         dataType : 'json',
         success :function(data){
-            $('#faktur').val(data.kode);
+            $('#nosp').val(data.kode);
         }
     });
 }
@@ -183,19 +184,20 @@ function edit(id){
 
     //Ajax Load data from ajax
     $.ajax({
-        url : "<?php echo site_url('masuk/edit')?>/" + id,
+        url : "<?php echo site_url('pemesanan/edit')?>/" + id,
         type: "GET",
         dataType: "JSON",
         success: function(data)
         {
 
             $('[name="id"]').val(data.id);
-            $('[name="faktur"]').val(data.faktur);
+            $('[name="nosp"]').val(data.nosp);
             $('[name="tanggal"]').val(data.tanggal);
+            $('[name="tgl_datang"]').val(data.tgl_datang);
             $('[name="supplier"]').val(data.id_supplier);
             $('[name="vsup"]').val(data.nama_supplier);
             $.ajax({
-                url : "masuk/edit_to_cart",
+                url : "pemesanan/edit_to_cart",
                 method : "POST",
                 data : {id:data.id},
                 dataType : 'html',
@@ -204,7 +206,7 @@ function edit(id){
                 }
             });
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
-            $('.modal-title').text('Edit Barang Masuk'); // Set title to Bootstrap modal title
+            $('.modal-title').text('Edit Pemesanan'); // Set title to Bootstrap modal title
 
         },
         error: function (jqXHR, textStatus, errorThrown)
@@ -221,9 +223,9 @@ function save()
     $('#btnSave').text('saving...'); //change button text
     $('#btnSave').attr('disabled',true); //set button disable 
     if(save_method == 'add') {
-        url = "<?php echo site_url('masuk/insert')?>";
+        url = "<?php echo site_url('pemesanan/insert')?>";
     } else {
-        url = "<?php echo site_url('masuk/update')?>";
+        url = "<?php echo site_url('pemesanan/update')?>";
     }
     var formdata = new FormData($('#form')[0]);
     // ajax adding data to database
@@ -256,7 +258,7 @@ function save()
                 if (data.pesan==0) {
                     Swal.fire({
                       icon: 'error',
-                      title: 'Data Penerimaan Masih Kosong'
+                      title: 'Data Pemesanan Masih Kosong'
                   });
                 }else{
                     Toast.fire({
@@ -305,7 +307,7 @@ $(function () {
         }
         var formdata = $('#form').serialize();
         $.ajax({
-            url : "masuk/add_to_cart",
+            url : "pemesanan/add_to_cart",
             method : "POST",
             data : formdata,
             dataType : 'html',
@@ -316,11 +318,11 @@ $(function () {
     })
 
     $(document).on('click','.hapus_cart',function(){
-            var id=$(this).attr("id_penerimaan"); //mengambil row_id dari artibut id
+            var id=$(this).attr("id_pemesanan"); //mengambil row_id dari artibut id
             var id_detail=$(this).attr("id_detail");
             
             $.ajax({
-                url : "masuk/hapus_cart",
+                url : "pemesanan/hapus_cart",
                 method : "POST",
                 data : {id : id,id_detail:id_detail},
                 success :function(data){
@@ -333,7 +335,7 @@ $(function () {
             });
         });
     $(document).on('click','.simpan_cart',function(){
-        var id=$(this).attr("id_penerimaan");
+        var id=$(this).attr("id_pemesanan");
             var id_detail=$(this).attr("id_detail"); //mengambil row_id dari artibut id
             var no = $(this).attr("no");
             var jumlah = $('.item'+no).val();
@@ -341,7 +343,7 @@ $(function () {
             var ed = $('.ed'+no).val();
 
             $.ajax({
-                url : "masuk/update_cart",
+                url : "pemesanan/update_cart",
                 method : "POST",
                 data : {id : id,id_detail : id_detail,jumlah : jumlah,nobatch : nobatch,ed : ed},
                 success :function(data){
@@ -361,7 +363,7 @@ $(function () {
 $(document).ready(function(){
 
    $( "#vsup").autocomplete({
-    source: 'masuk/get_supplier/?', 
+    source: 'pemesanan/get_supplier/?', 
     select : function (event, ui) {
 
          // display the selected text
@@ -382,7 +384,7 @@ $(document).ready(function(){
 
    setTimeout(function() { $('input[name="scanbar"]').focus() }, 3000);
    $( "#scanbar").autocomplete({
-    source: 'masuk/get_brg/?', 
+    source: 'pemesanan/get_brg/?', 
     select : function (event, ui) {
 
         $("#produk_nama").val(ui.item.label); // display the selected text
@@ -391,7 +393,7 @@ $(document).ready(function(){
         $("#produk_harga").val(ui.item.produk_harga);
         $("#nama_satuan").val(ui.item.nama_satuan);
         $("#kemasan").val(ui.item.id_kemasan);
-        $('#scanbar').val('');
+        $('#scanbar').val(ui.item.produk_nama);
         return false;
 
     }
@@ -403,7 +405,7 @@ function batal() {
      $("#detail_cart").empty();
      $('[name="id"]').val('0');
  $.ajax({
-    url : "masuk/hapus_all_cart",
+    url : "pemesanan/hapus_all_cart",
     success :function(data){
      $("#modal_form").removeData();
      $("#detail_cart").empty();
@@ -420,7 +422,7 @@ function batal() {
         <div class="modal-content ">
 
             <div class="modal-header">
-                <h3 class="modal-title">penerimaan Form</h3>
+                <h3 class="modal-title">Pemesanan Form</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="batal()">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -431,76 +433,60 @@ function batal() {
                     <input type="hidden" value="0" name="id"/> 
                     <div class="card-body">
                         <div class="row">
-                         <div class="col-md-4">
+                         <div class="col-md-6">
                             <div class="form-group row ">
-                                <label for="nama" class="col-sm-3 col-form-label">NO. SBBK</label>
-                                <div class="col-sm-9 kosong">
-                                    <input type="text" class="form-control" name="faktur" id="faktur" placeholder="No SBBK" value="" >
+                                <label for="nama" class="col-sm-4 col-form-label input-group-sm">NO. SP</label>
+                                <div class="col-sm-8 kosong">
+                                    <input type="text" class="form-control input-group-sm" name="nosp" id="nosp" placeholder="No SP" value="" >
                                     <span class="help-block"></span>
                                 </div>
                             </div>
                             <div class="form-group row ">
-                                <label for="nama" class="col-sm-3 col-form-label">Tanggal</label>
-                                <div class="col-sm-9 kosong">
+                                <label for="nama" class="col-sm-4 col-form-label">Tanggal</label>
+                                <div class="col-sm-8 kosong">
                                     <input type="date" class="form-control" name="tanggal" id="tanggal" placeholder="Tanggal" value="<?php echo date("Y-m-d") ?>" readonly>
                                     <span class="help-block"></span>
                                 </div>
                             </div>
+                            <div class="form-group row" >
+                                <label for="nama" class="col-sm-4 col-form-label">Tanggal Diharapkan Datang</label>
+                                <div class="col-sm-8 kosong">
+                                    <input type="date" class="form-control"  name="tgl_datang" id="tgl_datang" placeholder="Sumber" value="<?php echo date("Y-m-d") ?>" >
+                                    <span class="help-block" ></span>
+                                </div>
+                            </div>
                             <div class="form-group row ">
-                                <label for="nama" class="col-sm-3 col-form-label">Penyedia</label>
-                                <div class="col-sm-9 kosong">
+                                <label for="nama" class="col-sm-4 col-form-label">Penyedia</label>
+                                <div class="col-sm-8 kosong">
                                     <input type="hidden" class="form-control"  name="supplier" id="supplier" placeholder="Penyedia" autocomplete="off" >
                                     <input type="text" class="form-control"  name="vsup" id="vsup" placeholder="Penyedia" autocomplete="off" >
                                     <span class="help-block" ></span>
                                 </div>
                             </div>
-                            <div class="form-group row ">
-                                <label for="nama" class="col-sm-3 col-form-label">Sumber</label>
-                                <div class="col-sm-9 kosong">
-                                    <input type="text" class="form-control"  name="sumber" id="sumber" placeholder="Sumber" >
-                                    <span class="help-block" ></span>
-                                </div>
-                            </div>
+                            
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-6">
                            <div class="form-group row ">
-                            <label for="nama" class="col-sm-2 col-form-label">Barcode</label>
-                            <div class="col-sm-4 kosong" >
-                                <input type="text" class="form-control" name="scanbar" id="scanbar" autofocus autocomplete="off" placeholder="Scan Barcode" >
+                            <label for="nama" class="col-sm-4 col-form-label">Nama Barang</label>
+                            <div class="col-sm-8 kosong" >
+                                <input type="text" class="form-control" name="scanbar" id="scanbar" autofocus autocomplete="off" placeholder="Nama Barang" >
                                 <input type="hidden" class="form-control" name="produk_id" id="produk_id" value=""  >
                                 <input type="hidden" class="form-control" name="produk_harga" id="produk_harga" value=""  >
                                 <input type="hidden" class="form-control" name="kemasan" id="kemasan" placeholder="Kemasan" value="">
-                                <input type="hidden" class="form-control" name="nama_satuan" id="nama_satuan"  value="" >
-                                <span class="help-block"></span>
-                            </div>
-                            <label for="nama" class="col-sm-2 col-form-label">Nama Barang</label>
-                            <div class="col-sm-4 kosong">
-                                <input type="text" class="form-control" name="produk_nama" id="produk_nama" placeholder="Nama Barang" value="" readonly="">
+                                
                                 <span class="help-block"></span>
                             </div>
                         </div>
-                            <!-- <div class="form-group row">
-                                <label for="nama" class="col-sm-2 col-form-label">Nama</label>
-                                <div class="col-sm-10 kosong">
-                                    <input type="text" class="form-control" name="produk_nama" id="produk_nama" placeholder="Nama" value="" readonly="">
+                          <div class="form-group row ">
+                                <label for="nama" class="col-sm-4 col-form-label">Satuan</label>
+                                <div class="col-sm-8 kosong">
+                                    <input type="text" class="form-control" name="nama_satuan" id="nama_satuan"  value="" readonly="">
                                     <span class="help-block"></span>
                                 </div>
-                            </div> -->
-                            <div class="form-group row ">
-                                <label for="nama" class="col-sm-2 col-form-label">No Batch</label>
-                                <div class="col-sm-4 kosong">
-                                    <input type="text" class="form-control" name="nobatch" id="nobatch" placeholder="No Batch" value="" >
-                                    <span class="help-block"></span>
-                                </div>
-                                <label for="nama" class="col-sm-2 col-form-label">Expired</label>
-                                <div class="col-sm-4 kosong">
-                                    <input type="date" class="form-control"  name="ed" id="ed" placeholder="Expired"  value="<?php echo date("Y-m-d") ?>">
-                                    <span class="help-block"></span>
-                                </div>
-                                
                             </div>
+                           
                             <div class="form-group row ">
-                                <label for="nama" class="col-sm-2 col-form-label">Jumlah</label>
+                                <label for="nama" class="col-sm-4 col-form-label">Jumlah</label>
                                 <div class="col-sm-4 kosong">
                                     <input type="text"  class="form-control" onkeypress="return hanyaAngka(event)" name="jumlah" id="jumlah" placeholder="Jumlah" >
                                     <span class="help-block"></span>
@@ -522,8 +508,6 @@ function batal() {
                                             <th>Nama Barang</th>
                                             <th>Satuan</th>
                                             <th>Jumlah</th>
-                                            <th>No Batch</th>
-                                            <th>ED</th>
                                             <th>Harga</th>
                                             <th>Subtotal</th>
                                             <th>Aksi</th>

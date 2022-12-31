@@ -275,21 +275,21 @@ var loadFile = function(event) {
                         <div class="form-group row ">
                             <label for="nama" class="col-sm-3 col-form-label">No Kontak</label>
                             <div class="col-sm-9 kosong">
-                                <input type="text" class="form-control" name="notelp" id="notelp" placeholder="No Telpon" >
+                                <input type="text" class="form-control" name="notelp" id="notelp" placeholder="No Kontak" >
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="form-group row ">
                             <label for="nama" class="col-sm-3 col-form-label">Pimpinan</label>
                             <div class="col-sm-9 kosong">
-                                <input type="text" class="form-control" name="kp_instalasi" id="kp_instalasi" placeholder="Kepala Instalasi" >
+                                <input type="text" class="form-control" name="kp_instalasi" id="kp_instalasi" placeholder="Pimpinan" >
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="form-group row ">
                             <label for="nama" class="col-sm-3 col-form-label">Petugas Farmasi</label>
                             <div class="col-sm-9 kosong">
-                                <input type="text" class="form-control" name="admin_farmasi" id="admin_farmasi" placeholder="Admin Farmasi" >
+                                <input type="text" class="form-control" name="admin_farmasi" id="admin_farmasi" placeholder="Petugas Farmasi" >
                                 <span class="help-block"></span>
                             </div>
                         </div>

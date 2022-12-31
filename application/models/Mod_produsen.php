@@ -5,9 +5,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * Create By : Aryo
  * Youtube : Aryo Coding
  */
-class Mod_supplier extends CI_Model
+class Mod_produsen extends CI_Model
 {
-	var $table = 'supplier';
+	var $table = 'produsen';
 	var $column_search = array('nama'); 
 	var $column_order = array('nama');
 	var $order = array('id' => 'desc'); 
@@ -17,16 +17,10 @@ class Mod_supplier extends CI_Model
 		$this->load->database();
 	}
 
-		private function _get_datatables_query()
+	private function _get_datatables_query()
 	{
-		$level = $this->session->userdata['id_level'];
-		 $id_gudang = $this->session->userdata['id_gudang'];
-		 if ($level!=1) {
-			$this->db->where('id_gudang', $id_gudang);
-		} 
-		$this->db->select('a.*,b.nama_produsen');
-		$this->db->join('produsen b','a.id_produsen=b.id','left');
-		$this->db->from('supplier a');
+		
+		$this->db->from('produsen');
 		$i = 0;
 
 	foreach ($this->column_search as $item) // loop column 
@@ -38,17 +32,17 @@ class Mod_supplier extends CI_Model
 	{
 	$this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
 	$this->db->like($item, $_POST['search']['value']);
-	}
-	else
-	{
-		$this->db->or_like($item, $_POST['search']['value']);
-	}
+}
+else
+{
+	$this->db->or_like($item, $_POST['search']['value']);
+}
 
 		if(count($this->column_search) - 1 == $i) //last loop
 		$this->db->group_end(); //close bracket
 	}
 	$i++;
-	}
+}
 
 		if(isset($_POST['order'])) // here order processing
 		{
@@ -79,48 +73,34 @@ class Mod_supplier extends CI_Model
 
 	function count_all()
 	{
-		$level = $this->session->userdata['id_level'];
-		 $id_gudang = $this->session->userdata['id_gudang'];
-		 if ($level!=1) {
-			$this->db->where('id_gudang', $id_gudang);
-		} 
-		$this->db->join('produsen b','a.id_produsen=b.id','left');
-		$this->db->from('supplier a');
+
+		$this->db->from('produsen');
 		return $this->db->count_all_results();
 	}
 
 	function insert($table, $data)
-    {
-        $insert = $this->db->insert($table, $data);
-        return $insert;
-    }
+	{
+		$insert = $this->db->insert($table, $data);
+		return $insert;
+	}
 
-        function update($id, $data)
-    {
-        $this->db->where('id', $id);
-        $this->db->update('supplier', $data);
-    }
+	function update($id, $data)
+	{
+		$this->db->where('id', $id);
+		$this->db->update('produsen', $data);
+	}
 
-        function get($id)
-    {   
-    	$level = $this->session->userdata['id_level'];
-		 $id_gudang = $this->session->userdata['id_gudang'];
-		 if ($level!=1) {
-			$this->db->where('id_gudang', $id_gudang);
-		} 
-        $this->db->where('id',$id);
-        return $this->db->get('supplier')->row();
-    }
+	function get($id)
+	{   
+		$this->db->where('id',$id);
+		return $this->db->get('produsen')->row();
+	}
 
-        function delete($id, $table)
-    {
-        $this->db->where('id', $id);
-        $this->db->delete($table);
-    }
+	function delete($id, $table)
+	{
+		$this->db->where('id', $id);
+		$this->db->delete($table);
+	}
 
-    function getProdusen()
-    {   
-    	return $this->db->get('produsen');
-    }
- 
+	
 }
