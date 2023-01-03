@@ -96,6 +96,9 @@ $this->load->view('templates/menu');
 
     <!-- Main content -->
     <!-- <section class="content"> -->
+      <?php 
+        $this->load->view('templates/footer'); 
+        ?>
       <div class="container-fluid">
         <?php echo $contents; ?>
     </div>

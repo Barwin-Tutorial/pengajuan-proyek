@@ -23,7 +23,7 @@
                                     <th>Golongan</th>
                                     <th>Harga</th>
                                     <th>Lokasi Rak</th>
-                                    <th>Batch</th>
+                                    <!-- <th>Batch</th> -->
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -373,7 +373,7 @@ function barcode(id) {
                                 <span class="help-block"></span>
                             </div>
                         </div>
-                        <div class="form-group row ">
+                       <!--  <div class="form-group row ">
                         <label for="nama_owner" class="col-sm-4 col-form-label">Tahun Pengadaan</label>
                         <div class="col-sm-8 kosong">
                            <input type="text" class="form-control" name="thn_pengadaan" id="thn_pengadaan" placeholder="Tahun Pengadaan" >
@@ -393,7 +393,7 @@ function barcode(id) {
                            <input type="text" class="form-control" name="sumber_dana" id="sumber_dana" placeholder="Sumber Dana" >
                             <span class="help-block"></span>
                         </div>
-                    </div>
+                    </div> -->
                     </div>
                     <div class="col-md-6">
                      <div class="form-group row ">
@@ -418,7 +418,7 @@ function barcode(id) {
                         </div>
                     </div>
                       
-                      <div class="form-group row ">
+                      <!-- <div class="form-group row ">
                         <label for="nama_owner" class="col-sm-4 col-form-label">Batch</label>
                         <div class="col-sm-8 kosong">
                            <input type="text" class="form-control" name="batch" id="batch" placeholder="Batch" >
@@ -446,7 +446,7 @@ function barcode(id) {
                            <input type="date" class="form-control" name="ed" id="ed" placeholder="Expired Date" value="<?php echo date("d/m/Y") ?>">
                             <span class="help-block"></span>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div> 
         </div>

@@ -116,4 +116,10 @@ class Mod_dashboard extends CI_Model
 		return $sql;
 	}
 
+	function getAllGudang()
+	{
+		$this->db->from('gudang');
+		return $this->db->get();
+	}
+
 }
