@@ -91,11 +91,9 @@ class Mod_masuk extends CI_Model
 		 if ($level!=1) {
 			$this->db->where('a.id_gudang', $id_gudang);
 		} 
-		// $this->db->select('a.*,b.jumlah,b.kemasan,b.nobatch,c.nama as nama_barang');
-		/*$this->db->join('penerimaan_detail b', 'a.id=b.id_penerimaan');
-		$this->db->join('barang c', 'b.id_barang=c.id');*/
-		$this->db->select('a.*, d.nama as nama_supplier');
 		$this->db->join('supplier d', 'a.id_supplier=d.id');
+        $this->db->join('penerimaan_detail b', 'a.id=b.id_penerimaan');
+        $this->db->join('barang c', 'b.id_barang=c.id');
 		$this->db->from('penerimaan a');
 		return $this->db->count_all_results();
 	}

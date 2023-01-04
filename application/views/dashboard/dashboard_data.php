@@ -18,7 +18,7 @@
 
       <!-- /.card-header -->
       <div class="card-body">
-        <form class="form" id="form_lap" action="<?php echo base_url('lap_tb/lap_excel') ?>" method="post">
+        <form class="form" id="form_lap" action="<?php echo base_url('dashboard/lap_excel') ?>" method="post">
           <div class=" row">
             <div class="col-sm-3">
               <div class="form-group">
@@ -40,7 +40,7 @@
             <div class="col-md-4">
               <div class="form-group input-group-sm">
                 <button type="button" class="btn btn-success " onclick="sortir()">Tampilkan</button>
-                <button type="button" class="btn btn-primary " onclick="eksport()">Eksport</button>
+                <button  class="btn btn-primary " type="submit">Eksport</button>
               </div>
             </div>
 
@@ -50,6 +50,7 @@
           <table class="table table-bordered table-sm" id="tbl-lap">
             <thead class="bg-success">
               <tr>
+                <th rowspan="2">No</th>
                 <th rowspan="2">Gudang</th>
                 <th rowspan="2">Stok Awal</th>
                 <th colspan="2">Barang</th>
@@ -64,7 +65,7 @@
               </tr>
             </thead>
             <tbody id="lap_detail">
-              <?php foreach ($list->result() as $row): 
+              <?php $no=1; foreach ($list->result() as $row): 
                 $tanggal = date("Y-m-d H:i:s");
                 $a = $this->Mod_dashboard->stokawal($row->id_gudang, $tanggal);
                 $awal = (isset($a->awal)) ? $a->awal : '0' ;
@@ -79,6 +80,7 @@
                 $pkeluar = (isset($d->pkeluar)) ? $d->pkeluar : '0' ;
                 ?>
                 <tr>
+                  <td class="item"><?php echo $no++; ?></td>
                   <td> <?php echo $row->namagudang ?> </td>
                   <td class="item"><?php echo $awal ?></td>
                   <td class="item"><?php echo $row->masuk ?></td>

@@ -1,6 +1,8 @@
 <?php 
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 class Dashboard extends MY_Controller {
 
     public function __construct()
@@ -72,6 +74,7 @@ public function header_perusahaan()
     $output ='<table class="table table-bordered table-sm" id="tbl-lap">
     <thead class="bg-success">
     <tr>
+    <th rowspan="2">No</th>
     <th rowspan="2">Gudang</th>
     <th rowspan="2">Stok Awal</th>
     <th colspan="2">Barang</th>
@@ -87,6 +90,7 @@ public function header_perusahaan()
     </thead>
     <tbody id="lap_detail">';
     $list = $this->Mod_dashboard->get_laporan($gudang, $range);
+    $no=1;
     foreach ($list->result() as $row) {
 
         $a = $this->Mod_dashboard->stokawal($row->id_gudang, $tanggal);
@@ -102,6 +106,7 @@ public function header_perusahaan()
         $pkeluar = (isset($d->pkeluar)) ? $d->pkeluar : '0' ;
 
         $output .='<tr>
+        <td class="item">'.$no++.'</td>
         <td>'.$row->namagudang.'</td>
         <td class="item">'.$awal.'</td>
         <td class="item">'.$row->masuk.'</td>
@@ -116,6 +121,18 @@ public function header_perusahaan()
     echo  $output;
 }
 
+ public function lap_excel()
+    {
+        $range=$this->input->post('tanggal');
+    //
+        $gudang = $this->input->post('gudang');
+        $date=explode(" - ", $range);
+        $waktu = date("H:i:s");
+        $tanggal = date("Y-m-d H:i:s", strtotime($date[1].' '.$waktu));
+
+       $data['list'] = $this->Mod_dashboard->get_laporan($gudang, $range);
+        $this->load->view('dashboard/v_laporan',$data);
+    }
 
 
 }
