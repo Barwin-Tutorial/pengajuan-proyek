@@ -34,7 +34,7 @@ class Mod_laporan extends CI_Model
 		return $this->db->get('perundangan');
 	}
 
-	public function get_laporan($id_barang,$tglrange,$perundangan)
+	public function get_laporan_arus_stok($id_barang,$tglrange,$perundangan)
 	{
 
 		$level = $this->session->userdata['id_level'];
@@ -60,27 +60,36 @@ class Mod_laporan extends CI_Model
 			$and2 = " AND st.perundangan ='$perundangan'";
 		}
 
+		/*$sql = $this->db->query("select * from (
+			SELECT a.*,b.`nama` AS nama_barang, e.`nama` AS nama_supplier, 
+			'' AS nama_pelanggan, d.faktur, b.`perundangan` FROM `stok_opname` a 
+			LEFT JOIN barang b ON a.`id_barang`=b.`id`
+			LEFT JOIN penerimaan_detail c ON a.`id_transaksi`=c.`id`
+			LEFT JOIN penerimaan d ON c.`id_penerimaan`=d.`id`
+			LEFT JOIN supplier e ON d.`id_supplier`=e.`id`
+		) as st where 1=1 $gdg $and $and1 $and2 order by st.tanggal asc");*/
+
 		$sql = $this->db->query("select * from (
 			SELECT a.*,b.`nama` AS nama_barang, e.`nama` AS nama_supplier, 
 			'' AS nama_pelanggan, d.faktur, b.`perundangan` FROM `stok_opname` a 
 			LEFT JOIN barang b ON a.`id_barang`=b.`id`
 			LEFT JOIN penerimaan_detail c ON a.`id_transaksi`=c.`id`
 			LEFT JOIN penerimaan d ON c.`id_penerimaan`=d.`id`
-			LEFT JOIN supplier e ON d.`id_supplier`=e.`id` where a.`transaksi`='Penerimaan'
+			LEFT JOIN supplier e ON d.`id_supplier`=e.`id` where a.`transaksi`='Barang Masuk'
 			union all
 			SELECT a.*,b.`nama` AS nama_barang, '' AS nama_supplier, 
 			e.`nama` AS nama_pelanggan, d.faktur, b.`perundangan` FROM `stok_opname` a 
 			LEFT JOIN barang b ON a.`id_barang`=b.`id`
 			left JOIN keluar_detail c ON a.`id_transaksi`=c.`id`
 			left JOIN keluar d ON c.`id_keluar`=d.`id`
-			LEFT JOIN pelanggan e ON d.`id_pelanggan`=e.`id` where a.`transaksi`='Keluar'
+			LEFT JOIN pelanggan e ON d.`id_pelanggan`=e.`id` where a.`transaksi`='Barang Keluar'
 			UNION ALL
 			SELECT a.*,b.`nama` AS nama_barang, '' AS nama_supplier, 
 			e.`nama` AS nama_pelanggan, '' faktur, b.`perundangan` FROM `stok_opname` a 
 			LEFT JOIN barang b ON a.`id_barang`=b.`id`
 			left JOIN keluar_detail c ON a.`id_transaksi`=c.`id`
 			left JOIN keluar d ON c.`id_keluar`=d.`id`
-			LEFT JOIN pelanggan e ON d.`id_pelanggan`=e.`id` WHERE a.`transaksi`  not in ('Keluar','Penerimaan')
+			LEFT JOIN pelanggan e ON d.`id_pelanggan`=e.`id` WHERE a.`transaksi`  not in ('Barang Keluar','Barang Masuk')
 		) as st where 1=1 $gdg $and $and1 $and2 ");
 		return $sql;
 	}

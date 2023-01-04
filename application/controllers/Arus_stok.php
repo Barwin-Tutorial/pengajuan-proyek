@@ -67,7 +67,7 @@ public function laporan()
     $tglrange =$this->input->post('tanggal');
     $perundangan =$this->input->post('perundangan');
     $data['act'] = "";
-    $data['lap'] = $this->Mod_laporan->get_laporan($id_barang,$tglrange,$perundangan);
+    $data['lap'] = $this->Mod_laporan->get_laporan_arus_stok($id_barang,$tglrange,$perundangan);
     $this->load->view('laporan/view_arus_stok',$data);
 }
 
@@ -78,7 +78,7 @@ public function cetak()
     $tglrange =$this->input->post('tanggal');
     $perundangan =$this->input->post('perundangan');
     $data['act'] = "";
-    $data['lap'] = $this->Mod_laporan->get_laporan($id_barang,$tglrange,$perundangan);
+    $data['lap'] = $this->Mod_laporan->get_laporan_arus_stok($id_barang,$tglrange,$perundangan);
     $this->load->view('laporan/cetak_arus_stok',$data);
 }
 
@@ -87,7 +87,7 @@ public function laporan_xls()
     $id_barang=$this->input->post('id_barang');
     $tglrange =$this->input->post('tanggal');
     $perundangan =$this->input->post('perundangan');
-    $list = $this->Mod_laporan->get_laporan($id_barang,$tglrange,$perundangan)->result();
+    $list = $this->Mod_laporan->get_laporan_arus_stok($id_barang,$tglrange,$perundangan)->result();
     $spreadsheet = new Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
     $sheet->setCellValue('A1', 'No');
@@ -106,15 +106,20 @@ public function laporan_xls()
     $x = 2;
     foreach($list as $row)
     {
-        $tanggal = $row->tanggal;
-        $id_barang = $row->id_barang;
-        $a= $this->db->select('(sum(masuk)-sum(keluar)) as awal');
-        $a= $this->db->where('id_barang',$id_barang);
-        $a= $this->db->where('date(tanggal) <',$tanggal);
-        $a= $this->db->get('stok_opname')->row();
+        $tanggal = $row->tgl_input;
+            $id_barang = $row->id_barang;
+            $a= $this->db->select('(sum(masuk)-sum(keluar)) as awal');
+            $a= $this->db->where('id_barang',$id_barang);
+            $a= $this->db->where('tgl_input <',$tanggal);
+            $a= $this->db->get('stok_opname')->row();
 
-        $awal = (isset($a->awal)) ? $a->awal : '0' ;
-        $sisa = $awal- $row->keluar;
+            $awal = (isset($a->awal)) ? $a->awal : '0' ;
+
+            $b= $this->db->select('(sum(masuk)-sum(keluar)) as sisa');
+            $b= $this->db->where('id_barang',$id_barang);
+            $b= $this->db->where('tgl_input <=',$tanggal);
+            $b= $this->db->get('stok_opname')->row();
+            $sisa = (isset($b->sisa)) ? $b->sisa : '0' ;
         
         $sheet->setCellValue('A'.$x, $no++);
         $sheet->setCellValue('B'.$x, $row->transaksi);

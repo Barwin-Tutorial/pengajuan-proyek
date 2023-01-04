@@ -344,7 +344,6 @@ private function _validate()
         $id_detail = $this->input->post('id_detail');
         $save_detail  = array(
             'jumlah'         => $this->input->post('jumlah'),
-            'ed'         => $this->input->post('ed'),
         );
 
         $this->Mod_retur_penerimaan->update_detail($id_detail, $save_detail);

@@ -122,4 +122,63 @@ class Mod_dashboard extends CI_Model
 		return $this->db->get();
 	}
 
+
+	public function get_laporan($id_gudang, $tglrange)
+	{
+
+		$level = $this->session->userdata['id_level'];
+			
+		$and="";
+		if (!empty($id_gudang)) {
+			$and = " AND a.id_gudang='".$id_gudang."' ";
+		}
+
+		
+		$and1="";
+		if (!empty($tglrange)) {
+			$date=explode(" - ", $tglrange);
+			$p1=date("Y-m-d", strtotime($date[0]));
+			$p2=date("Y-m-d", strtotime($date[1]));
+			$and1 = " AND date(a.tanggal) BETWEEN '$p1' AND '$p2'";
+		}
+
+		$sql = $this->db->query("SELECT a.id_gudang, b.nama AS namagudang, SUM(a.masuk) AS masuk, SUM(a.`keluar`) AS keluar  FROM `stok_opname` a  JOIN gudang b ON a.id_gudang=b.id WHERE 1=1  $and $and1   GROUP BY a.`id_gudang`  ");
+		return $sql;
+	}
+
+	 public function stokawal($id_gudang, $tanggal)
+    {
+        $a= $this->db->select('(sum(masuk)-sum(keluar)) as awal');
+        $a= $this->db->where('id_gudang',$id_gudang);
+        $a= $this->db->where('tgl_input <',$tanggal);
+        $a= $this->db->get('stok_opname')->row();
+         return $a;
+    }
+
+    public function stokakhir($id_gudang, $tanggal)
+    {
+        $b= $this->db->select('(sum(masuk)-sum(keluar)) as sisa');
+        $b= $this->db->where('id_gudang',$id_gudang);
+        $b= $this->db->where('tgl_input <=',$tanggal);
+        $b= $this->db->get('stok_opname')->row();
+        return $b;
+    }
+
+    public function pmasuk($id_gudang, $tanggal)
+    {
+    	$this->db->select('sum(keluar) as pmasuk');
+        $this->db->where('id_gudang',$id_gudang);
+        $this->db->where('tgl_input <=',$tanggal);
+        $this->db->where('transaksi', 'Retur Penerimaan');
+        return $this->db->get('stok_opname')->row();
+    }
+
+    public function pkeluar($id_gudang, $tanggal)
+    {
+    	$this->db->select('sum(masuk) as pkeluar');
+        $this->db->where('id_gudang',$id_gudang);
+        $this->db->where('tgl_input <=',$tanggal);
+        $this->db->where('transaksi', 'Retur Keluar');
+        return $this->db->get('stok_opname')->row();
+    }
 }

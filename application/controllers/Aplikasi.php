@@ -125,7 +125,8 @@ public function backupdb()
         $this->load->dbutil();
         $aturan = array(
             'format'    => 'zip',
-            'filename'  => 'my_db_backup.sql'
+            'filename'  => 'my_db_backup.sql',
+            'foreign_key_checks'    => FALSE
         );
 
         $backup= $this->dbutil->backup($aturan);

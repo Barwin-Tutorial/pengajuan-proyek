@@ -99,10 +99,9 @@ $this->load->view('templates/menu');
       <?php 
         $this->load->view('templates/footer'); 
         ?>
-      <div class="container-fluid">
         <?php echo $contents; ?>
-    </div>
-    <script type="text/javascript">
+
+  <!--   <script type="text/javascript">
       $(document).ready(function () {
         $("input").change(function(){
           $(this).parent().parent().removeClass('has-error');
@@ -120,7 +119,7 @@ $this->load->view('templates/menu');
           $(this).removeClass('is-invalid');
         });
       })
-    </script>
+    </script> -->
     <!-- </section> -->
 <!-- /# end page-wrapper -->
   <!-- Control Sidebar -->

@@ -17,15 +17,20 @@
 		</thead>
 		<tbody>
 			<?php $no=1; foreach ($lap->result() as $row): 
-			$tanggal = $row->tanggal;
+			$tanggal = $row->tgl_input;
 			$id_barang = $row->id_barang;
-			$a= $this->db->select('(sum(masuk)-sum(keluar)) as awal, (sum(masuk)-sum(keluar)) as sisa');
+			$a= $this->db->select('(sum(masuk)-sum(keluar)) as awal');
 			$a= $this->db->where('id_barang',$id_barang);
-			$a= $this->db->where('date(tanggal) <',$tanggal);
+			$a= $this->db->where('tgl_input <',$tanggal);
 			$a= $this->db->get('stok_opname')->row();
 
 			$awal = (isset($a->awal)) ? $a->awal : '0' ;
-			$sisa = $awal- $row->keluar;
+
+			$b= $this->db->select('(sum(masuk)-sum(keluar)) as sisa');
+			$b= $this->db->where('id_barang',$id_barang);
+			$b= $this->db->where('tgl_input <=',$tanggal);
+			$b= $this->db->get('stok_opname')->row();
+			$sisa = (isset($b->sisa)) ? $b->sisa : '0' ;
 			?>
 				<tr>
 					<td><?=$no++;?></td>
