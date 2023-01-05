@@ -27,12 +27,13 @@ class Mod_masuk extends CI_Model
 		if ($level!=1) {
 			$this->db->where('a.id_gudang', $id_gudang);
 		} 
-        $this->db->select('a.*,b.jumlah,b.kemasan,b.nobatch,b.ed,b.harga,c.nama as nama_barang, d.nama as nama_supplier');
+        $this->db->select('a.*,b.jumlah,b.kemasan,b.nobatch,b.ed,b.harga,c.nama as nama_barang, d.nama as nama_supplier, e.nama as nama_satuan');
         
 		// $this->db->select('a.*,b.jumlah,c.nama as nama_barang, d.nama as nama_supplier');
 		$this->db->join('supplier d', 'a.id_supplier=d.id');
         $this->db->join('penerimaan_detail b', 'a.id=b.id_penerimaan');
         $this->db->join('barang c', 'b.id_barang=c.id');
+        $this->db->join('satuan e','b.kemasan=e.id');
 		$this->db->from('penerimaan a');
 		$i = 0;
 
@@ -94,6 +95,7 @@ class Mod_masuk extends CI_Model
 		$this->db->join('supplier d', 'a.id_supplier=d.id');
         $this->db->join('penerimaan_detail b', 'a.id=b.id_penerimaan');
         $this->db->join('barang c', 'b.id_barang=c.id');
+        $this->db->join('satuan e','b.kemasan=e.id');
 		$this->db->from('penerimaan a');
 		return $this->db->count_all_results();
 	}

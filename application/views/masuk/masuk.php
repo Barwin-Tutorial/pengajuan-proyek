@@ -20,7 +20,7 @@
                                     <th>Tanggal</th>
                                     <th>Penyedia</th>
                                     <th>Nama Barang</th>
-                                    <th>Kemasan</th>
+                                    <th>Satuan</th>
                                     <th>Jumlah</th>
                                     <th>Aksi</th>
                                 </tr>

@@ -70,7 +70,7 @@ class Masuk extends MY_Controller
             
             
             $row[] = $pel->nama_barang;
-            $row[] = $pel->kemasan;
+            $row[] = $pel->nama_satuan;
             $row[] = $pel->jumlah;
             if ($id !== $pel->id) {
                 $row[] = "</i></a>  <a class=\"btn btn-xs btn-outline-primary edit\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit('$pel->id')\"><i class=\"fas fa-edit\"></i></a>  <a class=\"btn btn-xs btn-outline-danger delete\" href=\"javascript:void(0)\" title=\"Delete\"  onclick=\"hapus('$pel->id')\"><i class=\"fas fa-trash\"></i></a>  <a class=\"btn btn-xs btn-outline-info \" href=\"javascript:void(0)\" title=\"Print\" onclick=\"cetak('$pel->id')\"><i class=\"fas fa-print\"></i></a>";
