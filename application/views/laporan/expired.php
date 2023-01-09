@@ -10,7 +10,12 @@
         </div>
       </div>
       <div class="card-body">
-        <table class="table table-bordered" id="tbl_stok" border="1" cellspacing="0" cellpadding="5" width="100%">
+        <div class="row">
+        <div class="bg-danger" style="width: 2rem;"></div>Expired
+        <div class="bg-warning" style="width: 2rem;"></div>Expired memasuki 3 bulan
+        <div class="bg-success" style="width: 2rem;"></div>Expired memasuki 6 bulan
+        </div>
+        <table class="table table-bordered table-sm" id="tbl_stok" border="1" cellspacing="0" cellpadding="5" width="100%">
           <thead class="bg-primary">
             <tr>
               <th>No</th>
@@ -24,9 +29,22 @@
           <tbody>
             <?php $no=1; 
             foreach ($lap->result() as $row): 
-           
+              $sekarang = date("Y-m-d");
+              $var1     = mktime(0, 0, 0, date("m")+3, date("d"), date("Y"));
+              $tiga_bln = date("Y-m-d", $var1);
+              $var2     = mktime(0, 0, 0, date("m")+6, date("d"), date("Y"));
+              $enam_bln = date("Y-m-d", $var2);
+              if (($row->ed > $sekarang) and ($row->ed <= $tiga_bln)) {
+                $bg = "bg-warning";
+              }else if (($row->ed > $sekarang) and ($row->ed <= $enam_bln)) {
+                $bg = "bg-success";
+              }else if ($row->ed <= $sekarang) {
+                $bg = "bg-danger";
+              } else {
+                $bg = "";
+              }
             ?>
-            <tr>
+            <tr class="<?=$bg?>">
               <td><?=$no++;?></td>
               <td><?php echo $row->nama_barang; ?></td>
               <td><?php echo date("d/m/Y", strtotime($row->ed)); ?></td>

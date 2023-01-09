@@ -107,4 +107,21 @@ class Lap_tb extends MY_Controller
 
       $writer->save('php://output');
     }
+
+    public function get_faktur()
+    {
+     $faktur = $this->input->get('term');
+     $data = $this->Mod_laporan->get_sbbk_masuk($faktur);
+     if (count($data) > 0) {
+
+      foreach ($data as $row){
+        $arr_result[] = array( 'value' => $row->id, 'label'  => $row->faktur,'supplier' => $row->id_supplier, 'nama_supplier' => $row->nama_supplier );
+
+      } 
+      echo json_encode($arr_result);
+    }else{
+      $arr_result = array( 'label'  => "Data Tidak di Temukan" );
+      echo json_encode($arr_result);
+    }
+  }
 }

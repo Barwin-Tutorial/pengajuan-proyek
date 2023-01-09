@@ -119,86 +119,100 @@ class Mod_laporan extends CI_Model
 		if ($level!=1) {
 			$gdg = " WHERE st.id_gudang=$id_gudang";
 		} 	
+		$var2     = mktime(0, 0, 0, date("m")+6, date("d"), date("Y"));
+		$enam_bln = date("Y-m-d", $var2);
+		$sql= $this->db->query("SELECT a.*,b.`nama` AS nama_barang, (SUM(masuk)-SUM(keluar)) AS sisa, b.berat  FROM `stok_opname` a 
+			LEFT JOIN barang b ON a.`id_barang`=b.`id` $gdg 
+			GROUP BY a.`id_barang`,a.nobatch HAVING sisa > 0 AND ed <= '$enam_bln' ORDER BY ed");
+			return $sql;
+		}
 
-		$sql = $this->db->query("
-			SELECT a.*,b.`nama` AS nama_barang, (SUM(masuk)-SUM(keluar)) AS sisa, b.berat  FROM `stok_opname` a 
-			LEFT JOIN barang b ON a.`id_barang`=b.`id` $gdg GROUP BY a.`id_barang`,a.nobatch");
-		return $sql;
+
+
+		public function get_laporan_tb($id_supplier,$tglrange,$faktur)
+		{
+
+			$level = $this->session->userdata['id_level'];
+			$id_gudang = $this->session->userdata['id_gudang'];
+			$gdg="";
+			if ($level!=1) {
+				$gdg = " AND a.id_gudang=$id_gudang";
+			} 	
+			$and="";
+			if (!empty($id_supplier)) {
+				$and = " AND a.id_supplier='$id_supplier'";
+			}
+
+			$date=explode(" - ", $tglrange);
+			$p1=date("Y-m-d", strtotime($date[0]));
+			$p2=date("Y-m-d", strtotime($date[1]));
+			$and1="";
+			if (!empty($tglrange)) {
+				$and1 = " AND date(a.tanggal) BETWEEN '$p1' AND '$p2'";
+			}
+			$and2="";
+			if (!empty($faktur) ) {
+				$and2 = " AND a.id ='$faktur'";
+			}
+
+			$sql = $this->db->query("SELECT b.*,a.`faktur`,a.`tanggal`,c.`nama` AS nama_supplier, d.`harga`, d.`harga`,d.`perundangan`, d.`nama` AS nama_barang, 
+				d.`berat`,d.`barcode`,d.`rak`, e.nama as nama_kemasan FROM penerimaan a 
+				JOIN penerimaan_detail b ON a.`id`=b.`id_penerimaan`
+				JOIN supplier c ON a.`id_supplier`=c.`id`
+				JOIN barang d ON b.`id_barang`=d.`id`
+				JOIN satuan e ON d.`kemasan`=e.`id`
+				JOIN perundangan f ON d.`perundangan`=f.`id` where 1=1 $gdg $and $and1 $and2 ");
+			return $sql;
+		}
+
+		public function get_laporan_kb($tglrange,$id_pelanggan,$group)
+		{
+
+			$level = $this->session->userdata['id_level'];
+			$id_gudang = $this->session->userdata['id_gudang'];
+			$gdg="";
+			if ($level!=1) {
+				$gdg = " AND a.id_gudang=$id_gudang";
+			} 	
+			$and="";
+			if (!empty($id_pelanggan)) {
+				$and = " AND a.id_pelanggan='$id_pelanggan'";
+			}
+
+			$date=explode(" - ", $tglrange);
+			$p1=date("Y-m-d", strtotime($date[0]));
+			$p2=date("Y-m-d", strtotime($date[1]));
+			$and1="";
+			if (!empty($tglrange)) {
+				$and1 = " AND date(a.tanggal) BETWEEN '$p1' AND '$p2'";
+			}
+
+			if ($group=='Group') {
+				$grp = "GROUP BY b.id_keluar";
+			}else{
+				$grp = "";
+			}
+			$sql = $this->db->query("SELECT b.*,a.`tanggal`,a.faktur,c.`nama` AS nama_pelanggan, d.`harga`,d.`perundangan`, d.`nama` AS nama_barang,  d.`berat`,d.`barcode`,d.`rak` , e.nama as nama_kemasan  FROM keluar a 
+				JOIN keluar_detail b ON a.`id`=b.`id_keluar`
+				JOIN pelanggan c ON a.`id_pelanggan`=c.`id`
+				JOIN barang d ON b.`id_barang`=d.`id`
+				JOIN satuan e ON d.`kemasan`=e.`id`
+				JOIN perundangan f ON d.`perundangan`=f.`id` where 1=1 $gdg $and $and1  $grp");
+			return $sql;
+		}
+
+		function get_sbbk_masuk($faktur)
+		{   
+			$level = $this->session->userdata['id_level'];
+			$id_gudang = $this->session->userdata['id_gudang'];
+			if ($level!=1) {
+				$this->db->where('id_gudang', $id_gudang);
+			} 
+
+			$this->db->select('a.*,b.nama as nama_supplier');
+			$this->db->like('a.faktur', $faktur);
+			$this->db->join('supplier b', 'a.id_supplier=b.id');
+			$this->db->limit(10);
+			return $this->db->get('penerimaan a')->result();
+		}
 	}
-
-
-
- 	public function get_laporan_tb($id_supplier,$tglrange,$faktur)
- 	{
-
- 		$level = $this->session->userdata['id_level'];
- 		$id_gudang = $this->session->userdata['id_gudang'];
- 		$gdg="";
- 		if ($level!=1) {
- 			$gdg = " AND a.id_gudang=$id_gudang";
- 		} 	
- 		$and="";
- 		if (!empty($id_supplier)) {
- 			$and = " AND a.id_supplier='$id_supplier'";
- 		}
-
- 		$date=explode(" - ", $tglrange);
- 		$p1=date("Y-m-d", strtotime($date[0]));
- 		$p2=date("Y-m-d", strtotime($date[1]));
- 		$and1="";
- 		if (!empty($tglrange)) {
- 			$and1 = " AND date(a.tanggal) BETWEEN '$p1' AND '$p2'";
- 		}
- 		$and2="";
- 		if (!empty($faktur) ) {
- 			$and2 = " AND a.faktur ='$faktur'";
- 		}
-
- 		$sql = $this->db->query("SELECT b.*,a.`faktur`,a.`tanggal`,c.`nama` AS nama_supplier, d.`harga`, d.`harga`,d.`perundangan`, d.`nama` AS nama_barang, 
- 			d.`berat`,d.`barcode`,d.`rak`, e.nama as nama_kemasan FROM penerimaan a 
- 			JOIN penerimaan_detail b ON a.`id`=b.`id_penerimaan`
- 			JOIN supplier c ON a.`id_supplier`=c.`id`
- 			JOIN barang d ON b.`id_barang`=d.`id`
- 			JOIN satuan e ON d.`kemasan`=e.`id`
- 			JOIN perundangan f ON d.`perundangan`=f.`id` where 1=1 $gdg $and $and1 $and2 ");
- 		return $sql;
- 	}
-
- 	public function get_laporan_kb($tglrange,$id_pelanggan,$group)
- 	{
-
- 		$level = $this->session->userdata['id_level'];
- 		$id_gudang = $this->session->userdata['id_gudang'];
- 		$gdg="";
- 		if ($level!=1) {
- 			$gdg = " AND a.id_gudang=$id_gudang";
- 		} 	
- 		$and="";
- 		if (!empty($id_pelanggan)) {
- 			$and = " AND a.id_pelanggan='$id_pelanggan'";
- 		}
-
- 		$date=explode(" - ", $tglrange);
- 		$p1=date("Y-m-d", strtotime($date[0]));
- 		$p2=date("Y-m-d", strtotime($date[1]));
- 		$and1="";
- 		if (!empty($tglrange)) {
- 			$and1 = " AND date(a.tanggal) BETWEEN '$p1' AND '$p2'";
- 		}
- 		
- 		if ($group=='Group') {
- 			$grp = "GROUP BY b.id_keluar";
- 		}else{
- 			$grp = "";
- 		}
- 		$sql = $this->db->query("SELECT b.*,a.`tanggal`,a.faktur,c.`nama` AS nama_pelanggan, d.`harga`,d.`perundangan`, d.`nama` AS nama_barang,  d.`berat`,d.`barcode`,d.`rak` , e.nama as nama_kemasan  FROM keluar a 
- 			JOIN keluar_detail b ON a.`id`=b.`id_keluar`
- 			JOIN pelanggan c ON a.`id_pelanggan`=c.`id`
- 			JOIN barang d ON b.`id_barang`=d.`id`
- 			JOIN satuan e ON d.`kemasan`=e.`id`
- 			JOIN perundangan f ON d.`perundangan`=f.`id` where 1=1 $gdg $and $and1  $grp");
- 		return $sql;
- 	}
-
-
- }
