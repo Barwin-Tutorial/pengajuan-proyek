@@ -294,13 +294,14 @@ function barcode(id) {
 }
 
     function print_barcode() {
+      /*  var data = $('#form1').serialize();
+        window.open('barang/print_barcode'+data, '_blank');*/
      $.ajax({
         url : 'barang/print_barcode',
         data : $('#form1').serialize(),
         type : 'post',
         dataType : 'html',
         success : function (respon) {
-            /*$("#load").html(respon);*/
             var doc = window.open();
             doc.document.write(respon);
             doc.print();

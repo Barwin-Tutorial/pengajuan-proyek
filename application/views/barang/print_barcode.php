@@ -16,8 +16,8 @@
  						<div class="card-body">
  							<div class="row">
  								<?php 
-
- 								$jum=intval($jumlah);
+                                $jm = (isset($jumlah)) ? 1 : $jumlah ;
+ 								$jum=intval($jm);
  								for ($i=1; $i <= $jum ; $i++) { 
  									echo "<div >"
  									.$barcode."
