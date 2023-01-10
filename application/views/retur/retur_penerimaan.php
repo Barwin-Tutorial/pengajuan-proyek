@@ -263,7 +263,7 @@ var loadFile = function(event) {
 
 
 $(function () {
-   /* $("#jumlah").change(function () {
+    /*$("#jumlah").change(function () {
         var formdata = $('#form').serialize();
         $.ajax({
             url : "retur_penerimaan/add_to_cart",
@@ -298,7 +298,27 @@ $(function () {
             var id_detail=$(this).attr("id_detail"); //mengambil row_id dari artibut id
             var no = $(this).attr("no");
             var jumlah = $('.item'+no).val();
+            var sisa = $('.item'+no).attr('sisa');
+            var nobatch = $('.item'+no).attr('nobatch');
             var ed = $('.ed'+no).val();
+
+            if (parseInt(jumlah) <= 0) {
+                Swal.fire({
+                  icon: 'warning',
+                  title : 'Peringatan',
+                  text: 'Jumlah Minimal 1 ',
+              });
+                return false;
+            }
+
+            if (parseInt(jumlah) > parseInt(sisa)) {
+                Swal.fire({
+                  icon: 'warning',
+                  title : 'Peringatan',
+                  html: 'Stok Saat Ini :'+ sisa +'<br> Anda Menginput :'+jumlah+'<br> No Batch :'+nobatch,
+              });
+                return false;
+            }
 
             $.ajax({
                 url : "retur_penerimaan/update_cart",

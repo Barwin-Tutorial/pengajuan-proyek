@@ -84,28 +84,28 @@ class Retur_penerimaan extends MY_Controller
         $this->_validate();
         $list = $this->Mod_retur_penerimaan->get_detail(0);
         if (count($list) == 0) {
-           echo json_encode(array("status" => FALSE, 'pesan' => 0));
+         echo json_encode(array("status" => FALSE, 'pesan' => 0));
 
-           exit();
-       }
-       $waktu = date("H:i:s");
-       $tanggal=$this->input->post('tanggal');
-       $id_gudang = $this->session->userdata['id_gudang'];
-       $id_user = $this->session->userdata['id_user'];
-       $save  = array(
+         exit();
+     }
+     $waktu = date("H:i:s");
+     $tanggal=$this->input->post('tanggal');
+     $id_gudang = $this->session->userdata['id_gudang'];
+     $id_user = $this->session->userdata['id_user'];
+     $save  = array(
         'tanggal'         => $tanggal,
         'id_supplier'         => $this->input->post('supplier'),
         'id_penerimaan'         => $this->input->post('id_penerimaan'),
         'user_input'  => $id_user,
         'id_gudang'   =>  $id_gudang
     );
-       $this->Mod_retur_penerimaan->insert("retur_penerimaan", $save);
-       $id_retur_penerimaan = $this->db->insert_id();
+     $this->Mod_retur_penerimaan->insert("retur_penerimaan", $save);
+     $id_retur_penerimaan = $this->db->insert_id();
 
 
 
 
-       foreach ($list as $items) {
+     foreach ($list as $items) {
         $save_detail = array('id_retur_penerimaan' => $id_retur_penerimaan);
         $id_detail=$items->id;
         $this->Mod_retur_penerimaan->update_detail($id_detail, $save_detail);
@@ -134,20 +134,20 @@ class Retur_penerimaan extends MY_Controller
 
 public function update()
 {
-   $id_gudang = $this->session->userdata['id_gudang'];
-   $id_user = $this->session->userdata['id_user'];
-   $this->_validate();
+ $id_gudang = $this->session->userdata['id_gudang'];
+ $id_user = $this->session->userdata['id_user'];
+ $this->_validate();
 
-   $id      = $this->input->post('id');
-   $waktu = date("H:i:s");
-   $tanggal=$this->input->post('tanggal');
-   $save  = array(
+ $id      = $this->input->post('id');
+ $waktu = date("H:i:s");
+ $tanggal=$this->input->post('tanggal');
+ $save  = array(
     'tanggal'         => $tanggal,
     'id_supplier'         => $this->input->post('supplier')
 );
 
-   $this->Mod_retur_penerimaan->update($id, $save);
-   $list = $this->Mod_retur_penerimaan->get_detail($id);
+ $this->Mod_retur_penerimaan->update($id, $save);
+ $list = $this->Mod_retur_penerimaan->get_detail($id);
         /*if (count($list)==0) {
             $list = $this->Mod_retur_penerimaan->get_detail(0);
         }*/
@@ -174,23 +174,23 @@ public function update()
                 );
                 $this->Mod_retur_penerimaan->insert("stok_opname", $save_stok);
             }else{
-             $save_stok  = array(
+               $save_stok  = array(
                 'keluar'         => $jumlah,
                 'ed'         => $items->ed,
             );
-             $this->Mod_retur_penerimaan->update_stok_opname($id_detail, $save_stok);
-         }
+               $this->Mod_retur_penerimaan->update_stok_opname($id_detail, $save_stok);
+           }
 
 
-     }
+       }
 
-     echo json_encode(array("status" => TRUE));
+       echo json_encode(array("status" => TRUE));
 
 
- }
+   }
 
- public function edit($id)
- {
+   public function edit($id)
+   {
     $data = $this->Mod_retur_penerimaan->get($id);
     echo json_encode($data);
 }
@@ -198,9 +198,9 @@ public function update()
 public function get_brg()
 {
 
- $id = $this->input->get('term');
- $data = $this->Mod_retur_penerimaan->get_brg($id);
- if (count($data) > 0) {
+   $id = $this->input->get('term');
+   $data = $this->Mod_retur_penerimaan->get_brg($id);
+   if (count($data) > 0) {
     foreach ($data as $row) {
         $arr_result[] = array( 'label'  => $row->nama, 'produk_nama'  => $row->nama, 'produk_id' => $row->id, 'produk_harga' =>  $row->harga, 'id_kemasan' => $row->kemasan, 'nama_satuan' => $row->nama_satuan);
     }
@@ -230,8 +230,8 @@ public function get_supplier()
 
 public function getAllSupplier()
 {
- $data = $this->Mod_retur_penerimaan->get_supplier_all();
- echo json_encode($data);
+   $data = $this->Mod_retur_penerimaan->get_supplier_all();
+   echo json_encode($data);
 }
 public function delete()
 {
@@ -277,26 +277,39 @@ private function _validate()
     }
 
     function add_to_cart(){ //fungsi Add To Cart
-     $id_user = $this->session->userdata['id_user'];
-     $id_retur_penerimaan = $this->input->post('id');
-      $id_penerimaan = $this->input->post('id_penerimaan');
-     $list = $this->Mod_masuk->get_detail($id_penerimaan);
-     foreach ($list as $items) {
-       $save_detail  = array(
-        'id_barang'         => $items->id_barang,
-        'id_kemasan'         => $items->kemasan,
-        'jumlah'         => $items->jumlah,
-        'ed'         => $items->ed,
-        'nobatch'         => $items->nobatch,
-        'id_retur_penerimaan' => $id_retur_penerimaan,
-        'id_detail_penerimaan' => $items->id,
-        'id_user'   => $id_user
+       $id_user = $this->session->userdata['id_user'];
+       $id_retur_penerimaan = $this->input->post('id');
+       $id_penerimaan = $this->input->post('id_penerimaan');
+       $list = $this->Mod_masuk->get_detail($id_penerimaan);
+       $jml=0;
+       foreach ($list as $items) {
+        $id_barang = $items->id_barang;
+        $nobatch = $items->nobatch;
+        $s=$this->Mod_retur_penerimaan->get_sisa_stok($id_barang,$nobatch)->row();
+        if ($s->sisa > 0) {
+         $save_detail  = array(
+            'id_barang'         => $items->id_barang,
+            'id_kemasan'         => $items->kemasan,
+            'jumlah'         => $s->sisa,
+            'ed'         => $items->ed,
+            'nobatch'         => $items->nobatch,
+            'id_retur_penerimaan' => $id_retur_penerimaan,
+            'id_detail_penerimaan' => $items->id,
+            'id_user'   => $id_user
 
-    );
-       $this->Mod_retur_penerimaan->insert("retur_penerimaan_detail", $save_detail);
-   }
-         $this->load_cart($id_retur_penerimaan); //tampilkan cart setelah added
-     }
+        );
+         $this->Mod_retur_penerimaan->insert("retur_penerimaan_detail", $save_detail);
+         $jml .= '1';
+     }else{
+        $jml .= '0';
+    }
+}
+    if ($jml > 0 ) {
+        $this->load_cart($id_retur_penerimaan);
+    }else{
+        echo "Sisa Stok Tidak Ada";
+    }
+}
 
 
     function show_cart($id_retur_penerimaan){ //Fungsi untuk menampilkan Cart
@@ -305,13 +318,16 @@ private function _validate()
         $total = 0;
         $list = $this->Mod_retur_penerimaan->get_detail($id_retur_penerimaan);
         foreach ($list as $items) {
+            $id_barang = $items->id_barang;
+            $nobatch = $items->nobatch;
+            $s=$this->Mod_retur_penerimaan->get_sisa_stok($id_barang,$nobatch)->row();
             $no++;
             $output .='
             <tr>
             <td>'.$no.'</td>
             <td>'.$items->nama_barang.'</td>
             <td>'.$items->nama_satuan.'</td>';
-            $output .= '<td><input type="text" size="5" class=" form-control item'.$no.'" onkeypress="return hanyaAngka(event)" value='.$items->jumlah.'></td>
+            $output .= '<td><input type="text" size="5" class=" form-control item'.$no.'" onkeypress="return hanyaAngka(event)" value='.$items->jumlah.' sisa='.$s->sisa.' nobatch='.$nobatch.'></td>
             <td>'.$items->ed.'</td>
             <td>
             <button type="button" id_retur_penerimaan="'.$items->id_retur_penerimaan.'" no="'.$no.'"  id_detail="'.$items->id.'" class="hapus_cart btn btn-danger btn-xs">Hapus</button>
@@ -366,9 +382,9 @@ private function _validate()
 
     public function get_faktur()
     {
-     $faktur = $this->input->get('term');
-     $data = $this->Mod_retur_penerimaan->get_faktur($faktur);
-     if (count($data) > 0) {
+       $faktur = $this->input->get('term');
+       $data = $this->Mod_retur_penerimaan->get_faktur($faktur);
+       if (count($data) > 0) {
 
         foreach ($data as $row){
             $arr_result[] = array( 'value' => $row->id, 'label'  => $row->faktur,'supplier' => $row->id_supplier, 'nama_supplier' => $row->nama_supplier );

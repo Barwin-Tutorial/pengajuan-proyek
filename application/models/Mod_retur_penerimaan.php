@@ -262,4 +262,28 @@ class Mod_retur_penerimaan extends CI_Model
         $this->db->limit(10);
         return $this->db->get('penerimaan a')->result();
     }
+
+        function get_sisa_stok($id_barang,$nobatch)
+    {   
+    
+
+        $level = $this->session->userdata['id_level'];
+         $id_gudang = $this->session->userdata['id_gudang'];
+         $and="";
+         if ($level!=1) {
+            $and = " AND a.id_gudang='$id_gudang'";
+        } 
+        $date = date("Y-m-d");
+
+        $sql=$this->db->query("SELECT * FROM (
+            SELECT  SUM(a.`masuk`) AS masuk, SUM(keluar) AS keluar, (SUM(a.`masuk`)-SUM(keluar)) AS sisa
+            FROM `stok_opname` `a`
+            JOIN `barang` `b` ON `a`.`id_barang`=`b`.`id`
+            JOIN `satuan` `c` ON `b`.`kemasan`=`c`.`id`
+            WHERE `a`.`ed` >= '$date'
+            AND a.`id_barang`='$id_barang' AND a.nobatch='$nobatch' $and
+        ) AS ab");
+
+        return $sql;
+    }
 }
