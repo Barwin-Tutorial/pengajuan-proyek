@@ -11,7 +11,7 @@ class Masuk extends MY_Controller
     function __construct()
     {
         parent::__construct();
-        $this->load->model('Mod_masuk');
+        $this->load->model(array('Mod_masuk','Mod_tanda_tangan'));
         // $this->load->model('dashboard/Mod_dashboard');
     }
 
@@ -421,6 +421,9 @@ private function _validate()
     public function cetak()
     {
         $id = $this->input->post('id');
+        $data['td1'] = $this->Mod_tanda_tangan->get_tanda_tangan(1);
+        $data['td2'] = $this->Mod_tanda_tangan->get_tanda_tangan(2);
+        $data['td3'] = $this->Mod_tanda_tangan->get_tanda_tangan(3);
         $data['tb'] = $this->Mod_masuk->get($id);
         $data['lap'] = $this->Mod_masuk->get_cetak($id);
         $this->load->view('masuk/cetak_penerimaan',$data);

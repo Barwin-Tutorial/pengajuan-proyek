@@ -82,19 +82,21 @@
 </table>
 <br/>
 <br/>
-<!-- <table width="50%" align="right">
-    <tr><td align="center">Pemberi</td></tr>
+<table width="50%" align="left">
+    <tr><td align="center">Mengetahui</td></tr>
+    <tr><td align="center"><?php $jb1 = (isset($td1->jabatan)) ? $td1->jabatan : '-' ; echo $jb1; ?></td></tr>
     <tr><td align="center">&nbsp;</td></tr>
+    <tr><td align="center">&nbsp;</td></tr> 
     <tr><td align="center">&nbsp;</td></tr>
+    <tr><td align="center"> <u>&nbsp;&nbsp;&nbsp;<?php $nm1 = (isset($td1->nama)) ? $td1->nama : '-' ; echo $nm1; ?>&nbsp;&nbsp;&nbsp;</u> </td></tr>
+</table>
+<table width="50%" align="right">
+    <tr><td align="center">Penyedia Obat</td></tr>
+     <tr><td align="center"><?php $jb2 = (isset($td2->jabatan)) ? $td2->jabatan : '-' ; echo $jb2; ?></td></tr>
     <tr><td align="center">&nbsp;</td></tr>
-    <tr><td align="center">( ...................................... )</td></tr>
-</table> -->
-<table  align="right">
-    <tr><td align="center">Bengkulu, <?php echo tanggalindo($tb->tanggal); ?></td></tr>
+    <tr><td align="center">&nbsp;</td></tr> 
     <tr><td align="center">&nbsp;</td></tr>
-    <tr><td align="center">&nbsp;</td></tr>
-    <tr><td align="center">&nbsp;</td></tr>
-    <tr><td align="center">( ...................................... )</td></tr>
+    <tr><td align="center"> <u>&nbsp;&nbsp;&nbsp;<?php $nm2 = (isset($td2->nama)) ? $td2->nama : '-' ; echo $nm2; ?>&nbsp;&nbsp;&nbsp;</u> </td></tr>
 </table>
 
 </body>

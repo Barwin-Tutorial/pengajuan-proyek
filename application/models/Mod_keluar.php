@@ -321,4 +321,15 @@ class Mod_keluar extends CI_Model
         return $this->db->get('keluar_detail');
     }
 
+     function get_tanda_tangan($urutan)
+    {
+        $level = $this->session->userdata['id_level'];
+         $id_gudang = $this->session->userdata['id_gudang'];
+         
+        $this->db->where('id_gudang', $id_gudang);
+        $this->db->where('urutan', $urutan);
+        $this->db->where('transaksi', 'Barang Keluar');
+        return $this->db->get('tanda_tangan')->row();
+    }
+
 }

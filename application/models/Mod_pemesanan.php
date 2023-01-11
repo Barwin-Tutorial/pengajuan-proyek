@@ -273,4 +273,15 @@ function cek_barang($id_barang,$id_pemesanan)
     $this->db->where('id_user', $id_user);
     return $this->db->get('pemesanan_detail');
 }
+
+  function get_tanda_tangan($urutan)
+    {
+        $level = $this->session->userdata['id_level'];
+         $id_gudang = $this->session->userdata['id_gudang'];
+         
+        $this->db->where('id_gudang', $id_gudang);
+        $this->db->where('urutan', $urutan);
+        $this->db->where('transaksi', 'Pemesanan');
+        return $this->db->get('tanda_tangan')->row();
+    }
 }

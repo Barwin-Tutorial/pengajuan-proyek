@@ -273,4 +273,16 @@ class Mod_masuk extends CI_Model
         $this->db->where('id_user', $id_user);
         return $this->db->get('penerimaan_detail');
     }
+
+     function get_tanda_tangan($urutan)
+    {
+    	$level = $this->session->userdata['id_level'];
+		 $id_gudang = $this->session->userdata['id_gudang'];
+		 
+		$this->db->where('id_gudang', $id_gudang);
+		$this->db->where('urutan', $urutan);
+		$this->db->where('transaksi', 'Barang Masuk');
+        return $this->db->get('tanda_tangan')->row();
+    }
 }
+

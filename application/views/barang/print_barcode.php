@@ -16,13 +16,13 @@
  						<div class="card-body">
  							<div class="row">
  								<?php 
-                                $jm = (isset($jumlah)) ? 1 : $jumlah ;
+                                $jm = (isset($jumlah)) ? $jumlah : 1 ;
  								$jum=intval($jm);
  								for ($i=1; $i <= $jum ; $i++) { 
- 									echo "<div >"
+ 									echo "<div class='col-2'>"
  									.$barcode."
  									<p>".$code."</p>
- 									</div> <span style='width:10px; text-align:center'>|</span>";
+ 									</div> ";
  								}
 
  								?>

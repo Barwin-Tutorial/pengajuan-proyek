@@ -481,6 +481,9 @@ private function _validate()
         public function cetak()
         {
             $id = $this->input->post('id');
+            $data['td1'] = $this->Mod_keluar->get_tanda_tangan(1);
+            $data['td2'] = $this->Mod_keluar->get_tanda_tangan(2);
+            $data['td3'] = $this->Mod_keluar->get_tanda_tangan(3);
             $data['keluar'] = $this->Mod_keluar->get($id);
             $data['lap'] = $this->Mod_keluar->get_cetak($id);
             $this->load->view('keluar/cetak_kb',$data);
