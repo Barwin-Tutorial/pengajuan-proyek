@@ -16,7 +16,7 @@
               <div class="card-body">
                 <table id="tabellevel" class="table table-bordered table-striped table-hover">
                   <thead>
-                    <tr class="bg-info">
+                    <tr class="bg-purple">
                       <th>Level</th>
                       <th>Akses</th>
                       <th>Aksi</th>

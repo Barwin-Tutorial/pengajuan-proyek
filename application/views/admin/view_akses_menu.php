@@ -1,7 +1,7 @@
 <div class="card-body table-responsive p-0">
   <table class="table table-bordered table-hover" id="vakses"> 
     <thead>
-      <tr class="bg-primary">
+      <tr class="bg-purple">
         <th>No</th>
         <th>Menu</th>
         <th>View</th>

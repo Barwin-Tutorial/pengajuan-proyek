@@ -7,7 +7,7 @@
               <div class="card-header bg-light">
                 <h3 class="card-title"><i class="fa fa-list text-blue"></i> Data User</h3>
                 <div class="text-right">
-                  
+
                   <button type="button" class="btn btn-sm btn-outline-primary" onclick="add_user()" title="Add Data"><i class="fas fa-plus"></i> Add</button>
                   <a href="<?php echo base_url('user/download') ?>" type="button" class="btn btn-sm btn-outline-info" target="_blank" id="dwn_user" title="Download"><i class="fas fa-download"></i> Download</a>
                 </div>
@@ -16,12 +16,11 @@
               <div class="card-body">
                 <table id="tabeluser" class="table table-bordered table-striped table-hover">
                   <thead>
-                    <tr class="bg-teal">
+                    <tr class="bg-purple">
                       <th>Foto</th>
                       <th>User name</th>
                       <th>Full Name</th>
                       <th>Level</th>
-                      <th>Gudang</th>
                       <th>Is Active</th>
                       <th>Aksi</th>
                     </tr>
@@ -67,13 +66,19 @@ var save_method; //for save method string
 var table;
 
 $(document).ready(function() {
-
- table =$("#tabeluser").DataTable({
-  "responsive": true,
-  "autoWidth": false,
-  "language": {
-    "sEmptyTable": "Data User Belum Ada"
-  },
+  var id_level=$('[name="level"]').val();
+  if (id_level=='6' || id_level=='8') {
+    $('.jrs').show();
+  }else{
+    $('.jrs').hide();
+  }
+  
+  table =$("#tabeluser").DataTable({
+    "responsive": true,
+    "autoWidth": false,
+    "language": {
+      "sEmptyTable": "Data User Belum Ada"
+    },
         "processing": true, //Feature control the processing indicator.
         "serverSide": true, //Feature control DataTables' server-side processing mode.
         "order": [], //Initial no order.
@@ -83,22 +88,22 @@ $(document).ready(function() {
           "url": "<?php echo site_url('user/ajax_list')?>",
           "type": "POST"
         },
-        });
- $("input").change(function(){
-  $(this).parent().parent().removeClass('has-error');
-  $(this).next().empty();
-  $(this).removeClass('is-invalid');
-});
- $("textarea").change(function(){
-  $(this).parent().parent().removeClass('has-error');
-  $(this).next().empty();
-  $(this).removeClass('is-invalid');
-});
- $("select").change(function(){
-  $(this).parent().parent().removeClass('has-error');
-  $(this).next().empty();
-  $(this).removeClass('is-invalid');
-});
+      });
+  $("input").change(function(){
+    $(this).parent().parent().removeClass('has-error');
+    $(this).next().empty();
+    $(this).removeClass('is-invalid');
+  });
+  $("textarea").change(function(){
+    $(this).parent().parent().removeClass('has-error');
+    $(this).next().empty();
+    $(this).removeClass('is-invalid');
+  });
+  $("select").change(function(){
+    $(this).parent().parent().removeClass('has-error');
+    $(this).next().empty();
+    $(this).removeClass('is-invalid');
+  });
 });
 
 function reload_table()
@@ -187,30 +192,30 @@ function deluser(id){
     confirmButtonText: 'Yes, delete it!'
   }).then((result) => {
     if (result.value) {
-    $.ajax({
-      url:"<?php echo site_url('user/delete');?>",
-      type:"POST",
-      data:"id="+id,
-      cache:false,
-      dataType: 'json',
-      success:function(respone){
-        if (respone.status) {
-          reload_table();
-          Swal.fire({
+      $.ajax({
+        url:"<?php echo site_url('user/delete');?>",
+        type:"POST",
+        data:"id="+id,
+        cache:false,
+        dataType: 'json',
+        success:function(respone){
+          if (respone.status) {
+            reload_table();
+            Swal.fire({
              title :'Deleted!',
              text :'Your file has been deleted.',
              icon:'success',
              showConfirmButton: false,
              timer: 2000});
-        }else{
-          Toast.fire({
-            icon: 'error',
-            title: 'Delete Error!!.'
-          });
+          }else{
+            Toast.fire({
+              icon: 'error',
+              title: 'Delete Error!!.'
+            });
+          }
         }
-      }
-    });
-}
+      });
+    }
   })
 }
 
@@ -246,8 +251,11 @@ function add_user()
         $('[name="full_name"]').val(data.full_name);
         $('[name="is_active"]').val(data.is_active);
         $('[name="level"]').val(data.id_level);
-        $('[name="id_gudang"]').val(data.id_gudang);
-
+        $('[name="id_jurusan"]').val(data.id_jurusan);
+        var id_level=$('[name="level"]').val(data.id_level);
+        if (id_level=='6' || id_level=='8') {
+          $('.jrs').show();
+        }
         if (data.image==null) {
           var image = "<?php echo base_url('assets/foto/user/default.png')?>";
           $("#v_image").attr("src",image);
@@ -266,6 +274,13 @@ function add_user()
           }
         });
   }
+
+  $('[name="level"]').change(function () {
+    var id_level=$('[name="level"]').val(); 
+    if (id_level=='6' || id_level=='8') {
+      $('.jrs').show();
+    }
+  })
 
   function save()
   {
@@ -383,18 +398,7 @@ function add_user()
                 <input type="text" class="form-control" name="full_name" id="full_name" placeholder="Full Name">
               </div>
             </div>
-            <div class="form-group row ">
-              <label for="level" class="col-sm-3 col-form-label">Gudang</label>
-              <div class="col-sm-9 kosong">
-                <select class="form-control" name="id_gudang" id="id_gudang">
-                  <option value="">Pilih Gudang</option>
-                  <?php
-                  foreach ($gudang->result() as $g) {?>
-                    <option value="<?=$g->id;?>"><?=$g->nama;?></option>
-                  <?php }?>
-                </select>
-              </div>
-            </div>
+
             <div class="form-group row ">
               <label for="password" class="col-sm-3 col-form-label">Password</label>
               <div class="col-sm-9 kosong">
@@ -418,6 +422,18 @@ function add_user()
               <div class="col-sm-9 kosong ">
                 <img  id="v_image" width="100px" height="100px">
                 <input type="file" class="form-control btn-file" onchange="loadFile(event)" name="imagefile" id="imagefile" placeholder="Image" value="UPLOAD">
+              </div>
+            </div>
+            <div class="form-group row ">
+              <label for="id_jurusan" class="col-sm-3 col-form-label">Jurusan</label>
+              <div class="col-sm-9 kosong">
+                <select class="form-control" name="id_jurusan" id="id_jurusan">
+                  <option value="" selected="" disabled="">Pilih Jurusan</option>
+                  <?php
+                  foreach ($jurusan->result() as $j) {?>
+                    <option value="<?=$j->id_jurusan;?>"><?=$j->nama_jurusan;?></option>
+                  <?php }?>
+                </select>
               </div>
             </div>
           </div>

@@ -67,8 +67,8 @@ class Mod_satuan extends CI_Model
 	function count_filtered()
 	{
 		$this->_get_datatables_query();
-		$query = $this->db->get();
-		return $query->num_rows();
+		$query = $this->db->get()->result();
+		return count($query);
 	}
 
 	function count_all()

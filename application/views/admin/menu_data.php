@@ -16,7 +16,7 @@
               <div class="card-body">
                 <table id="tabelmenu" class="table table-bordered table-striped table-hover">
                   <thead>
-                    <tr class="bg-teal">
+                    <tr class="bg-purple">
                       <th>Nama Menu</th>
                       <th>Link</th>
                       <th>Icon</th>

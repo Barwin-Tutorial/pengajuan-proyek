@@ -47,8 +47,8 @@ class Login extends CI_Controller {
                     'title'       => $apl->title,
                     'logo'        => $apl->logo,
                     'nama_owner'     => $apl->nama_owner,
-                    'id_gudang'       => $db->id_gudang,
-                    'logged_in'    => TRUE
+                    'logged_in'    => TRUE,
+                    'id_jurusan'  => $db->id_jurusan,
                 );
 
                 $urls=$this->Mod_login->akses_menu($db->id_level)->row();

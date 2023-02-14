@@ -32,7 +32,7 @@ class Satuan extends MY_Controller
             $akses=$a_submenu->view;
         }
         if ($akses=="Y") {
-            $this->template->load('layoutbackend','barang/satuan',$data);
+            $this->template->load('layoutbackend','satuan/index',$data);
         }else{
             $data['page']=$link;
             $this->template->load('layoutbackend','admin/akses_ditolak',$data);
@@ -50,7 +50,7 @@ class Satuan extends MY_Controller
 
             $no++;
             $row = array();
-            $row[] = $pel->nama;
+            $row[] = $pel->nama_satuan;
             $row[] = "<a class=\"btn btn-xs btn-outline-primary edit\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit('$pel->id')\"><i class=\"fas fa-edit\"></i></a><a class=\"btn btn-xs btn-outline-danger delete\" href=\"javascript:void(0)\" title=\"Delete\"  onclick=\"hapus('$pel->id')\"><i class=\"fas fa-trash\"></i></a>";
             $data[] = $row;
         }
@@ -70,7 +70,7 @@ class Satuan extends MY_Controller
        
         $id_user = $this->session->userdata['id_user'];
         $save  = array(
-            'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
+            'nama_satuan'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
           
         );
         $this->Mod_satuan->insert("satuan", $save);
@@ -83,7 +83,7 @@ class Satuan extends MY_Controller
         // $this->_validate();
         $id      = $this->input->post('id');
         $save  = array(
-            'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
+            'nama_satuan'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
         );
 
         $this->Mod_satuan->update($id, $save);

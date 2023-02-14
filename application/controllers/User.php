@@ -19,7 +19,6 @@ class User extends MY_Controller {
         $this->load->helper('url');
         $data['user'] = $this->Mod_user->getAll();
         $data['user_level'] = $this->Mod_user->userlevel();
-        $data['gudang'] = $this->Mod_user->get_gudang();
 
         $link = $this->uri->segment(1);
         $level = $this->session->userdata['id_level'];
@@ -35,6 +34,7 @@ class User extends MY_Controller {
             $akses=$a_submenu->view;
         }
         if ($akses=="Y") {
+            $data['jurusan'] = $this->Mod_fungsi->get_jurusan();
             $this->template->load('layoutbackend', 'admin/user_data', $data);
         }else{
             $data['page']=$link;
@@ -59,8 +59,7 @@ class User extends MY_Controller {
            }
             $row[] = $user->username;
             $row[] = $user->full_name;
-            $row[] = $user->nama_level; 
-            $row[] = $user->nama_gudang;            
+            $row[] = $user->nama_level;         
             $row[] = $user->is_active;
             $row[] = "<a class=\"btn btn-xs btn-outline-primary edit\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit_user('$user->id_user')\"><i class=\"fas fa-edit\"></i></a><a class=\"btn btn-xs btn-outline-danger delete\" href=\"javascript:void(0)\" title=\"Delete\"  onclick=\"deluser('$user->id_user')\"><i class=\"fas fa-trash\"></i></a>";
             $data[] = $row;
@@ -103,8 +102,8 @@ class User extends MY_Controller {
                 'full_name' => ucwords($this->input->post('full_name')),
                 'password'  => get_hash($this->input->post('password')),
                 'id_level'  => $this->input->post('level'),
+                'id_jurusan'  => $this->input->post('id_jurusan'),
                 'is_active' => $this->input->post('is_active'),
-                'id_gudang' => $this->input->post('id_gudang'),
                 'image' => $gambar['file_name']
             );
 
@@ -116,7 +115,7 @@ class User extends MY_Controller {
                 'full_name' => ucwords($this->input->post('full_name')),
                 'password'  => get_hash($this->input->post('password')),
                 'id_level'  => $this->input->post('level'),
-                'id_gudang' => $this->input->post('id_gudang'),
+                'id_jurusan'  => $this->input->post('id_jurusan'),
                 'is_active' => $this->input->post('is_active')
             );
             
@@ -173,7 +172,7 @@ class User extends MY_Controller {
                     'password'  => get_hash($this->input->post('password')),
                     'id_level'  => $this->input->post('level'),
                     'is_active' => $this->input->post('is_active'),
-                    'id_gudang' => $this->input->post('id_gudang'),
+                    'id_jurusan'  => $this->input->post('id_jurusan'),
                     'image' => $gambar['file_name']
                 );
             }else{//Jika password kosong
@@ -182,7 +181,7 @@ class User extends MY_Controller {
                 'full_name' => ucwords($this->input->post('full_name')),
                 'id_level'  => $this->input->post('level'),
                 'is_active' => $this->input->post('is_active'),
-                'id_gudang' => $this->input->post('id_gudang'),
+                'id_jurusan'  => $this->input->post('id_jurusan'),
                 'image' => $gambar['file_name']
                 );
             }
@@ -207,7 +206,7 @@ class User extends MY_Controller {
                     'full_name' => ucwords($this->input->post('full_name')),
                     'password'  => get_hash($this->input->post('password')),
                     'id_level'  => $this->input->post('level'),
-                    'id_gudang' => $this->input->post('id_gudang'),
+                    'id_jurusan'  => $this->input->post('id_jurusan'),
                     'is_active' => $this->input->post('is_active')
                 );
             }else{//Jika password kosong
@@ -215,7 +214,7 @@ class User extends MY_Controller {
                 'username' => $this->input->post('username'),
                 'full_name' => ucwords($this->input->post('full_name')),
                 'id_level'  => $this->input->post('level'),
-                'id_gudang' => $this->input->post('id_gudang'),
+                'id_jurusan'  => $this->input->post('id_jurusan'),
                 'is_active' => $this->input->post('is_active')
                 );
             }
@@ -233,7 +232,7 @@ class User extends MY_Controller {
                 'full_name' => ucwords($this->input->post('full_name')),
                 'password'  => get_hash($this->input->post('password')),
                 'id_level'  => $this->input->post('level'),
-                'id_gudang' => $this->input->post('id_gudang'),
+                'id_jurusan'  => $this->input->post('id_jurusan'),
                 'is_active' => $this->input->post('is_active')
                 );
             }else{
@@ -241,7 +240,7 @@ class User extends MY_Controller {
                 'username' => $this->input->post('username'),
                 'full_name' => ucwords($this->input->post('full_name')),
                 'id_level'  => $this->input->post('level'),
-                'id_gudang' => $this->input->post('id_gudang'),
+                'id_jurusan'  => $this->input->post('id_jurusan'),
                 'is_active' => $this->input->post('is_active')
                 );
             }

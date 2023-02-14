@@ -5,97 +5,104 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title><?php echo $aplikasi->title; ?></title>
   <!-- Tell the browser to be responsive to screen width -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="robots" content="all,follow">
+    <meta  name="description" content="SMA Negeri Kaligondang" >
+  <meta  name="keywords" content="inven smanka, kaligondang, smanka">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="<?php echo base_url();?>assets/plugins/fontawesome-5.5.0/css/all.min.css">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="<?php echo base_url();?>assets/plugins/fontawesome-4.3.0/css/all.min.css">
+  <!-- <link rel="stylesheet" href="<?php echo base_url();?>assets/plugins/fontawesome-4.3.0/css/all.min.css"> -->
+  <link rel="stylesheet" href="<?php echo base_url();?>assets/vendor/bootstrap/css/bootstrap.min.css">
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Theme style -->
-  <link rel="stylesheet" href="<?php echo base_url();?>assets/dist/css/adminlte.min.css">
-    <!-- Body style -->
+  <link rel="stylesheet" href="<?php echo base_url();?>assets/dist/css/fontastic.css">
   <link rel="stylesheet" href="<?php echo base_url();?>assets/dist/css/stylearyo.css">
+  <link rel="stylesheet" href="<?php echo base_url();?>assets/dist/css/custom.css">
+  <link rel="stylesheet" href="<?php echo base_url();?>assets/dist/css/style.default.css" id="theme-stylesheet">
   <!-- iCheck -->
-  <link rel="stylesheet" href="<?php echo base_url();?>assets/plugins/iCheck/square/blue.css">
-  <!-- Google Font: Source Sans Pro -->
-  <!-- <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet"> -->
-      <!-- SweetAlert2 -->
+  <!-- <link rel="stylesheet" href="<?php echo base_url();?>assets/plugins/iCheck/square/blue.css"> -->
+
   <link rel="stylesheet" href="<?php echo base_url();?>assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
   <!-- Toastr -->
   <link rel="stylesheet" href="<?php echo base_url();?>assets/plugins/toastr/toastr.min.css">
 </head>
-<body class="hold-transition login-page" id="gradien1">
+<body >
 
-<div class="login-box">
-  <div class="login-logo ">
-    <a href="<?php echo base_url();?>">
-      <b>
-        <?php 
-          echo $aplikasi->nama_aplikasi;
-        ?>
-     </b></a>
-  </div>
+ <div class="page login-page">
+  <div class="container d-flex align-items-center">
+    <div class="form-holder has-shadow">
+      <div class="row">
 
-  <!-- /.login-logo -->
-  <div class="card">
-    <div class="card-header bg-info">
-      <h4><i class="fas fa-sign-in-alt"></i> Silahkan Masuk</h4>
-    </div>
-    <div class="card-body login-card-body">
+        <!-- Form Panel    -->
+        <div class="col-lg-6 bg-white">
+          <div class="form d-flex align-items-center">
 
-      <form action="" role="form" id="quickForm" method="post">
-        <div class="form-group">
-        <label for="username">Username</label>
-        <div class="input-group mb-3 kosong">
-          <input type="text" name="username" class="form-control" placeholder="Username" value="<?php echo set_value('username'); ?>" >
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-user"></span>
+            <div class="content">
+              <div class="text-center">
+                <img src="<?php echo base_url('assets/foto/logo/'.$aplikasi->logo);?>" height="100px" width="100px">
+                <h4>Login</h4>
+              </div>
+              <form action="" role="form" id="quickForm" method="post" class="form-validate">
+                <div class="form-group kosong">
+                  <label for="login-username" class="label-material">User Name</label>
+                  <input id="login-username" type="text" name="username" required data-msg="Please enter your username" class="form-control" value="<?php echo set_value('username'); ?>">
+                  <div class="input-group-append">
+                   
+                  </div>
+                </div>
+                <div class="form-group kosong">
+                  <label for="login-password" class="label-material">Password</label>
+                  <input id="login-password" type="password" name="password" required data-msg="Please enter your password" class="form-control" value="<?php echo set_value('password'); ?>">
+                  <div class="input-group-append">
+                    
+                  </div>
+                </div><a type="button" id="login" class="btn btn-primary">Login</a>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-- Logo & Information Panel-->
+        <div class="col-lg-6">
+          <div class="info d-flex align-items-center">
+            <div class="content">
+              <!-- <div class="logo">
+              </div> -->
+              <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                  <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                  <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                  <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                  <div class="carousel-item active">
+                    <img class="d-block w-100" src="https://placehold.it/900x500/39CCCC/ffffff&text=I+Love+Bootstrap" alt="First slide">
+                  </div>
+                  <div class="carousel-item">
+                    <img class="d-block w-100" src="https://placehold.it/900x500/3c8dbc/ffffff&text=I+Love+Bootstrap" alt="Second slide">
+                  </div>
+                  <div class="carousel-item">
+                    <img class="d-block w-100" src="https://placehold.it/900x500/f39c12/ffffff&text=I+Love+Bootstrap" alt="Third slide">
+                  </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </div>
             </div>
           </div>
         </div>
       </div>
-        <label for="username">Password</label>
-        <div class="input-group mb-3 kosong">
-          <input type="password" name="password"  class="form-control" placeholder="Password" value="<?php echo set_value('password'); ?>">
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-lock"></span>
-            </div>
-          </div>
-        </div>
-    
-          <!-- /.col -->
-          <div class="center" >
-            <button type="button" id="login" class="btn btn-info btn-block btn-flat"><span class="fa fa-sign-in-alt"></span> Masuk</button>
-          </div>
-          <!-- /.col -->
-        <!-- </div> -->
-      </form>
-    </div>
-      <!-- <div class="col-md-12">      
-        <?php
-        if(!empty($pesan)) {
-          echo $pesan;
-        }?>
-        </div> -->
-    <!-- /.login-card-body -->
-    <div class="card-footer" style="text-align: center;">
-      <b>
-     <?php 
-        // foreach ($aplikasi as $apl) {
-          echo $aplikasi->copy_right.' '.$aplikasi->tahun.' | '.$aplikasi->nama_owner;
-        // }
-        
-        ?>
-        </b>
     </div>
   </div>
+  <!--  -->
 </div>
-<!-- /.login-box -->
-
 <!-- jQuery -->
 <script src="<?php echo base_url();?>assets/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
@@ -105,9 +112,9 @@
 <script src="<?php echo base_url();?>assets/plugins/jquery-validation/jquery.validate.min.js"></script>
 <script src="<?php echo base_url();?>assets/plugins/jquery-validation/additional-methods.min.js"></script>
 <!-- AdminLTE App -->
-<script src="<?php echo base_url();?>assets/dist/js/adminlte.min.js"></script>
+<!-- <script src="<?php echo base_url();?>assets/dist/js/adminlte.min.js"></script> -->
 <!-- AdminLTE for demo purposes -->
-<script src="<?php echo base_url();?>assets/dist/js/demo.js"></script>
+<!-- <script src="<?php echo base_url();?>assets/dist/js/demo.js"></script> -->
 <!-- SweetAlert2 -->
 <script src="<?php echo base_url();?>assets/plugins/sweetalert2/sweetalert2.min.js"></script>
 <!-- Toastr -->
@@ -116,32 +123,32 @@
 
 <script>
   $("#login").on('click',function() {
-      $.ajax({
-        url : '<?php echo base_url('login/login') ?>',
-        type : 'POST',
-        data : $('#quickForm').serialize(),
-        dataType : 'JSON',
-        success : function(data) {
-          if (data.status) {
+    $.ajax({
+      url : '<?php echo base_url('login/login') ?>',
+      type : 'POST',
+      data : $('#quickForm').serialize(),
+      dataType : 'JSON',
+      success : function(data) {
+        if (data.status) {
             // alert(data.url)
-            toastr.success('Login Berhasil!');
-            var url = '<?php echo base_url() ?>'+data.url;
-            window.location = url;
-          }else if (data.error) {
-            toastr.error(
-              data.pesan
+          toastr.success('Login Berhasil!');
+          var url = '<?php echo base_url() ?>'+data.url;
+          window.location = url;
+        }else if (data.error) {
+          toastr.error(
+            data.pesan
             );
-          }else{
-                for (var i = 0; i < data.inputerror.length; i++) 
-                {
-                    $('[name="'+data.inputerror[i]+'"]').addClass('is-invalid');
-                    $('[name="'+data.inputerror[i]+'"]').closest('.kosong').append('<span></span>');
-                    $('[name="'+data.inputerror[i]+'"]').next().next().text(data.error_string[i]).addClass('invalid-feedback');
-                }
+        }else{
+          for (var i = 0; i < data.inputerror.length; i++) 
+          {
+            $('[name="'+data.inputerror[i]+'"]').addClass('is-invalid');
+            $('[name="'+data.inputerror[i]+'"]').closest('.kosong').append('<span></span>');
+            $('[name="'+data.inputerror[i]+'"]').next().next().text(data.error_string[i]).addClass('invalid-feedback');
           }
         }
-      });
-      
+      }
+    });
+
   });
 
 </script>

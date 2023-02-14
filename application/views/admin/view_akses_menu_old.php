@@ -7,7 +7,7 @@
           <div class="card-body table-responsive">
             <table class="table table-bordered table-hover responsive" id="vakses"> 
               <thead>
-                <tr class="bg-primary">
+                <tr class="bg-purple">
                   <th>No</th>
                   <th>Menu</th>
                   <th>View</th>
@@ -23,8 +23,8 @@
 
                   ?>
                   <tr>
-                    <td class="bg-teal"><?=$i++;?></td>
-                    <td class="bg-teal"><?=$row->nama_menu?></td>
+                    <td class="bg-purple"><?=$i++;?></td>
+                    <td class="bg-purple"><?=$row->nama_menu?></td>
                     <td>
                       <?php if ($row->view=="Y") {?>
                         <div id="vcek<?=$i.$row->id?>" onClick="checked('<?=$row->id?>','<?=$row->id_level?>')">

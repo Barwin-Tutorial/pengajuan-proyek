@@ -84,7 +84,7 @@ class Userlevel extends MY_Controller
         $this->_validate();
         
         $save  = array(
-            'nama_level' => $this->input->post('nama_level')
+            'nama_level' => ucwords($this->input->post('nama_level'))
         );
         
         $this->Mod_userlevel->insertlevel("tbl_userlevel", $save);
@@ -138,7 +138,7 @@ class Userlevel extends MY_Controller
         $this->_validate();
         $id = $this->input->post('id_level');
         $save  = array(
-            'nama_level' => $this->input->post('nama_level')
+            'nama_level' => ucwords($this->input->post('nama_level'))
         );
 
         $this->Mod_userlevel->update($id, $save);

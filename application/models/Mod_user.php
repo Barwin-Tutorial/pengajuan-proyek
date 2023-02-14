@@ -20,9 +20,8 @@ class Mod_user extends CI_Model {
  private function _get_datatables_query()
     {
        
-    	$this->db->select('a.*,b.nama_level, c.nama as nama_gudang');
+    	$this->db->select('a.*,b.nama_level');
     	$this->db->join('tbl_userlevel b', 'a.id_level=b.id_level');
-        $this->db->join('gudang c', 'a.id_gudang=c.id','left');
         $this->db->from('tbl_user a');
 
         $i = 0;
@@ -91,9 +90,8 @@ class Mod_user extends CI_Model {
 
     function getAll()
     {   
-        $this->db->select('a.*,b.nama_level, c.nama as nama_gudang');
+        $this->db->select('a.*,b.nama_level');
         $this->db->join('tbl_userlevel b', 'a.id_level = b.id_level');
-        $this->db->join('gudang c', 'a.id_gudang=c.id','left');
         $this->db->order_by('a.id_user desc');
         return $this->db->get('tbl_user a');
     }
@@ -116,10 +114,7 @@ class Mod_user extends CI_Model {
         return $this->db->get("tbl_user a")->row();
     }
 
-        function get_gudang()
-    {   
-        return $this->db->get("gudang");
-    }
+      
 
     function updateUser($id, $data)
     {
