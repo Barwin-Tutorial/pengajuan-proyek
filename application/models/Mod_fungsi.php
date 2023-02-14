@@ -38,6 +38,12 @@ function get_ruang()
 {   
     return $this->db->get('ruang');
 }
+
+function get_alat_by_id($id)
+{   
+    $this->db->where('id_alat', $id);
+    return $this->db->get('alat');
+}
 function get_alat($nama)
 {   
     $this->db->like('nama_alat', $nama);

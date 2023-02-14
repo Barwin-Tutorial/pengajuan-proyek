@@ -121,5 +121,10 @@ else
 		$this->db->delete($table);
 	}
 
-	
+	   function getImage($id)
+    {
+        $this->db->select('foto');
+        $this->db->where('foto', $id);
+        return $this->db->get('peminjaman');
+    }
 }

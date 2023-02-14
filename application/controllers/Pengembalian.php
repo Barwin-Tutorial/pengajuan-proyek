@@ -80,9 +80,43 @@ class Pengembalian extends MY_Controller
 
     public function insert()
     {
-     
+
         $id_user = $this->session->userdata['id_user'];
         $id_jurusan = $this->session->userdata['id_jurusan'];
+        if(!empty($_FILES['imagefile']['name'])) {
+        // $this->_validate();
+            $id = $this->input->post('id_user');
+
+            $nama = encrypt_url($this->input->post('nama'));
+            $config['upload_path']   = './assets/foto/kembali/';
+            $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
+            $config['max_size']      = '1000';
+            $config['max_width']     = '2000';
+            $config['max_height']    = '1024';
+            $config['file_name']     = $nama; 
+            
+            $this->upload->initialize($config);
+
+            if ($this->upload->do_upload('imagefile')){
+             $gambar = $this->upload->data();
+             $save  = array(
+                'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
+                'id_jabatan'    => $this->input->post('id_jabatan'),
+                'id_alat'    => $this->input->post('id_alat'),
+                'id_satuan'    => $this->input->post('id_satuan'),
+                'id_kondisi'    => $this->input->post('id_kondisi'),
+                'tgl_in'    => $this->input->post('tgl_in'),
+                'stok_in'    => $this->input->post('stok_in'),
+                'keterangan'    => $this->input->post('keterangan'),
+                'id_user'    => $id_user,
+                'id_jurusan' => $id_jurusan,
+                'foto'         => $gambar['file_name'],
+
+            );
+             $this->Mod_pengembalian->insert("pengembalian", $save);
+             echo json_encode(array("status" => TRUE));
+         }
+     }else{
         $save  = array(
             'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
             'id_jabatan'    => $this->input->post('id_jabatan'),
@@ -93,18 +127,57 @@ class Pengembalian extends MY_Controller
             'stok_in'    => $this->input->post('stok_in'),
             'keterangan'    => $this->input->post('keterangan'),
             'id_user'    => $id_user,
-            'id_jurusan' => $id_jurusan
-            
+            'id_jurusan' => $id_jurusan,
+
         );
         $this->Mod_pengembalian->insert("pengembalian", $save);
         echo json_encode(array("status" => TRUE));
-
     }
 
-    public function update()
-    {
+}
+
+public function update()
+{
         // $this->_validate();
-        $id      = $this->input->post('id');
+    $id      = $this->input->post('id');
+    if(!empty($_FILES['imagefile']['name'])) {
+        // $this->_validate();
+        $id = $this->input->post('id_user');
+
+        $nama = encrypt_url($this->input->post('nama'));
+        $config['upload_path']   = './assets/foto/kembali/';
+            $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
+            $config['max_size']      = '1000';
+            $config['max_width']     = '2000';
+            $config['max_height']    = '1024';
+            $config['file_name']     = $nama; 
+            
+            $this->upload->initialize($config);
+
+            if ($this->upload->do_upload('imagefile')){
+             $gambar = $this->upload->data();
+             $save  = array(
+                'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
+                'id_jabatan'    => $this->input->post('id_jabatan'),
+                'id_alat'    => $this->input->post('id_alat'),
+                'id_satuan'    => $this->input->post('id_satuan'),
+                'id_kondisi'    => $this->input->post('id_kondisi'),
+                'tgl_in'    => $this->input->post('tgl_in'),
+                'stok_in'    => $this->input->post('stok_in'),
+                'keterangan'    => $this->input->post('keterangan'),
+                'foto'         => $gambar['file_name'],
+
+            );
+             $g = $this->Mod_pengembalian->getImage($id)->row();
+
+            if (!empty($g->foto) || $g->foto != NULL) {
+                //hapus gambar yg ada diserver
+                unlink('assets/foto/kembali/'.$g->foto);
+            }
+             $this->Mod_pengembalian->update($id, $save);
+             echo json_encode(array("status" => TRUE));
+         }
+     }else{
         $save  = array(
             'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
             'id_jabatan'    => $this->input->post('id_jabatan'),
@@ -114,68 +187,76 @@ class Pengembalian extends MY_Controller
             'tgl_in'    => $this->input->post('tgl_in'),
             'stok_in'    => $this->input->post('stok_in'),
             'keterangan'    => $this->input->post('keterangan'),
-            
+
         );
 
         $this->Mod_pengembalian->update($id, $save);
         echo json_encode(array("status" => TRUE));
-
     }
 
-    public function edit($id)
+}
+public function get_alat_by_id()
+{
+    $id = $this->input->post('id_alat');
+    $alat = $this->Mod_fungsi->get_alat_by_id($id)->row();
+    echo json_encode($alat);
+}
+public function edit($id)
+{
+    $data = $this->Mod_pengembalian->get($id);
+    echo json_encode($data);
+}
+
+public function delete()
+{
+    $id = $this->input->post('id');
+    $this->Mod_pengembalian->delete($id, 'pengembalian');        
+    echo json_encode(array("status" => TRUE));
+}
+private function _validate()
+{
+    $data = array();
+    $data['error_string'] = array();
+    $data['inputerror'] = array();
+    $data['status'] = TRUE;
+
+    if($this->input->post('nama') == '')
     {
-        $data = $this->Mod_pengembalian->get($id);
+        $data['inputerror'][] = 'nama';
+        $data['error_string'][] = 'Nama pengembalian Tidak Boleh Kosong';
+        $data['status'] = FALSE;
+    }
+
+
+    if($data['status'] === FALSE)
+    {
         echo json_encode($data);
+        exit();
     }
+}
 
-    public function delete()
-    {
-        $id = $this->input->post('id');
-        $this->Mod_pengembalian->delete($id, 'pengembalian');        
-        echo json_encode(array("status" => TRUE));
+public function get_alat_bar()
+{
+    $barcode = $this->input->post('barcode');
+    $data = $this->Mod_fungsi->get_alat_bar($barcode)->row();
+    echo json_encode($data);
+
+}
+public function get_alat()
+{
+    $nama = $this->input->get('term');
+    $data = $this->Mod_fungsi->get_alat($nama);
+    if (count($data->result()) > 0) {
+
+        foreach ($data->result() as $row){
+            $arr_result[] = array( 'value' => $row->id_alat, 'label'  => $row->nama_alat,  );
+        } 
+        echo json_encode($arr_result);
+    }else{
+        $arr_result = array( 'label'  => "Data Tidak di Temukan" );
+        echo json_encode($arr_result);
     }
-    private function _validate()
-    {
-        $data = array();
-        $data['error_string'] = array();
-        $data['inputerror'] = array();
-        $data['status'] = TRUE;
+}
 
-        if($this->input->post('nama') == '')
-        {
-            $data['inputerror'][] = 'nama';
-            $data['error_string'][] = 'Nama pengembalian Tidak Boleh Kosong';
-            $data['status'] = FALSE;
-        }
-        
 
-        if($data['status'] === FALSE)
-        {
-            echo json_encode($data);
-            exit();
-        }
-    }
-
-    public function get_alat_bar()
-    {
-        $barcode = $this->input->post('barcode');
-        $data = $this->Mod_fungsi->get_alat_bar($barcode)->row();
-        echo json_encode($data);
-        
-    }
-    public function get_alat()
-    {
-        $nama = $this->input->get('term');
-        $data = $this->Mod_fungsi->get_alat($nama);
-        if (count($data->result()) > 0) {
-
-            foreach ($data->result() as $row){
-                $arr_result[] = array( 'value' => $row->id_alat, 'label'  => $row->nama_alat,  );
-            } 
-            echo json_encode($arr_result);
-        }else{
-            $arr_result = array( 'label'  => "Data Tidak di Temukan" );
-            echo json_encode($arr_result);
-        }
-    }
 }

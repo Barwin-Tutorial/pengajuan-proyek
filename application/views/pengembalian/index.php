@@ -178,6 +178,19 @@ function edit(id){
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
             $('.modal-title').text('Pengembalian'); // Set title to Bootstrap modal title
 
+           $.ajax({
+            url : 'pengembalian/get_alat_by_id/',
+            data : {id_alat:data.id_alat},
+            dataType : 'json',
+            type : 'POST',
+            success : function (data) {
+                $("#nama_alat").val(data.nama_alat); 
+                $("#id_alat").val(data.id_alat);
+                // $('#scanbar').val('');
+                return false;
+            }
+
+        })
         },
         error: function (jqXHR, textStatus, errorThrown)
         {

@@ -89,7 +89,7 @@ class Peminjaman extends MY_Controller
         // $this->_validate();
             $id = $this->input->post('id_user');
 
-            $nama = slug($this->input->post('nama'));
+            $nama = encrypt_url($this->input->post('nama'));
             $config['upload_path']   = './assets/foto/pinjam/';
             $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
             $config['max_size']      = '1000';
@@ -150,7 +150,7 @@ class Peminjaman extends MY_Controller
         // $this->_validate();
         $id = $this->input->post('id_user');
 
-        $nama = slug($this->input->post('nama'));
+        $nama = encrypt_url($this->input->post('nama'));
         $config['upload_path']   = './assets/foto/pinjam/';
             $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
             $config['max_size']      = '1000';
@@ -176,6 +176,13 @@ class Peminjaman extends MY_Controller
 
             );
 
+             $g = $this->Mod_peminjaman->getImage($id)->row();
+
+            if (!empty($g->foto) || $g->foto != NULL) {
+                //hapus gambar yg ada diserver
+                unlink('assets/foto/pinjam/'.$g->foto);
+            }
+
              $this->Mod_peminjaman->update($id, $save);
              echo json_encode(array("status" => TRUE));
          }
@@ -200,6 +207,12 @@ class Peminjaman extends MY_Controller
 
 }
 
+public function get_alat_by_id()
+{
+    $id = $this->input->post('id_alat');
+    $alat = $this->Mod_fungsi->get_alat_by_id($id)->row();
+    echo json_encode($alat);
+}
 public function edit($id)
 {
     $data = $this->Mod_peminjaman->get($id);

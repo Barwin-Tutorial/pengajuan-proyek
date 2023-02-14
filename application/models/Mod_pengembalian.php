@@ -108,8 +108,9 @@ class Mod_pengembalian extends CI_Model
 
         function get($id)
     {   
-        $this->db->where('id_pengembalian',$id);
-        return $this->db->get('pengembalian')->row();
+
+        $this->db->where('a.id_pengembalian',$id);
+        return $this->db->get('pengembalian a')->row();
     }
 
         function delete($id, $table)
@@ -118,5 +119,11 @@ class Mod_pengembalian extends CI_Model
         $this->db->delete($table);
     }
 
+       function getImage($id)
+    {
+        $this->db->select('foto');
+        $this->db->where('foto', $id);
+        return $this->db->get('pengembalian');
+    }
  
 }

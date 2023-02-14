@@ -180,7 +180,20 @@ function edit(id){
             $('[name="keterangan"]').val(data.keterangan);
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
             $('.modal-title').text('Peminjaman'); // Set title to Bootstrap modal title
+            setTimeout(function() { $('input[name="scanbar"]').focus() }, 2000);
+            $.ajax({
+            url : 'peminjaman/get_alat_by_id/',
+            data : {id_alat:data.id_alat},
+            dataType : 'json',
+            type : 'POST',
+            success : function (data) {
+                $("#nama_alat").val(data.nama_alat); 
+                $("#id_alat").val(data.id_alat);
+                // $('#scanbar').val('');
+                return false;
+            }
 
+        })
         },
         error: function (jqXHR, textStatus, errorThrown)
         {
@@ -270,7 +283,7 @@ $(document).ready(function(){
     }
 })
 
-setTimeout(function() { $('input[name="scanbar"]').focus() }, 3000);
+setTimeout(function() { $('input[name="scanbar"]').focus() }, 2000);
    /*{
     source: 'peminjaman/get_alat_bar/?', 
     change : function (event, ui) {
