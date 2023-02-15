@@ -8,7 +8,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Mod_fungsi extends CI_Model
 {
 
+  function get_tahun()
+  {   
+    return $this->db->get('tahun');
+}
 
+function get_dana()
+  {   
+    return $this->db->get('dana');
+}
   function get_jabatan()
   {   
     return $this->db->get('jabatan');

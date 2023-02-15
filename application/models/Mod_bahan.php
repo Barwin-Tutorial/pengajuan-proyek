@@ -24,11 +24,9 @@ class Mod_bahan extends CI_Model
 		if ($level=='6' || $level=='9') {
 			$this->db->where('a.id_jurusan',$id_jurusan);
 		}
-		$this->db->select('a.*,b.nama_merk,c.nama_satuan,d.kondisi,e.nama_ruang');
+		$this->db->select('a.*,b.nama_merk,c.nama_satuan');
 		$this->db->join('merk b','a.id_merk=b.id_merk');
 		$this->db->join('satuan c','a.id_satuan=c.id');
-		$this->db->join('kondisi d','a.id_kondisi=d.id_kondisi');
-		$this->db->join('ruang e','a.id_ruang=e.id_ruang');
 		$this->db->from('bahan a');
 		$i = 0;
 
@@ -88,11 +86,9 @@ else
 		if ($level=='6' || $level=='9') {
 			$this->db->where('a.id_jurusan',$id_jurusan);
 		}
-		$this->db->select('a.*,b.nama_merk,c.nama_satuan,d.kondisi,e.nama_ruang');
+		$this->db->select('a.*,b.nama_merk,c.nama_satuan');
 		$this->db->join('merk b','a.id_merk=b.id_merk');
 		$this->db->join('satuan c','a.id_satuan=c.id');
-		$this->db->join('kondisi d','a.id_kondisi=d.id_kondisi');
-		$this->db->join('ruang e','a.id_ruang=e.id_ruang');
 		$this->db->from('bahan a');
 		return $this->db->count_all_results();
 	}
@@ -111,8 +107,11 @@ else
 
 	function get($id)
 	{   
+		$this->db->select('a.*,b.nama_satuan,c.nama_merk');
 		$this->db->where('id_bahan',$id);
-		return $this->db->get('bahan')->row();
+		$this->db->join('satuan b', 'a.id_satuan=b.id','left');
+		$this->db->join('merk c', 'a.id_merk=c.id_merk','left');
+		return $this->db->get('bahan a')->row();
 	}
 
 	function delete($id, $table)
@@ -132,4 +131,11 @@ else
 		$this->db->where('id_jurusan', $id_jurusan);
 		return $this->db->get('bahan')->result_array();
 	}
+
+	function getImage($id)
+    {
+        $this->db->select('photo,barcode');
+        $this->db->where('id_bahan', $id);
+        return $this->db->get('bahan');
+    }
 }

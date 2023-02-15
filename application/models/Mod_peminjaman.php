@@ -124,7 +124,7 @@ else
 	   function getImage($id)
     {
         $this->db->select('foto');
-        $this->db->where('foto', $id);
+        $this->db->where('id_peminjaman', $id);
         return $this->db->get('peminjaman');
     }
 }

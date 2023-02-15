@@ -15,7 +15,7 @@
                         <table id="tbl_alat" class="table table-bordered table-striped table-hover nowrap">
                             <thead>
                                 <tr class="bg-purple">
-                                    <th>Barcode</th>
+                                    <th>QR Code</th>
                                     <th>Nama Alat</th>
                                     <th>Stok</th>
                                     <th>Foto</th>
@@ -173,6 +173,8 @@ function edit(id){
             $('[name="id_kondisi"]').val(data.id_kondisi);
             $('[name="id_ruang"]').val(data.id_ruang);
             $('[name="id_satuan"]').val(data.id_satuan);
+            $('[name="id_dana"]').val(data.id_dana);
+            $('[name="id_tahun"]').val(data.id_tahun);
             $('[name="stok"]').val(data.stok);
             $('[name="photo"]').val(data.photo);
             $('[name="keterangan"]').val(data.keterangan);
@@ -263,7 +265,17 @@ $(document).ready(function(){
         return false;
     }
 })
+  $( "#nama_satuan").autocomplete({
+    source: 'bahan/get_satuan_by_nama/?', 
+    select : function (event, ui) {
 
+         // display the selected text
+         var value = ui.item.value;
+        $("#id_satuan").val(value); // save selected id to hidden input
+        $("#nama_satuan").val(ui.item.label);
+        return false;
+    }
+})
 });
 </script>
 
@@ -345,6 +357,30 @@ $(document).ready(function(){
                                 <option value="" disabled="" selected="">Pilih Ruang</option>
                                 <?php foreach ($ruang->result() as $r): ?>
                                  <option value="<?=$r->id_ruang?>"><?php echo $r->nama_ruang; ?></option>
+                             <?php endforeach ?>
+                         </select>
+                        <span class="help-block"></span>
+                    </div>
+                </div>
+                <div class="form-group row ">
+                    <label for="nama" class="col-sm-3 col-form-label">Dana</label>
+                    <div class="col-sm-9 kosong">
+                        <select class="form-control" name="id_dana" id="id_dana">
+                                <option value="" disabled="" selected="">Pilih Dana</option>
+                                <?php foreach ($dana->result() as $r): ?>
+                                 <option value="<?=$r->id_dana?>"><?php echo $r->dana; ?></option>
+                             <?php endforeach ?>
+                         </select>
+                        <span class="help-block"></span>
+                    </div>
+                </div>
+                <div class="form-group row ">
+                    <label for="nama" class="col-sm-3 col-form-label">Tahun Masuk</label>
+                    <div class="col-sm-9 kosong">
+                        <select class="form-control" name="id_tahun" id="id_tahun">
+                                <option value="" disabled="" selected="">Pilih Tahun Masuk</option>
+                                <?php foreach ($tahun->result() as $r): ?>
+                                 <option value="<?=$r->id_tahun?>"><?php echo $r->tahun; ?></option>
                              <?php endforeach ?>
                          </select>
                         <span class="help-block"></span>

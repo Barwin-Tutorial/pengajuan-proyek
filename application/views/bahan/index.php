@@ -15,12 +15,10 @@
                         <table id="tbl_bahan" class="table table-bordered table-striped table-hover nowrap">
                             <thead>
                                 <tr class="bg-purple">
-                                    <th>Barcode</th>
+                                    <th>QR Code</th>
                                     <th>Nama Bahan</th>
                                     <th>Stok</th>
-                                    <th>Foto</th>
-                                    <!-- <th>Kondisi</th> -->
-                                    <th>Ruang</th>
+                                    <th>Foto</th>                                   
                                     <th>Keterangan</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -168,15 +166,19 @@ function edit(id){
             $('[name="id"]').val(data.id_bahan);
             $('[name="nama_bahan"]').val(data.nama_bahan);
             $('[name="id_merk"]').val(data.id_merk);
+            $('[name="nama_merk"]').val(data.nama_merk);
             $('[name="id_kondisi"]').val(data.id_kondisi);
             $('[name="id_ruang"]').val(data.id_ruang);
             $('[name="id_satuan"]').val(data.id_satuan);
+            $('[name="nama_satuan"]').val(data.nama_satuan);
             $('[name="stok"]').val(data.stok);
             $('[name="photo"]').val(data.photo);
             $('[name="keterangan"]').val(data.keterangan);
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
-            $('.modal-title').text('Edit bahan'); // Set title to Bootstrap modal title
+            $('.modal-title').text('Edit Bahan'); // Set title to Bootstrap modal title
 
+            var image = "<?php echo base_url('assets/foto/bahan/')?>";
+            $("#v_image").attr("src",image+data.photo);
         },
         error: function (jqXHR, textStatus, errorThrown)
         {
@@ -184,6 +186,34 @@ function edit(id){
         }
     });
 }
+
+$(document).ready(function(){
+
+ $( "#nama_merk").autocomplete({
+    source: 'bahan/get_merk_by_nama/?', 
+    select : function (event, ui) {
+
+         // display the selected text
+         var value = ui.item.value;
+        $("#id_merk").val(value); // save selected id to hidden input
+        $("#nama_merk").val(ui.item.label);
+        return false;
+    }
+})
+
+  $( "#nama_satuan").autocomplete({
+    source: 'bahan/get_satuan_by_nama/?', 
+    select : function (event, ui) {
+
+         // display the selected text
+         var value = ui.item.value;
+        $("#id_satuan").val(value); // save selected id to hidden input
+        $("#nama_satuan").val(ui.item.label);
+        return false;
+    }
+})
+
+});
 
 function save()
 {
@@ -272,83 +302,53 @@ var loadFile = function(event) {
                             </div>
                         </div>
                         <div class="form-group row ">
+
                             <label for="nama" class="col-sm-3 col-form-label">Merk</label>
                             <div class="col-sm-9 kosong">
-                                <select class="form-control" name="id_merk" id="id_merk">
-                                    <option value="" disabled="" selected="">Pilih Merk</option>
-                                    <?php foreach ($merk->result() as $m): ?>
-                                     <option value="<?=$m->id_merk?>"><?php echo $m->nama_merk; ?></option>
-                                 <?php endforeach ?>
-                             </select>
+                                <input type="hidden" name="id_merk" id="id_merk">
+                                <input type="text" class="form-control" name="nama_merk" id="nama_merk" placeholder="Ketik Merk" >
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row ">
+                            <label for="nama" class="col-sm-3 col-form-label">Satuan</label>
+                            <div class="col-sm-9 kosong">
+                                <input type="hidden" name="id_satuan" id="id_satuan">
+                                <input type="text" class="form-control" name="nama_satuan" id="nama_satuan" placeholder="Ketik Satuan" >
+
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row ">
+                            <label for="stok" class="col-sm-3 col-form-label">Stok</label>
+                            <div class="col-sm-9 kosong">
+                                <input type="text" class="form-control" name="stok" id="stok" placeholder="Stok" >
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row ">
+                            <label for="nama" class="col-sm-3 col-form-label">Photo</label>
+                            <div class="col-sm-9 kosong">
+                                <img  id="v_image" width="100px" height="100px">
+                                <input type="file" class="form-control btn-file" onchange="loadFile(event)" name="imagefile" id="imagefile" placeholder="Image" value="UPLOAD">
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row ">
+                            <label for="nama" class="col-sm-3 col-form-label">Keterangan</label>
+                            <div class="col-sm-9 kosong">
+                             <textarea class="form-control" name="keterangan" id="keterangan" placeholder="Keterangan"></textarea>
                              <span class="help-block"></span>
                          </div>
                      </div>
-                     <div class="form-group row ">
-                        <label for="nama" class="col-sm-3 col-form-label">Satuan</label>
-                        <div class="col-sm-9 kosong">
-                            <select class="form-control" name="id_satuan" id="id_satuan">
-                                <option value="" disabled="" selected="">Pilih Satuan</option>
-                                <?php foreach ($satuan->result() as $s): ?>
-                                 <option value="<?=$s->id?>"><?php echo $s->nama_satuan; ?></option>
-                             <?php endforeach ?>
-                         </select>
-                         <span class="help-block"></span>
-                     </div>
                  </div>
-                 <div class="form-group row ">
-                    <label for="stok" class="col-sm-3 col-form-label">Stok</label>
-                    <div class="col-sm-9 kosong">
-                        <input type="text" class="form-control" name="stok" id="stok" placeholder="Stok" >
-                        <span class="help-block"></span>
-                    </div>
-                </div>
-                <div class="form-group row ">
-                    <label for="nama" class="col-sm-3 col-form-label">Photo</label>
-                    <div class="col-sm-9 kosong">
-                        <img  id="v_image" width="100px" height="100px">
-                        <input type="file" class="form-control btn-file" onchange="loadFile(event)" name="imagefile" id="imagefile" placeholder="Image" value="UPLOAD">
-                        <span class="help-block"></span>
-                    </div>
-                </div>
-                <div class="form-group row ">
-                    <label for="nama" class="col-sm-3 col-form-label">Kondisi</label>
-                    <div class="col-sm-9 kosong">
-                        <select class="form-control" name="id_kondisi" id="id_kondisi">
-                                <option value="" disabled="" selected="">Pilih Kondisi</option>
-                                <?php foreach ($kondisi->result() as $k): ?>
-                                 <option value="<?=$k->id_kondisi?>"><?php echo $k->kondisi; ?></option>
-                             <?php endforeach ?>
-                         </select>
-                        <span class="help-block"></span>
-                    </div>
-                </div>
-                <div class="form-group row ">
-                    <label for="nama" class="col-sm-3 col-form-label">Ruang</label>
-                    <div class="col-sm-9 kosong">
-                        <select class="form-control" name="id_ruang" id="id_ruang">
-                                <option value="" disabled="" selected="">Pilih Ruang</option>
-                                <?php foreach ($ruang->result() as $r): ?>
-                                 <option value="<?=$r->id_ruang?>"><?php echo $r->nama_ruang; ?></option>
-                             <?php endforeach ?>
-                         </select>
-                        <span class="help-block"></span>
-                    </div>
-                </div>
-                <div class="form-group row ">
-                    <label for="nama" class="col-sm-3 col-form-label">Keterangan</label>
-                    <div class="col-sm-9 kosong">
-                       <textarea class="form-control" name="keterangan" id="keterangan" placeholder="Keterangan"></textarea>
-                        <span class="help-block"></span>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class="modal-footer">
-        <button type="button" id="btnSave" onclick="save()" class="btn btn-primary">Save</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-    </div>
-</div><!-- /.modal-content -->
+             </form>
+         </div>
+         <div class="modal-footer">
+            <button type="button" id="btnSave" onclick="save()" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+        </div>
+    </div><!-- /.modal-content -->
 </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <!-- End Bootstrap modal -->

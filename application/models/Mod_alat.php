@@ -24,11 +24,13 @@ class Mod_alat extends CI_Model
 		if ($level=='6' || $level=='9') {
 			$this->db->where('a.id_jurusan',$id_jurusan);
 		}
-		$this->db->select('a.*,b.nama_merk,c.nama_satuan,d.kondisi,e.nama_ruang');
+		$this->db->select('a.*,b.nama_merk,c.nama_satuan,d.kondisi,e.nama_ruang,f.tahun,g.dana');
 		$this->db->join('merk b','a.id_merk=b.id_merk');
 		$this->db->join('satuan c','a.id_satuan=c.id');
 		$this->db->join('kondisi d','a.id_kondisi=d.id_kondisi');
 		$this->db->join('ruang e','a.id_ruang=e.id_ruang');
+		$this->db->join('tahun f','a.id_tahun=f.id_tahun','left');
+		$this->db->join('dana g','a.id_dana=g.id_dana','left');
 		$this->db->from('alat a');
 		$i = 0;
 
@@ -136,7 +138,7 @@ class Mod_alat extends CI_Model
 	  function getImage($id)
     {
         $this->db->select('photo');
-        $this->db->where('photo', $id);
+        $this->db->where('id_alat', $id);
         return $this->db->get('alat');
     }
 }

@@ -23,9 +23,6 @@ CREATE TABLE `alat` (
   PRIMARY KEY (`id_alat`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `alat` (`id_alat`, `barcode`, `nama_alat`, `id_merk`, `stok`, `id_satuan`, `tgl_input`, `tgl_update`, `id_user`, `id_kondisi`, `photo`, `keterangan`, `id_ruang`, `id_jurusan`) VALUES (1, 'A323020001', 'Tes', 1, '1', 1, '2023-02-13 20:23:29', '2023-02-13 20:23:29', NULL, 3, 'tes.jpg', 'tess', 1, 3);
-
-
 #
 # TABLE STRUCTURE FOR: aplikasi
 #
@@ -76,6 +73,18 @@ CREATE TABLE `bahan` (
   `id_jurusan` int DEFAULT NULL,
   PRIMARY KEY (`id_bahan`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+#
+# TABLE STRUCTURE FOR: dana
+#
+
+DROP TABLE IF EXISTS `dana`;
+
+CREATE TABLE `dana` (
+  `id_dana` int NOT NULL AUTO_INCREMENT,
+  `dana` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  PRIMARY KEY (`id_dana`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 #
 # TABLE STRUCTURE FOR: guru
@@ -209,10 +218,9 @@ CREATE TABLE `peminjaman` (
   `barcode` varchar(100) DEFAULT NULL,
   `status` enum('0','1') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '0' COMMENT '0=Belum Kembali, 1=Kembali',
   PRIMARY KEY (`id_peminjaman`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `peminjaman` (`id_peminjaman`, `nama`, `id_alat`, `id_jabatan`, `stok_out`, `id_satuan`, `id_kondisi`, `tgl_out`, `id_guru`, `keterangan`, `tgl_input`, `tgl_update`, `id_user`, `id_jurusan`, `penanggung_jawab`, `foto`, `barcode`, `status`) VALUES (2, 'Tesss', 1, 2, '1', 1, 3, '2023-02-12', 1, 'tessss', '2023-02-12 14:33:12', '2023-02-12 14:33:12', 30, 3, NULL, NULL, NULL, '0');
-INSERT INTO `peminjaman` (`id_peminjaman`, `nama`, `id_alat`, `id_jabatan`, `stok_out`, `id_satuan`, `id_kondisi`, `tgl_out`, `id_guru`, `keterangan`, `tgl_input`, `tgl_update`, `id_user`, `id_jurusan`, `penanggung_jawab`, `foto`, `barcode`, `status`) VALUES (3, 'Tess', 1, 2, '2', 1, 3, '2023-02-14', NULL, 'tess', '2023-02-14 22:30:00', '2023-02-14 22:30:00', 30, 3, 'aryo', 'tess.png', NULL, '0');
+INSERT INTO `peminjaman` (`id_peminjaman`, `nama`, `id_alat`, `id_jabatan`, `stok_out`, `id_satuan`, `id_kondisi`, `tgl_out`, `id_guru`, `keterangan`, `tgl_input`, `tgl_update`, `id_user`, `id_jurusan`, `penanggung_jawab`, `foto`, `barcode`, `status`) VALUES (4, 'Tesss', 1, 2, '2', 1, 3, '2023-02-15', NULL, 'tesss', '2023-02-15 09:21:04', '2023-02-15 10:20:47', 30, 3, 'abis', 'V3NZWlFFY1hudG9IWGl4cXdvSTJXZz09.png', NULL, '1');
 
 
 #
@@ -236,8 +244,12 @@ CREATE TABLE `pengembalian` (
   `id_user` int DEFAULT NULL,
   `id_jurusan` int DEFAULT NULL,
   `foto` varchar(500) DEFAULT NULL,
+  `id_peminjaman` int DEFAULT NULL,
   PRIMARY KEY (`id_pengembalian`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `pengembalian` (`id_pengembalian`, `nama`, `id_alat`, `id_jabatan`, `stok_in`, `id_satuan`, `id_kondisi`, `tgl_in`, `keterangan`, `tgl_input`, `tgl_update`, `id_user`, `id_jurusan`, `foto`, `id_peminjaman`) VALUES (2, 'Tesss', 1, 2, '2', 1, 3, '2023-02-15', 'tesss ok', '2023-02-15 10:20:47', '2023-02-15 10:20:47', 30, 3, 'QVRIRDZZUzh5SkRwVENtaEYwSmJIZz09.png', NULL);
+
 
 #
 # TABLE STRUCTURE FOR: ruang
@@ -267,6 +279,21 @@ CREATE TABLE `satuan` (
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 
 INSERT INTO `satuan` (`id`, `nama_satuan`) VALUES (1, 'Strip');
+
+
+#
+# TABLE STRUCTURE FOR: tahun
+#
+
+DROP TABLE IF EXISTS `tahun`;
+
+CREATE TABLE `tahun` (
+  `id_tahun` int NOT NULL AUTO_INCREMENT,
+  `tahun` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  PRIMARY KEY (`id_tahun`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `tahun` (`id_tahun`, `tahun`) VALUES (2, '2024');
 
 
 #
@@ -347,7 +374,7 @@ CREATE TABLE `tbl_akses_submenu` (
   PRIMARY KEY (`id`),
   KEY `id_level` (`id_level`),
   KEY `id_submenu` (`id_submenu`)
-) ENGINE=InnoDB AUTO_INCREMENT=423 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=428 DEFAULT CHARSET=latin1;
 
 INSERT INTO `tbl_akses_submenu` (`id`, `id_level`, `id_submenu`, `view`, `add`, `edit`, `delete`, `print`, `upload`, `download`) VALUES (2, 1, 2, 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'N');
 INSERT INTO `tbl_akses_submenu` (`id`, `id_level`, `id_submenu`, `view`, `add`, `edit`, `delete`, `print`, `upload`, `download`) VALUES (4, 1, 1, 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'N');
@@ -439,6 +466,11 @@ INSERT INTO `tbl_akses_submenu` (`id`, `id_level`, `id_submenu`, `view`, `add`, 
 INSERT INTO `tbl_akses_submenu` (`id`, `id_level`, `id_submenu`, `view`, `add`, `edit`, `delete`, `print`, `upload`, `download`) VALUES (420, 7, 82, 'N', 'N', 'N', 'N', 'N', 'N', 'N');
 INSERT INTO `tbl_akses_submenu` (`id`, `id_level`, `id_submenu`, `view`, `add`, `edit`, `delete`, `print`, `upload`, `download`) VALUES (421, 8, 82, 'Y', 'N', 'N', 'N', 'N', 'N', 'N');
 INSERT INTO `tbl_akses_submenu` (`id`, `id_level`, `id_submenu`, `view`, `add`, `edit`, `delete`, `print`, `upload`, `download`) VALUES (422, 9, 82, 'Y', 'N', 'N', 'N', 'N', 'N', 'N');
+INSERT INTO `tbl_akses_submenu` (`id`, `id_level`, `id_submenu`, `view`, `add`, `edit`, `delete`, `print`, `upload`, `download`) VALUES (423, 1, 83, 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y');
+INSERT INTO `tbl_akses_submenu` (`id`, `id_level`, `id_submenu`, `view`, `add`, `edit`, `delete`, `print`, `upload`, `download`) VALUES (424, 6, 83, 'N', 'N', 'N', 'N', 'N', 'N', 'N');
+INSERT INTO `tbl_akses_submenu` (`id`, `id_level`, `id_submenu`, `view`, `add`, `edit`, `delete`, `print`, `upload`, `download`) VALUES (425, 7, 83, 'N', 'N', 'N', 'N', 'N', 'N', 'N');
+INSERT INTO `tbl_akses_submenu` (`id`, `id_level`, `id_submenu`, `view`, `add`, `edit`, `delete`, `print`, `upload`, `download`) VALUES (426, 8, 83, 'N', 'N', 'N', 'N', 'N', 'N', 'N');
+INSERT INTO `tbl_akses_submenu` (`id`, `id_level`, `id_submenu`, `view`, `add`, `edit`, `delete`, `print`, `upload`, `download`) VALUES (427, 9, 83, 'N', 'N', 'N', 'N', 'N', 'N', 'N');
 
 
 #
@@ -482,7 +514,7 @@ CREATE TABLE `tbl_submenu` (
   `is_active` enum('Y','N') CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT 'Y',
   `urutan` int unsigned DEFAULT NULL,
   PRIMARY KEY (`id_submenu`)
-) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=84 DEFAULT CHARSET=latin1;
 
 INSERT INTO `tbl_submenu` (`id_submenu`, `nama_submenu`, `link`, `icon`, `id_menu`, `is_active`, `urutan`) VALUES (1, 'Menu', 'menu', 'far fa-circle', 57, 'Y', NULL);
 INSERT INTO `tbl_submenu` (`id_submenu`, `nama_submenu`, `link`, `icon`, `id_menu`, `is_active`, `urutan`) VALUES (2, 'Sub Menu', 'submenu', 'far fa-circle', 57, 'Y', NULL);
@@ -490,7 +522,7 @@ INSERT INTO `tbl_submenu` (`id_submenu`, `nama_submenu`, `link`, `icon`, `id_men
 INSERT INTO `tbl_submenu` (`id_submenu`, `nama_submenu`, `link`, `icon`, `id_menu`, `is_active`, `urutan`) VALUES (10, 'User Level', 'userlevel', 'far fa-circle', 57, 'Y', NULL);
 INSERT INTO `tbl_submenu` (`id_submenu`, `nama_submenu`, `link`, `icon`, `id_menu`, `is_active`, `urutan`) VALUES (44, 'Data Pengguna', 'user', 'far fa-circle', 57, 'Y', NULL);
 INSERT INTO `tbl_submenu` (`id_submenu`, `nama_submenu`, `link`, `icon`, `id_menu`, `is_active`, `urutan`) VALUES (55, 'Satuan', 'satuan', 'far fa-circle', 93, 'Y', NULL);
-INSERT INTO `tbl_submenu` (`id_submenu`, `nama_submenu`, `link`, `icon`, `id_menu`, `is_active`, `urutan`) VALUES (71, 'Guru', 'guru', 'far fa-circle', 93, 'Y', 3);
+INSERT INTO `tbl_submenu` (`id_submenu`, `nama_submenu`, `link`, `icon`, `id_menu`, `is_active`, `urutan`) VALUES (71, 'Dana', 'dana', 'far fa-circle', 93, 'Y', 3);
 INSERT INTO `tbl_submenu` (`id_submenu`, `nama_submenu`, `link`, `icon`, `id_menu`, `is_active`, `urutan`) VALUES (72, 'Jurusan', 'jurusan', 'far fa-circle', 93, 'Y', 4);
 INSERT INTO `tbl_submenu` (`id_submenu`, `nama_submenu`, `link`, `icon`, `id_menu`, `is_active`, `urutan`) VALUES (73, 'Jabatan', 'jabatan', 'far fa-circle', 93, 'Y', 5);
 INSERT INTO `tbl_submenu` (`id_submenu`, `nama_submenu`, `link`, `icon`, `id_menu`, `is_active`, `urutan`) VALUES (74, 'Merk', 'merk', 'far fa-circle', 93, 'Y', 1);
@@ -502,6 +534,7 @@ INSERT INTO `tbl_submenu` (`id_submenu`, `nama_submenu`, `link`, `icon`, `id_men
 INSERT INTO `tbl_submenu` (`id_submenu`, `nama_submenu`, `link`, `icon`, `id_menu`, `is_active`, `urutan`) VALUES (80, 'Kondisi', 'kondisi', 'far fa-circle', 93, 'Y', 0);
 INSERT INTO `tbl_submenu` (`id_submenu`, `nama_submenu`, `link`, `icon`, `id_menu`, `is_active`, `urutan`) VALUES (81, 'Pemakaian Bahan', 'pemakaian_bahan', 'far fa-circle', 111, 'Y', 0);
 INSERT INTO `tbl_submenu` (`id_submenu`, `nama_submenu`, `link`, `icon`, `id_menu`, `is_active`, `urutan`) VALUES (82, 'Kerusakan', 'kerusakan', 'far fa-circle', 111, 'Y', 0);
+INSERT INTO `tbl_submenu` (`id_submenu`, `nama_submenu`, `link`, `icon`, `id_menu`, `is_active`, `urutan`) VALUES (83, 'Tahun Masuk', 'tahun', 'far fa-circle', 93, 'Y', 0);
 
 
 #

@@ -400,12 +400,7 @@ setTimeout(function() { $('input[name="scanbar"]').focus() }, 2000);
                             <label for="nama" class="col-sm-3 col-form-label">Penanggung Jawab</label>
                             <div class="col-sm-9 kosong">
                                 <input type="text" class="form-control" name="penanggung_jawab" id="penanggung_jawab" placeholder="Penanggung Jawab" >
-                                <!-- <select class="form-control" name="id_guru" id="id_guru">
-                                    <option value="" selected="" disabled="">Pilih Guru</option>
-                                    <?php foreach ($guru->result() as $g): ?>
-                                        <option value="<?=$g->id_guru?>"><?php echo $g->nama_guru; ?></option>
-                                    <?php endforeach ?>
-                                </select> -->
+                              
                                 <span class="help-block"></span>
                             </div>
                         </div>

@@ -34,5 +34,51 @@ class Mod_dashboard extends CI_Model
 		return $this->db->get('tbl_akses_submenu a');
 	}
 
+	function jml_alat()
+	{
+		$level = $this->session->userdata['id_level'];
+		$id_jurusan = $this->session->userdata['id_jurusan'];
+		if ($level=='6' || $level=='9') {
+			$this->db->where('id_jurusan',$id_jurusan);
+		}
+		
+		$this->db->from('alat');
+		return $this->db->count_all_results();
+	}
 
+	function jml_bahan()
+	{
+		$level = $this->session->userdata['id_level'];
+		$id_jurusan = $this->session->userdata['id_jurusan'];
+		if ($level=='6' || $level=='9') {
+			$this->db->where('id_jurusan',$id_jurusan);
+		}
+		
+		$this->db->from('bahan');
+		return $this->db->count_all_results();
+	}
+
+	function jml_pinjam()
+	{
+		$level = $this->session->userdata['id_level'];
+		$id_jurusan = $this->session->userdata['id_jurusan'];
+		if ($level=='6' || $level=='9') {
+			$this->db->where('id_jurusan',$id_jurusan);
+		}
+		
+		$this->db->from('peminjaman');
+		return $this->db->count_all_results();
+	}
+
+	function jml_pemakai_bahan()
+	{
+		$level = $this->session->userdata['id_level'];
+		$id_jurusan = $this->session->userdata['id_jurusan'];
+		if ($level=='6' || $level=='9') {
+			$this->db->where('id_jurusan',$id_jurusan);
+		}
+		
+		$this->db->from('pemakaian_bahan');
+		return $this->db->count_all_results();
+	}
 }

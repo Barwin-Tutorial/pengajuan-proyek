@@ -36,6 +36,10 @@ class Dashboard extends MY_Controller {
             
             $data['level'] = $this->session->userdata['id_level'];
             if ($akses=="Y") {
+                $data['jml_alat'] = $this->Mod_dashboard->jml_alat();
+                $data['jml_bahan'] = $this->Mod_dashboard->jml_bahan();
+                $data['jml_pinjam'] = $this->Mod_dashboard->jml_pinjam();
+                $data['jml_pemakai_bahan'] = $this->Mod_dashboard->jml_pemakai_bahan();
                $this->template->load('layoutbackend','dashboard/dashboard_data',$data);
            }else{
             $data['page']=$link;

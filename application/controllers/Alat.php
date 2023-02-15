@@ -37,6 +37,8 @@ class Alat extends MY_Controller
             $data['merk'] = $this->Mod_fungsi->get_merk();
             $data['satuan'] = $this->Mod_fungsi->get_satuan();
             $data['ruang'] = $this->Mod_fungsi->get_ruang();
+            $data['dana'] = $this->Mod_fungsi->get_dana();
+            $data['tahun'] = $this->Mod_fungsi->get_tahun();
             $this->template->load('layoutbackend','alat/index',$data);
         }else{
             $data['page']=$link;
@@ -55,14 +57,15 @@ class Alat extends MY_Controller
 
             $no++;
             $row = array();
-            $row[] = $pel->barcode;
+            $row[] = "<a download=\"".$pel->barcode.".png"."\" href=\"./assets/foto/alat/\" title=\"Download QR Code\">
+            <img alt=\"Download QR Code\" src=\"./assets/foto/alat/".$pel->barcode.".png"."\" width=\"50px\" height=\"50px\"> </a>";
             $row[] = $pel->nama_alat;
-            // $row[] = $pel->nama_merk;
             $row[] = $pel->stok;
-            // $row[] = $pel->nama_satuan;
             $row[] = "<img src=\"./assets/foto/alat/".$pel->photo."\" width=\"50px\" height=\"50px\">";
             $row[] = $pel->kondisi;
             $row[] = $pel->nama_ruang;
+            $row[] = $pel->dana;
+            $row[] = $pel->tahun;
             $row[] = $pel->keterangan;
             $row[] = "<a class=\"btn btn-xs btn-outline-primary edit\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit('$pel->id_alat')\"><i class=\"fas fa-edit\"></i></a><a class=\"btn btn-xs btn-outline-danger delete\" href=\"javascript:void(0)\" title=\"Delete\"  onclick=\"hapus('$pel->id_alat')\"><i class=\"fas fa-trash\"></i></a>";
             $data[] = $row;
@@ -117,6 +120,8 @@ class Alat extends MY_Controller
                 'id_kondisi'         => htmlspecialchars_decode($this->input->post('id_kondisi')),
                 'id_ruang'         => htmlspecialchars_decode($this->input->post('id_ruang')),
                 'keterangan'         => htmlspecialchars_decode($this->input->post('keterangan')),
+                'id_tahun'         => htmlspecialchars_decode($this->input->post('id_tahun')),
+                'id_dana'         => htmlspecialchars_decode($this->input->post('id_dana')),
                 'photo'         => $gambar['file_name'],
                 'id_jurusan'    => $id_jurusan,
                 'barcode'       => $kode
@@ -134,6 +139,8 @@ class Alat extends MY_Controller
             'id_kondisi'         => htmlspecialchars_decode($this->input->post('id_kondisi')),
             'id_ruang'         => htmlspecialchars_decode($this->input->post('id_ruang')),
             'keterangan'         => htmlspecialchars_decode($this->input->post('keterangan')),
+            'id_tahun'         => htmlspecialchars_decode($this->input->post('id_tahun')),
+            'id_dana'         => htmlspecialchars_decode($this->input->post('id_dana')),
             'id_jurusan'    => $id_jurusan,
             'barcode'       => $kode
 
@@ -142,18 +149,34 @@ class Alat extends MY_Controller
            echo json_encode(array("status" => TRUE));
        }
 
-   }
+        $config['cacheable']    = true; //boolean, the default is true
+        $config['cachedir']     = './assets/'; //string, the default is application/cache/
+        $config['errorlog']     = './assets/'; //string, the default is application/logs/
+        $config['imagedir']     = './assets/foto/alat/'; //direktori penyimpanan qr code
+        $config['quality']      = true; //boolean, the default is true
+        $config['size']         = '1024'; //interger, the default is 1024
+        $config['black']        = array(224,255,255); // array, default is array(255,255,255)
+        $config['white']        = array(70,130,180); // array, default is array(0,0,0)
+        $this->ciqrcode->initialize($config);
+        $image_name=$kode.'.png'; 
+        $params['data'] = $kode; //data yang akan di jadikan QR CODE
+        $params['level'] = 'H'; //H=High
+        $params['size'] = 10;
+        $params['savename'] = FCPATH.$config['imagedir'].$image_name; //simpan image QR CODE ke folder assets/images/
+        $this->ciqrcode->generate($params); // fungsi untuk generate QR CODE
 
-   public function update()
-   {
+    }
+
+    public function update()
+    {
         // $this->_validate();
-    $id      = $this->input->post('id');
-    if(!empty($_FILES['imagefile']['name'])) {
+        $id      = $this->input->post('id');
+        if(!empty($_FILES['imagefile']['name'])) {
         // $this->_validate();
-        $id = $this->input->post('id_user');
-        
-        $nama = slug($this->input->post('nama_guru'));
-        $config['upload_path']   = './assets/foto/alat/';
+            $id = $this->input->post('id_user');
+
+            $nama = slug($this->input->post('nama_guru'));
+            $config['upload_path']   = './assets/foto/alat/';
         $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
         $config['max_size']      = '1000';
         $config['max_width']     = '2000';
@@ -172,6 +195,8 @@ class Alat extends MY_Controller
             'id_kondisi'         => htmlspecialchars_decode($this->input->post('id_kondisi')),
             'id_ruang'         => htmlspecialchars_decode($this->input->post('id_ruang')),
             'keterangan'         => htmlspecialchars_decode($this->input->post('keterangan')),
+            'id_tahun'         => htmlspecialchars_decode($this->input->post('id_tahun')),
+            'id_dana'         => htmlspecialchars_decode($this->input->post('id_dana')),
             'photo'         => $gambar['file_name']
 
         );
@@ -195,6 +220,8 @@ class Alat extends MY_Controller
         'id_kondisi'         => htmlspecialchars_decode($this->input->post('id_kondisi')),
         'id_ruang'         => htmlspecialchars_decode($this->input->post('id_ruang')),
         'keterangan'         => htmlspecialchars_decode($this->input->post('keterangan')),
+        'id_tahun'         => $this->input->post('id_tahun'),
+        'id_dana'         => $this->input->post('id_dana'),
 
     );
     $this->Mod_alat->update($id, $save);
@@ -246,36 +273,36 @@ private function _validate()
 
 
 
- public function get_satuan_by_nama()
-    {
-        $nama = $this->input->get('term');
-        $data = $this->Mod_fungsi->get_satuan_by_nama($nama);
-        if (count($data->result()) > 0) {
+public function get_satuan_by_nama()
+{
+    $nama = $this->input->get('term');
+    $data = $this->Mod_fungsi->get_satuan_by_nama($nama);
+    if (count($data->result()) > 0) {
 
-            foreach ($data->result() as $row){
-                $arr_result[] = array( 'value' => $row->id_satuan, 'label'  => $row->nama_satuan,  );
-            } 
-            echo json_encode($arr_result);
-        }else{
-            $arr_result = array( 'label'  => "Data Tidak di Temukan" );
-            echo json_encode($arr_result);
-        }
+        foreach ($data->result() as $row){
+            $arr_result[] = array( 'value' => $row->id_satuan, 'label'  => $row->nama_satuan,  );
+        } 
+        echo json_encode($arr_result);
+    }else{
+        $arr_result = array( 'label'  => "Data Tidak di Temukan" );
+        echo json_encode($arr_result);
     }
+}
 
-    public function get_merk_by_nama()
-    {
-        $nama = $this->input->get('term');
-        $data = $this->Mod_fungsi->get_merk_by_nama($nama);
-        if (count($data->result()) > 0) {
+public function get_merk_by_nama()
+{
+    $nama = $this->input->get('term');
+    $data = $this->Mod_fungsi->get_merk_by_nama($nama);
+    if (count($data->result()) > 0) {
 
-            foreach ($data->result() as $row){
-                $arr_result[] = array( 'value' => $row->id_merk, 'label'  => $row->nama_merk,  );
-            } 
-            echo json_encode($arr_result);
-        }else{
-            $arr_result = array( 'label'  => "Data Tidak di Temukan" );
-            echo json_encode($arr_result);
-        }
+        foreach ($data->result() as $row){
+            $arr_result[] = array( 'value' => $row->id_merk, 'label'  => $row->nama_merk,  );
+        } 
+        echo json_encode($arr_result);
+    }else{
+        $arr_result = array( 'label'  => "Data Tidak di Temukan" );
+        echo json_encode($arr_result);
     }
-    
+}
+
 }

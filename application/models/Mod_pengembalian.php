@@ -122,7 +122,7 @@ class Mod_pengembalian extends CI_Model
        function getImage($id)
     {
         $this->db->select('foto');
-        $this->db->where('foto', $id);
+        $this->db->where('id_pengembalian', $id);
         return $this->db->get('pengembalian');
     }
 
