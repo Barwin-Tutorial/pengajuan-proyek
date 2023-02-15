@@ -57,11 +57,10 @@ class Alat extends MY_Controller
             $row = array();
             $row[] = $pel->barcode;
             $row[] = $pel->nama_alat;
-            $row[] = $pel->nama_merk;
+            // $row[] = $pel->nama_merk;
             $row[] = $pel->stok;
-            $row[] = $pel->nama_satuan;
-            $row[] = $pel->tgl_input;
-            $row[] = $pel->photo;
+            // $row[] = $pel->nama_satuan;
+            $row[] = "<img src=\"./assets/foto/alat/".$pel->photo."\" width=\"50px\" height=\"50px\">";
             $row[] = $pel->kondisi;
             $row[] = $pel->nama_ruang;
             $row[] = $pel->keterangan;
@@ -109,8 +108,8 @@ class Alat extends MY_Controller
             $this->upload->initialize($config);
 
             if ($this->upload->do_upload('imagefile')){
-             $gambar = $this->upload->data();
-             $save  = array(
+               $gambar = $this->upload->data();
+               $save  = array(
                 'nama_alat'         => htmlspecialchars_decode(ucwords($this->input->post('nama_alat'))),
                 'id_merk'         => htmlspecialchars_decode($this->input->post('id_merk')),
                 'id_satuan'         => htmlspecialchars_decode($this->input->post('id_satuan')),
@@ -123,11 +122,11 @@ class Alat extends MY_Controller
                 'barcode'       => $kode
 
             );
-             $this->Mod_alat->insert("alat", $save);
-             echo json_encode(array("status" => TRUE));
-         }
-     }else{
-         $save  = array(
+               $this->Mod_alat->insert("alat", $save);
+               echo json_encode(array("status" => TRUE));
+           }
+       }else{
+           $save  = array(
             'nama_alat'         => htmlspecialchars_decode(ucwords($this->input->post('nama_alat'))),
             'id_merk'         => htmlspecialchars_decode($this->input->post('id_merk')),
             'id_satuan'         => htmlspecialchars_decode($this->input->post('id_satuan')),
@@ -139,14 +138,14 @@ class Alat extends MY_Controller
             'barcode'       => $kode
 
         );
-         $this->Mod_alat->insert("alat", $save);
-         echo json_encode(array("status" => TRUE));
-     }
+           $this->Mod_alat->insert("alat", $save);
+           echo json_encode(array("status" => TRUE));
+       }
 
- }
+   }
 
- public function update()
- {
+   public function update()
+   {
         // $this->_validate();
     $id      = $this->input->post('id');
     if(!empty($_FILES['imagefile']['name'])) {
@@ -164,8 +163,8 @@ class Alat extends MY_Controller
         $this->upload->initialize($config);
 
         if ($this->upload->do_upload('imagefile')){
-           $gambar = $this->upload->data();
-           $save  = array(
+         $gambar = $this->upload->data();
+         $save  = array(
             'nama_alat'         => htmlspecialchars_decode(ucwords($this->input->post('nama_alat'))),
             'id_merk'         => htmlspecialchars_decode($this->input->post('id_merk')),
             'id_satuan'         => htmlspecialchars_decode($this->input->post('id_satuan')),
@@ -177,10 +176,17 @@ class Alat extends MY_Controller
 
         );
 
-           $this->Mod_alat->update($id, $save);
-           echo json_encode(array("status" => TRUE));
-       }
-   }else{
+         $g = $this->Mod_alat->getImage($id)->row();
+
+         if (!empty($g->photo) || $g->photo != NULL) {
+                //hapus gambar yg ada diserver
+            unlink('assets/foto/alat/'.$g->photo);
+        }
+
+        $this->Mod_alat->update($id, $save);
+        echo json_encode(array("status" => TRUE));
+    }
+}else{
     $save  = array(
         'nama_alat'         => htmlspecialchars_decode(ucwords($this->input->post('nama_alat'))),
         'id_merk'         => htmlspecialchars_decode($this->input->post('id_merk')),
@@ -206,6 +212,13 @@ public function edit($id)
 public function delete()
 {
     $id = $this->input->post('id');
+
+    $g = $this->Mod_alat->getImage($id)->row();
+
+    if (!empty($g->photo) || $g->photo != NULL) {
+                //hapus gambar yg ada diserver
+        unlink('assets/foto/alat/'.$g->photo);
+    }
     $this->Mod_alat->delete($id, 'alat');        
     echo json_encode(array("status" => TRUE));
 }
@@ -219,7 +232,7 @@ private function _validate()
     if($this->input->post('nama_alat') == '')
     {
         $data['inputerror'][] = 'nama_alat';
-        $data['error_string'][] = 'Nama alat Tidak Boleh Kosong';
+        $data['error_string'][] = 'Nama Alat Tidak Boleh Kosong';
         $data['status'] = FALSE;
     }
 
@@ -230,4 +243,39 @@ private function _validate()
         exit();
     }
 }
+
+
+
+ public function get_satuan_by_nama()
+    {
+        $nama = $this->input->get('term');
+        $data = $this->Mod_fungsi->get_satuan_by_nama($nama);
+        if (count($data->result()) > 0) {
+
+            foreach ($data->result() as $row){
+                $arr_result[] = array( 'value' => $row->id_satuan, 'label'  => $row->nama_satuan,  );
+            } 
+            echo json_encode($arr_result);
+        }else{
+            $arr_result = array( 'label'  => "Data Tidak di Temukan" );
+            echo json_encode($arr_result);
+        }
+    }
+
+    public function get_merk_by_nama()
+    {
+        $nama = $this->input->get('term');
+        $data = $this->Mod_fungsi->get_merk_by_nama($nama);
+        if (count($data->result()) > 0) {
+
+            foreach ($data->result() as $row){
+                $arr_result[] = array( 'value' => $row->id_merk, 'label'  => $row->nama_merk,  );
+            } 
+            echo json_encode($arr_result);
+        }else{
+            $arr_result = array( 'label'  => "Data Tidak di Temukan" );
+            echo json_encode($arr_result);
+        }
+    }
+    
 }

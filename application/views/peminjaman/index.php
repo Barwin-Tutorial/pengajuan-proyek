@@ -189,7 +189,6 @@ function edit(id){
             success : function (data) {
                 $("#nama_alat").val(data.nama_alat); 
                 $("#id_alat").val(data.id_alat);
-                // $('#scanbar').val('');
                 return false;
             }
 
@@ -284,17 +283,7 @@ $(document).ready(function(){
 })
 
 setTimeout(function() { $('input[name="scanbar"]').focus() }, 2000);
-   /*{
-    source: 'peminjaman/get_alat_bar/?', 
-    change : function (event, ui) {
 
-        $("#nama_alat").val(ui.item.label); 
-        $("#id_alat").val(ui.item.id_alat);
-        $('#scanbar').val('');
-        return false;
-
-    }
-}*/
    $( "#scanbar").change(function () {
         var barcode = $(this).val();
         $.ajax({
@@ -311,6 +300,9 @@ setTimeout(function() { $('input[name="scanbar"]').focus() }, 2000);
 
         })
    })
+
+
+
 });
 </script>
 

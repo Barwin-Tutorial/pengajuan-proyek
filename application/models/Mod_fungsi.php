@@ -54,9 +54,31 @@ function get_alat_bar($barcode)
     $this->db->where('barcode', $barcode);
     return $this->db->get('alat');
 }
-function get_bahan()
+function get_bahan_by_id($id)
 {   
+    $this->db->where('id_bahan', $id);
     return $this->db->get('bahan');
+}
+function get_bahan($nama)
+{   
+    $this->db->like('nama_bahan', $nama);
+    return $this->db->get('bahan');
+}
+function get_bahan_bar($barcode)
+{   
+    $this->db->where('barcode', $barcode);
+    return $this->db->get('bahan');
+}
+
+function get_satuan_by_nama($nama='')
+{   
+    $this->db->like('nama_satuan', $nama);
+    return $this->db->get('satuan');
+}
+function get_merk_by_nama($nama='')
+{   
+    $this->db->like('nama_merk', $nama);
+    return $this->db->get('merk');
 }
 
 }

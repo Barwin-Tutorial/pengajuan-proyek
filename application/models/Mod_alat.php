@@ -132,4 +132,11 @@ class Mod_alat extends CI_Model
 		$this->db->where('id_jurusan', $id_jurusan);
 		return $this->db->get('alat')->result_array();
 	}
+
+	  function getImage($id)
+    {
+        $this->db->select('photo');
+        $this->db->where('photo', $id);
+        return $this->db->get('alat');
+    }
 }

@@ -57,11 +57,8 @@ class Bahan extends MY_Controller
             $row = array();
             $row[] = $pel->barcode;
             $row[] = $pel->nama_bahan;
-            $row[] = $pel->nama_merk;
             $row[] = $pel->stok;
-            $row[] = $pel->nama_satuan;
-            $row[] = $pel->tgl_input;
-            $row[] = $pel->photo;
+            $row[] = "<img src=\"./assets/foto/bahan/".$pel->photo."\" width=\"50px\" height=\"50px\">";
             $row[] = $pel->kondisi;
             $row[] = $pel->nama_ruang;
             $row[] = $pel->keterangan;

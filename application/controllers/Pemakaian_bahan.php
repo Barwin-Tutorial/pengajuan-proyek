@@ -35,9 +35,7 @@ class Pemakaian_bahan extends MY_Controller
             $data['jurusan'] = $this->Mod_fungsi->get_jurusan();
             $data['kondisi'] = $this->Mod_fungsi->get_kondisi();
             $data['satuan'] = $this->Mod_fungsi->get_satuan();
-            $data['bahan'] = $this->Mod_fungsi->get_bahan();
             $data['jabatan'] = $this->Mod_fungsi->get_jabatan();
-            $data['guru'] = $this->Mod_fungsi->get_guru();
             $this->template->load('layoutbackend','pemakaian_bahan/index',$data);
         }else{
             $data['page']=$link;
@@ -81,22 +79,22 @@ class Pemakaian_bahan extends MY_Controller
 
     public function insert()
     {
-       
+
         $id_user = $this->session->userdata['id_user'];
         $id_jurusan = $this->session->userdata['id_jurusan'];
         $save  = array(
             'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
             'id_jabatan'    => $this->input->post('id_jabatan'),
             'id_bahan'    => $this->input->post('id_bahan'),
-            'id_guru'    => $this->input->post('id_guru'),
+            'penanggung_jawab'    => $this->input->post('penanggung_jawab'),
             'id_satuan'    => $this->input->post('id_satuan'),
             'id_kondisi'    => $this->input->post('id_kondisi'),
             'tgl_out'    => $this->input->post('tgl_out'),
             'stok_out'    => $this->input->post('stok_out'),
             'keterangan'    => $this->input->post('keterangan'),
             'id_user'    => $id_user,
-            'id_jurusan' => $id_jurusan
-          
+            'id_jurusan' => $id_jurusan 
+
         );
         $this->Mod_pemakaian_bahan->insert("pemakaian_bahan", $save);
         echo json_encode(array("status" => TRUE));
@@ -107,17 +105,17 @@ class Pemakaian_bahan extends MY_Controller
     {
         // $this->_validate();
         $id      = $this->input->post('id');
-         $save  = array(
+        $save  = array(
             'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
             'id_jabatan'    => $this->input->post('id_jabatan'),
             'id_bahan'    => $this->input->post('id_bahan'),
-            'id_guru'    => $this->input->post('id_guru'),
+            'penanggung_jawab'    => $this->input->post('penanggung_jawab'),
             'id_satuan'    => $this->input->post('id_satuan'),
             'id_kondisi'    => $this->input->post('id_kondisi'),
             'tgl_out'    => $this->input->post('tgl_out'),
             'stok_out'    => $this->input->post('stok_out'),
             'keterangan'    => $this->input->post('keterangan'),
-          
+
         );
 
         $this->Mod_pemakaian_bahan->update($id, $save);
@@ -147,15 +145,44 @@ class Pemakaian_bahan extends MY_Controller
         if($this->input->post('nama') == '')
         {
             $data['inputerror'][] = 'nama';
-            $data['error_string'][] = 'Nama Pemakaian Bahan Tidak Boleh Kosong';
+            $data['error_string'][] = 'Nama Pemakai Bahan Tidak Boleh Kosong';
             $data['status'] = FALSE;
         }
-       
+
 
         if($data['status'] === FALSE)
         {
             echo json_encode($data);
             exit();
+        }
+    }
+
+    public function get_bahan_by_id()
+    {
+        $id = $this->input->post('id_alat');
+        $alat = $this->Mod_fungsi->get_bahan_by_id($id)->row();
+        echo json_encode($alat);
+    }
+    public function get_bahan_bar()
+    {
+        $barcode = $this->input->post('barcode');
+        $data = $this->Mod_fungsi->get_bahan_bar($barcode)->row();
+        echo json_encode($data);
+
+    }
+    public function get_bahan()
+    {
+        $nama = $this->input->get('term');
+        $data = $this->Mod_fungsi->get_bahan($nama);
+        if (count($data->result()) > 0) {
+
+            foreach ($data->result() as $row){
+                $arr_result[] = array( 'value' => $row->id_bahan, 'label'  => $row->nama_bahan,  );
+            } 
+            echo json_encode($arr_result);
+        }else{
+            $arr_result = array( 'label'  => "Data Tidak di Temukan" );
+            echo json_encode($arr_result);
         }
     }
 }

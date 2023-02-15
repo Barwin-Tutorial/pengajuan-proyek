@@ -125,5 +125,17 @@ class Mod_pengembalian extends CI_Model
         $this->db->where('foto', $id);
         return $this->db->get('pengembalian');
     }
+
+    function cek_nama_peminjam($nama='')
+    {
+    	$this->db->like('nama', $nama);
+        $this->db->where('status', '0');
+        return $this->db->get('peminjaman');
+    }
  
+ 	function get_peminjam($id='')
+    {
+        $this->db->where('id_peminjaman', $id);
+        return $this->db->get('peminjaman');
+    }
 }

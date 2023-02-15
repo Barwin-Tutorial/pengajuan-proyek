@@ -22,7 +22,7 @@
                                     <th>Satuan</th>
                                     <th>Kondisi</th>
                                     <th>Tanggal Out</th>
-                                    <th>Guru Mapel</th>
+                                    <th>Penanggung Jawab</th>
                                     <th>Keterangan</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -150,7 +150,7 @@ function add()
     $('.form-group').removeClass('has-error'); // clear error class
     $('.help-block').empty(); // clear error string
     $('#modal_form').modal({backdrop: 'static', keyboard: false}); // show bootstrap modal
-    $('.modal-title').text('Add Pemakaian Bahan'); // Set Title to Bootstrap modal title
+    $('.modal-title').text('Pemakaian Bahan'); // Set Title to Bootstrap modal title
 }
 
 function edit(id){
@@ -178,7 +178,7 @@ function edit(id){
             $('[name="tgl_out"]').val(data.tgl_out);
             $('[name="keterangan"]').val(data.keterangan);
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
-            $('.modal-title').text('Edit Pemakaian Bahan'); // Set title to Bootstrap modal title
+            $('.modal-title').text('Pemakaian Bahan'); // Set title to Bootstrap modal title
 
         },
         error: function (jqXHR, textStatus, errorThrown)
@@ -246,6 +246,51 @@ var loadFile = function(event) {
   var image = document.getElementById('v_image');
   image.src = URL.createObjectURL(event.target.files[0]);
 };
+
+$(document).ready(function(){
+
+   $( "#nama_bahan").autocomplete({
+    source: 'pemakaian_bahan/get_bahan/?', 
+    select : function (event, ui) {
+
+         // display the selected text
+         var value = ui.item.value;
+        $("#id_bahan").val(value); // save selected id to hidden input
+        $("#nama_bahan").val(ui.item.label);
+        return false;
+    },
+    change : function (event, ui) {
+         // display the selected text
+         var value = ui.item.value;
+        $("#id_bahan").val(value); // save selected id to hidden input
+        $("#nama_bahan").val(ui.item.label);
+        return false;
+    }
+})
+
+setTimeout(function() { $('input[name="scanbar"]').focus() }, 2000);
+
+   $( "#scanbar").change(function () {
+        var barcode = $(this).val();
+        $.ajax({
+            url : 'pemakaian_bahan/get_bahan_bar/',
+            data : {barcode:barcode},
+            dataType : 'json',
+            type : 'POST',
+            success : function (data) {
+                $("#nama_bahan").val(data.nama_bahan); 
+                $("#id_bahan").val(data.id_bahan);
+                $('[name="id_satuan"]').val(data.id_satuan);
+                // $('#scanbar').val('');
+                return false;
+            }
+
+        })
+   })
+
+
+
+});
 </script>
 
 
@@ -266,15 +311,18 @@ var loadFile = function(event) {
                 <form action="#" id="form" class="form-horizontal" >
                     <input type="hidden" value="" name="id"/> 
                     <div class="card-body">
+                         <div class="form-group row ">
+                            <label for="id_alat" class="col-sm-3 col-form-label">Barcode</label>
+                            <div class="col-sm-9 kosong">
+                                <input type="text" class="form-control" name="scanbar" id="scanbar" autofocus autocomplete="off" placeholder="Scan Barcode" >
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
                         <div class="form-group row ">
                             <label for="id_bahan" class="col-sm-3 col-form-label">Nama Bahan</label>
                             <div class="col-sm-9 kosong">
-                                <select class="form-control" name="id_bahan" id="id_bahan">
-                                    <option value="" selected="" disabled="">Pilih Bahan</option>
-                                    <?php foreach ($bahan->result() as $a): ?>
-                                        <option value="<?=$a->id_bahan?>"><?php echo $a->nama_bahan; ?></option>
-                                    <?php endforeach ?>
-                                </select>
+                                <input type="text" class="form-control" name="nama_bahan" id="nama_bahan" autofocus autocomplete="off" placeholder="Ketik Nama Bahan" >
+                                <input type="hidden" class="form-control" name="id_bahan" id="id_bahan">
                                 <span class="help-block"></span>
                             </div>
                         </div>
@@ -336,14 +384,10 @@ var loadFile = function(event) {
                             </div>
                         </div>
                         <div class="form-group row ">
-                            <label for="nama" class="col-sm-3 col-form-label">Guru Mapel</label>
+                            <label for="nama" class="col-sm-3 col-form-label">Penanggung Jawab</label>
                             <div class="col-sm-9 kosong">
-                                <select class="form-control" name="id_guru" id="id_guru">
-                                    <option value="" selected="" disabled="">Pilih Guru</option>
-                                    <?php foreach ($guru->result() as $g): ?>
-                                        <option value="<?=$g->id_guru?>"><?php echo $g->nama_guru; ?></option>
-                                    <?php endforeach ?>
-                                </select>
+                                <input type="text" class="form-control" name="penanggung_jawab" id="penanggung_jawab" placeholder="Penanggung Jawab" >
+                               
                                 <span class="help-block"></span>
                             </div>
                         </div>

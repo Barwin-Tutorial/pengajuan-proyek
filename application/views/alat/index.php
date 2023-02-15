@@ -17,13 +17,12 @@
                                 <tr class="bg-purple">
                                     <th>Barcode</th>
                                     <th>Nama Alat</th>
-                                    <th>Merk</th>
                                     <th>Stok</th>
-                                    <th>Satuan</th>
-                                    <th>Tanggal Input</th>
-                                    <th>Photo</th>
+                                    <th>Foto</th>
                                     <th>Kondisi</th>
                                     <th>Ruang</th>
+                                    <th>Dana</th>
+                                    <th>Tahun Masuk</th>
                                     <th>Keterangan</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -247,16 +246,25 @@ var loadFile = function(event) {
   image.src = URL.createObjectURL(event.target.files[0]);
 };
 $(function () {
-    //Initialize Select2 Elements
-    /*$('.select2x').select2({
-        
-        width: '100%',
-        dropdownParent: $("#modal_form")
     
-    })*/
-    $("select:not(.select2x)").select2();
+    $(".select").select2();
   })
 
+$(document).ready(function(){
+
+   $( "#nama_merk").autocomplete({
+    source: 'alat/get_merk_by_nama/?', 
+    select : function (event, ui) {
+
+         // display the selected text
+         var value = ui.item.value;
+        $("#id_merk").val(value); // save selected id to hidden input
+        $("#nama_merk").val(ui.item.label);
+        return false;
+    }
+})
+
+});
 </script>
 
 
@@ -267,7 +275,7 @@ $(function () {
         <div class="modal-content ">
 
             <div class="modal-header">
-                <h3 class="modal-title">alat Form</h3>
+                <h3 class="modal-title">Alat Form</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -277,14 +285,7 @@ $(function () {
                 <form action="#" id="form" class="form-horizontal" >
                     <input type="hidden" value="" name="id"/> 
                     <div class="card-body">
-                        <div class="row">
-                            <select class="form-control select2x" style="width: 100%; height: 100%;" name="id_merk" id="id_merk" >
-                                    <option value="" disabled="" selected="">Pilih Merk</option>
-                                    <?php foreach ($merk->result() as $m): ?>
-                                     <option value="<?=$m->id_merk?>"><?php echo $m->nama_merk; ?></option>
-                                 <?php endforeach ?>
-                             </select>
-                        </div>
+                        
                         <div class="form-group row ">
                             <label for="nama" class="col-sm-3 col-form-label">Nama Alat</label>
                             <div class="col-sm-9 kosong">
@@ -296,24 +297,17 @@ $(function () {
 
                             <label for="nama" class="col-sm-3 col-form-label">Merk</label>
                             <div class="col-sm-9 kosong">
-                                <select class="form-control select2x" name="id_merk" id="id_merk">
-                                    <option value="" disabled="" selected="">Pilih Merk</option>
-                                    <?php foreach ($merk->result() as $m): ?>
-                                     <option value="<?=$m->id_merk?>"><?php echo $m->nama_merk; ?></option>
-                                 <?php endforeach ?>
-                             </select>
+                                <input type="hidden" name="id_merk" id="id_merk">
+                                <input type="text" class="form-control" name="nama_merk" id="nama_merk" placeholder="Ketik Merk" >
                              <span class="help-block"></span>
                          </div>
                      </div>
                      <div class="form-group row ">
                         <label for="nama" class="col-sm-3 col-form-label">Satuan</label>
                         <div class="col-sm-9 kosong">
-                            <select class="form-control" name="id_satuan" id="id_satuan">
-                                <option value="" disabled="" selected="">Pilih Satuan</option>
-                                <?php foreach ($satuan->result() as $s): ?>
-                                 <option value="<?=$s->id?>"><?php echo $s->nama_satuan; ?></option>
-                             <?php endforeach ?>
-                         </select>
+                            <input type="hidden" name="id_satuan" id="id_satuan">
+                            <input type="text" class="form-control" name="nama_satuan" id="nama_satuan" placeholder="Ketik Satuan" >
+                            
                          <span class="help-block"></span>
                      </div>
                  </div>

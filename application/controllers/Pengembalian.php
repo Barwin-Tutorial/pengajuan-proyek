@@ -11,7 +11,7 @@ class Pengembalian extends MY_Controller
     function __construct()
     {
         parent::__construct();
-        $this->load->model('Mod_pengembalian');
+        $this->load->model(array('Mod_pengembalian','Mod_peminjaman'));
         // $this->load->model('dashboard/Mod_dashboard');
     }
 
@@ -35,9 +35,7 @@ class Pengembalian extends MY_Controller
             $data['jurusan'] = $this->Mod_fungsi->get_jurusan();
             $data['kondisi'] = $this->Mod_fungsi->get_kondisi();
             $data['satuan'] = $this->Mod_fungsi->get_satuan();
-            // $data['alat'] = $this->Mod_fungsi->get_alat();
             $data['jabatan'] = $this->Mod_fungsi->get_jabatan();
-            $data['guru'] = $this->Mod_fungsi->get_guru();
             $this->template->load('layoutbackend','pengembalian/index',$data);
         }else{
             $data['page']=$link;
@@ -83,6 +81,9 @@ class Pengembalian extends MY_Controller
 
         $id_user = $this->session->userdata['id_user'];
         $id_jurusan = $this->session->userdata['id_jurusan'];
+
+        
+
         if(!empty($_FILES['imagefile']['name'])) {
         // $this->_validate();
             $id = $this->input->post('id_user');
@@ -133,13 +134,16 @@ class Pengembalian extends MY_Controller
         $this->Mod_pengembalian->insert("pengembalian", $save);
         echo json_encode(array("status" => TRUE));
     }
-
+    $id_peminjaman = $this->input->post('id_peminjaman');
+    $save1 = array('status' => '1', );
+    $this->Mod_peminjaman->update($id_peminjaman, $save1);
 }
 
 public function update()
 {
         // $this->_validate();
     $id      = $this->input->post('id');
+
     if(!empty($_FILES['imagefile']['name'])) {
         // $this->_validate();
         $id = $this->input->post('id_user');
@@ -210,6 +214,12 @@ public function edit($id)
 public function delete()
 {
     $id = $this->input->post('id');
+    $g = $this->Mod_pengembalian->getImage($id)->row();
+
+    if (!empty($g->foto) || $g->foto != NULL) {
+                //hapus gambar yg ada diserver
+        unlink('assets/foto/kembali/'.$g->foto);
+    }
     $this->Mod_pengembalian->delete($id, 'pengembalian');        
     echo json_encode(array("status" => TRUE));
 }
@@ -256,6 +266,30 @@ public function get_alat()
         $arr_result = array( 'label'  => "Data Tidak di Temukan" );
         echo json_encode($arr_result);
     }
+}
+
+public function cek_peminjam_alat()
+{
+    $nama = $this->input->get('term');
+    $data = $this->Mod_pengembalian->cek_nama_peminjam($nama);
+    if (count($data->result()) > 0) {
+
+        foreach ($data->result() as $row){
+            $arr_result[] = array( 'value' => $row->id_peminjaman, 'label'  => $row->nama, 'id_alat' => $row->id_alat, 'id_jabatan' => $row->id_jabatan, 'stok_out' => $row->stok_out,'id_satuan' => $row->id_satuan, 'keterangan' => $row->keterangan, 'penanggung_jawab' => $row->penanggung_jawab, );
+        } 
+        echo json_encode($arr_result);
+    }else{
+        $arr_result = array( 'label'  => "Peminjam Tidak di Temukan" );
+        echo json_encode($arr_result);
+    }
+}
+
+public function get_peminjam()
+{
+    $id = $this->input->post('id');
+    $data = $this->Mod_pengembalian->get_peminjam($id)->row();
+    echo json_encode($data);
+
 }
 
 

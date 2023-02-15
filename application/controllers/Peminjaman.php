@@ -35,9 +35,7 @@ class Peminjaman extends MY_Controller
             $data['jurusan'] = $this->Mod_fungsi->get_jurusan();
             $data['kondisi'] = $this->Mod_fungsi->get_kondisi();
             $data['satuan'] = $this->Mod_fungsi->get_satuan();
-            // $data['alat'] = $this->Mod_fungsi->get_alat();
             $data['jabatan'] = $this->Mod_fungsi->get_jabatan();
-            $data['guru'] = $this->Mod_fungsi->get_guru();
             $this->template->load('layoutbackend','peminjaman/index',$data);
         }else{
             $data['page']=$link;
@@ -56,9 +54,9 @@ class Peminjaman extends MY_Controller
 
             $no++;
             $row = array();
+            $row[] = $pel->nama_alat;
             $row[] = $pel->nama;
             $row[] = $pel->nama_jabatan;
-            $row[] = $pel->nama_alat;
             $row[] = $pel->stok_out;
             $row[] = $pel->nama_satuan;
             $row[] = $pel->kondisi;
@@ -105,7 +103,6 @@ class Peminjaman extends MY_Controller
                 'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
                 'id_jabatan'    => $this->input->post('id_jabatan'),
                 'id_alat'    => $this->input->post('id_alat'),
-            // 'id_guru'    => $this->input->post('id_guru'),
                 'penanggung_jawab'    => $this->input->post('penanggung_jawab'),
                 'id_satuan'    => $this->input->post('id_satuan'),
                 'id_kondisi'    => $this->input->post('id_kondisi'),
@@ -125,7 +122,6 @@ class Peminjaman extends MY_Controller
                 'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
                 'id_jabatan'    => $this->input->post('id_jabatan'),
                 'id_alat'    => $this->input->post('id_alat'),
-            // 'id_guru'    => $this->input->post('id_guru'),
                 'penanggung_jawab'    => $this->input->post('penanggung_jawab'),
                 'id_satuan'    => $this->input->post('id_satuan'),
                 'id_kondisi'    => $this->input->post('id_kondisi'),
@@ -173,7 +169,7 @@ class Peminjaman extends MY_Controller
                 'tgl_out'    => $this->input->post('tgl_out'),
                 'stok_out'    => $this->input->post('stok_out'),
                 'keterangan'    => $this->input->post('keterangan'),
-
+                'foto'         => $gambar['file_name'],
             );
 
              $g = $this->Mod_peminjaman->getImage($id)->row();
@@ -207,12 +203,7 @@ class Peminjaman extends MY_Controller
 
 }
 
-public function get_alat_by_id()
-{
-    $id = $this->input->post('id_alat');
-    $alat = $this->Mod_fungsi->get_alat_by_id($id)->row();
-    echo json_encode($alat);
-}
+
 public function edit($id)
 {
     $data = $this->Mod_peminjaman->get($id);
@@ -222,6 +213,12 @@ public function edit($id)
 public function delete()
 {
     $id = $this->input->post('id');
+    $g = $this->Mod_peminjaman->getImage($id)->row();
+
+    if (!empty($g->foto) || $g->foto != NULL) {
+                //hapus gambar yg ada diserver
+        unlink('assets/foto/pinjam/'.$g->foto);
+    }
     $this->Mod_peminjaman->delete($id, 'peminjaman');        
     echo json_encode(array("status" => TRUE));
 }
@@ -247,6 +244,12 @@ private function _validate()
     }
 }
 
+public function get_alat_by_id()
+{
+    $id = $this->input->post('id_alat');
+    $alat = $this->Mod_fungsi->get_alat_by_id($id)->row();
+    echo json_encode($alat);
+}
 public function get_alat_bar()
 {
     $barcode = $this->input->post('barcode');

@@ -295,6 +295,62 @@ setTimeout(function() { $('input[name="scanbar"]').focus() }, 3000);
 
         })
    })
+
+  $( "#nama").autocomplete({
+    source: 'pengembalian/cek_peminjam_alat/?', 
+    select : function (event, ui) {
+
+         // display the selected text
+         var value = ui.item.value;
+        $('[name="id_peminjaman"]').val(value); 
+        $('[name="nama"]').val(ui.item.nama);
+        $('[name="id_alat"]').val(ui.item.id_alat);
+        $('[name="id_jabatan"]').val(ui.item.id_jabatan);
+        $('[name="id_satuan"]').val(ui.item.id_satuan);
+        $('[name="stok_in"]').val(ui.item.stok_out);
+        $('[name="keterangan"]').val(ui.item.keterangan);
+        $("#nama").val(ui.item.label);
+        $.ajax({
+            url : 'pengembalian/get_alat_by_id/',
+            data : {id_alat:ui.item.id_alat},
+            dataType : 'json',
+            type : 'POST',
+            success : function (data) {
+                $("#nama_alat").val(data.nama_alat); 
+                $("#id_alat").val(data.id_alat);
+                return false;
+            }
+
+        })
+        return false;
+    },
+    change : function (event, ui) {
+         // display the selected text
+         var value = ui.item.value;
+        $('[name="id_peminjaman"]').val(value); // save selected id to hidden input
+        $('[name="nama"]').val(ui.item.nama);
+        $('[name="id_alat"]').val(ui.item.id_alat);
+        $('[name="nama_alat"]').val(ui.item.nama_alat);
+        $('[name="id_jabatan"]').val(ui.item.id_jabatan);
+        $('[name="id_satuan"]').val(ui.item.id_satuan);
+        $('[name="stok_in"]').val(ui.item.stok_out);
+        $('[name="keterangan"]').val(ui.item.keterangan);
+        $("#nama").val(ui.item.label);
+        $.ajax({
+            url : 'pengembalian/get_alat_by_id/',
+            data : {id_alat:ui.item.id_alat},
+            dataType : 'json',
+            type : 'POST',
+            success : function (data) {
+                $("#nama_alat").val(data.nama_alat); 
+                $("#id_alat").val(data.id_alat);
+                return false;
+            }
+
+        })
+        return false;
+    }
+})
 })
 </script>
 
@@ -315,6 +371,7 @@ setTimeout(function() { $('input[name="scanbar"]').focus() }, 3000);
             <div class="modal-body form">
                 <form action="#" id="form" class="form-horizontal" >
                     <input type="hidden" value="" name="id"/> 
+                    <input type="hidden" value="" name="id_peminjaman"/> 
                     <div class="card-body">
                          <div class="form-group row ">
                             <label for="id_alat" class="col-sm-3 col-form-label">Barcode</label>

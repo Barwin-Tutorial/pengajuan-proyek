@@ -17,12 +17,9 @@
                                 <tr class="bg-purple">
                                     <th>Barcode</th>
                                     <th>Nama Bahan</th>
-                                    <th>Merk</th>
                                     <th>Stok</th>
-                                    <th>Satuan</th>
-                                    <th>Tanggal Input</th>
-                                    <th>Photo</th>
-                                    <th>Kondisi</th>
+                                    <th>Foto</th>
+                                    <!-- <th>Kondisi</th> -->
                                     <th>Ruang</th>
                                     <th>Keterangan</th>
                                     <th>Aksi</th>
