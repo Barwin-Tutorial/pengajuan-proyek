@@ -25,11 +25,10 @@ class Mod_pemakaian_bahan extends CI_Model
 		if ($level=='6' || $level=='9') {
 			$this->db->where('a.id_jurusan',$id_jurusan);
 		}
-		$this->db->select('a.*,b.nama_bahan,c.nama_satuan,d.nama_jabatan,e.nama_guru,f.kondisi');
+		$this->db->select('a.*,b.nama_bahan,c.nama_satuan,d.nama_jabatan,f.kondisi');
 		$this->db->join('bahan b','a.id_bahan=b.id_bahan');
 		$this->db->join('satuan c','a.id_satuan=c.id');
 		$this->db->join('jabatan d', 'a.id_jabatan=d.id_jabatan');
-		$this->db->join('guru e', 'a.id_guru=e.id_guru');
 		$this->db->join('kondisi f', 'a.id_kondisi=f.id_kondisi');
 		$this->db->from('pemakaian_bahan a');
 		$i = 0;
@@ -92,7 +91,6 @@ else
 		$this->db->join('bahan b','a.id_bahan=b.id_bahan');
 		$this->db->join('satuan c','a.id_satuan=c.id');
 		$this->db->join('jabatan d', 'a.id_jabatan=d.id_jabatan');
-		$this->db->join('guru e', 'a.id_guru=e.id_guru');
 		$this->db->from('pemakaian_bahan a');
 		return $this->db->count_all_results();
 	}

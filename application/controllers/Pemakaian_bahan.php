@@ -61,7 +61,7 @@ class Pemakaian_bahan extends MY_Controller
             $row[] = $pel->nama_satuan;
             $row[] = $pel->kondisi;
             $row[] = $pel->tgl_out;
-            $row[] = $pel->nama_guru;
+            $row[] = $pel->penanggung_jawab;
             $row[] = $pel->keterangan;
             $row[] = "<a class=\"btn btn-xs btn-outline-primary edit\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit('$pel->id_pemakaian_bahan')\"><i class=\"fas fa-edit\"></i></a><a class=\"btn btn-xs btn-outline-danger delete\" href=\"javascript:void(0)\" title=\"Delete\"  onclick=\"hapus('$pel->id_pemakaian_bahan')\"><i class=\"fas fa-trash\"></i></a>";
             $data[] = $row;

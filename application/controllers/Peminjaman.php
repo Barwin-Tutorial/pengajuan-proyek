@@ -187,14 +187,12 @@ class Peminjaman extends MY_Controller
                 'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
                 'id_jabatan'    => $this->input->post('id_jabatan'),
                 'id_alat'    => $this->input->post('id_alat'),
-                // 'id_guru'    => $this->input->post('id_guru'),
                 'penanggung_jawab'    => $this->input->post('penanggung_jawab'),
                 'id_satuan'    => $this->input->post('id_satuan'),
                 'id_kondisi'    => $this->input->post('id_kondisi'),
                 'tgl_out'    => $this->input->post('tgl_out'),
                 'stok_out'    => $this->input->post('stok_out'),
                 'keterangan'    => $this->input->post('keterangan'),
-                'foto'         => $gambar['file_name'],
             );
 
              $this->Mod_peminjaman->update($id, $save);
