@@ -55,7 +55,7 @@ class Bahan extends MY_Controller
 
             $no++;
             $row = array();
-            $row[] = "<a download=\"".$pel->barcode.".png"."\" href=\"./assets/foto/bahan/\" title=\"Download QR Code\">
+            $row[] = "<a download href=\"./assets/foto/bahan/".$pel->barcode.".png"."\" title=\"Download QR Code\">
                 <img alt=\"Download QR Code\" src=\"./assets/foto/bahan/".$pel->barcode.".png"."\" width=\"50px\" height=\"50px\"> </a>";
             $row[] = $pel->nama_bahan;
             $row[] = $pel->stok;
@@ -111,7 +111,7 @@ class Bahan extends MY_Controller
                $gambar = $this->upload->data();
                $save  = array(
                 'nama_bahan'         => htmlspecialchars_decode(ucwords($this->input->post('nama_bahan'))),
-                'id_merk'         => htmlspecialchars_decode($this->input->post('id_merk')),
+                'merk'         => htmlspecialchars_decode($this->input->post('merk')),
                 'id_satuan'         => htmlspecialchars_decode($this->input->post('id_satuan')),
                 'stok'         => htmlspecialchars_decode($this->input->post('stok')),
                 /*'id_kondisi'         => htmlspecialchars_decode($this->input->post('id_kondisi')),
@@ -129,11 +129,9 @@ class Bahan extends MY_Controller
        }else{
            $save  = array(
             'nama_bahan'         => htmlspecialchars_decode(ucwords($this->input->post('nama_bahan'))),
-            'id_merk'         => htmlspecialchars_decode($this->input->post('id_merk')),
+            'merk'         => htmlspecialchars_decode($this->input->post('merk')),
             'id_satuan'         => htmlspecialchars_decode($this->input->post('id_satuan')),
             'stok'         => htmlspecialchars_decode($this->input->post('stok')),
-            /*'id_kondisi'         => htmlspecialchars_decode($this->input->post('id_kondisi')),
-            'id_ruang'         => htmlspecialchars_decode($this->input->post('id_ruang')),*/
             'keterangan'         => htmlspecialchars_decode($this->input->post('keterangan')),
             'id_jurusan'    => $id_jurusan,
             'barcode'       => $kode
@@ -184,11 +182,9 @@ class Bahan extends MY_Controller
          $gambar = $this->upload->data();
          $save  = array(
             'nama_bahan'         => htmlspecialchars_decode(ucwords($this->input->post('nama_bahan'))),
-            'id_merk'         => htmlspecialchars_decode($this->input->post('id_merk')),
+            'merk'         => htmlspecialchars_decode($this->input->post('merk')),
             'id_satuan'         => htmlspecialchars_decode($this->input->post('id_satuan')),
             'stok'         => htmlspecialchars_decode($this->input->post('stok')),
-            /*'id_kondisi'         => htmlspecialchars_decode($this->input->post('id_kondisi')),
-            'id_ruang'         => htmlspecialchars_decode($this->input->post('id_ruang')),*/
             'keterangan'         => htmlspecialchars_decode($this->input->post('keterangan')),
             'photo'         => $gambar['file_name']
 
@@ -207,11 +203,9 @@ class Bahan extends MY_Controller
 }else{
     $save  = array(
         'nama_bahan'         => htmlspecialchars_decode(ucwords($this->input->post('nama_bahan'))),
-        'id_merk'         => htmlspecialchars_decode($this->input->post('id_merk')),
+        'merk'         => htmlspecialchars_decode($this->input->post('merk')),
         'id_satuan'         => htmlspecialchars_decode($this->input->post('id_satuan')),
         'stok'         => htmlspecialchars_decode($this->input->post('stok')),
-        /*'id_kondisi'         => htmlspecialchars_decode($this->input->post('id_kondisi')),
-        'id_ruang'         => htmlspecialchars_decode($this->input->post('id_ruang')),*/
         'keterangan'         => htmlspecialchars_decode($this->input->post('keterangan')),
 
     );

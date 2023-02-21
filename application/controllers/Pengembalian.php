@@ -107,6 +107,7 @@ class Pengembalian extends MY_Controller
                 'id_satuan'    => $this->input->post('id_satuan'),
                 'id_kondisi'    => $this->input->post('id_kondisi'),
                 'tgl_in'    => $this->input->post('tgl_in'),
+                'tgl_out'    => $this->input->post('tgl_out'),
                 'stok_in'    => $this->input->post('stok_in'),
                 'keterangan'    => $this->input->post('keterangan'),
                 'id_user'    => $id_user,
@@ -125,6 +126,7 @@ class Pengembalian extends MY_Controller
             'id_satuan'    => $this->input->post('id_satuan'),
             'id_kondisi'    => $this->input->post('id_kondisi'),
             'tgl_in'    => $this->input->post('tgl_in'),
+            'tgl_out'    => $this->input->post('tgl_out'),
             'stok_in'    => $this->input->post('stok_in'),
             'keterangan'    => $this->input->post('keterangan'),
             'id_user'    => $id_user,
@@ -166,6 +168,7 @@ public function update()
                 'id_alat'    => $this->input->post('id_alat'),
                 'id_satuan'    => $this->input->post('id_satuan'),
                 'id_kondisi'    => $this->input->post('id_kondisi'),
+                'tgl_out'    => $this->input->post('tgl_out'),
                 'tgl_in'    => $this->input->post('tgl_in'),
                 'stok_in'    => $this->input->post('stok_in'),
                 'keterangan'    => $this->input->post('keterangan'),
@@ -188,6 +191,7 @@ public function update()
             'id_alat'    => $this->input->post('id_alat'),
             'id_satuan'    => $this->input->post('id_satuan'),
             'id_kondisi'    => $this->input->post('id_kondisi'),
+            'tgl_out'    => $this->input->post('tgl_out'),
             'tgl_in'    => $this->input->post('tgl_in'),
             'stok_in'    => $this->input->post('stok_in'),
             'keterangan'    => $this->input->post('keterangan'),
@@ -275,7 +279,7 @@ public function cek_peminjam_alat()
     if (count($data->result()) > 0) {
 
         foreach ($data->result() as $row){
-            $arr_result[] = array( 'value' => $row->id_peminjaman, 'label'  => $row->nama, 'id_alat' => $row->id_alat, 'id_jabatan' => $row->id_jabatan, 'stok_out' => $row->stok_out,'id_satuan' => $row->id_satuan, 'keterangan' => $row->keterangan, 'penanggung_jawab' => $row->penanggung_jawab, );
+            $arr_result[] = array( 'value' => $row->id_peminjaman, 'label'  => $row->nama, 'id_alat' => $row->id_alat, 'id_jabatan' => $row->id_jabatan, 'stok_out' => $row->stok_out,'id_satuan' => $row->id_satuan, 'keterangan' => $row->keterangan, 'penanggung_jawab' => $row->penanggung_jawab, 'tgl_out' => $row->tgl_out);
         } 
         echo json_encode($arr_result);
     }else{

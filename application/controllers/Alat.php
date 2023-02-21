@@ -57,14 +57,13 @@ class Alat extends MY_Controller
 
             $no++;
             $row = array();
-            $row[] = "<a download=\"".$pel->barcode.".png"."\" href=\"./assets/foto/alat/\" title=\"Download QR Code\">
+            $row[] = "<a  href=\"./assets/foto/alat/".$pel->barcode.".png"."\" title=\"Download QR Code\" download>
             <img alt=\"Download QR Code\" src=\"./assets/foto/alat/".$pel->barcode.".png"."\" width=\"50px\" height=\"50px\"> </a>";
             $row[] = $pel->nama_alat;
             $row[] = $pel->stok;
             $row[] = "<img src=\"./assets/foto/alat/".$pel->photo."\" width=\"50px\" height=\"50px\">";
             $row[] = $pel->kondisi;
             $row[] = $pel->nama_ruang;
-            $row[] = $pel->dana;
             $row[] = $pel->tahun;
             $row[] = $pel->keterangan;
             $row[] = "<a class=\"btn btn-xs btn-outline-primary edit\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit('$pel->id_alat')\"><i class=\"fas fa-edit\"></i></a><a class=\"btn btn-xs btn-outline-danger delete\" href=\"javascript:void(0)\" title=\"Delete\"  onclick=\"hapus('$pel->id_alat')\"><i class=\"fas fa-trash\"></i></a>";
@@ -114,16 +113,16 @@ class Alat extends MY_Controller
                $gambar = $this->upload->data();
                $save  = array(
                 'nama_alat'         => htmlspecialchars_decode(ucwords($this->input->post('nama_alat'))),
-                'id_merk'         => htmlspecialchars_decode($this->input->post('id_merk')),
+                'merk'         => htmlspecialchars_decode($this->input->post('nama_merk')),
                 'id_satuan'         => htmlspecialchars_decode($this->input->post('id_satuan')),
                 'stok'         => htmlspecialchars_decode($this->input->post('stok')),
                 'id_kondisi'         => htmlspecialchars_decode($this->input->post('id_kondisi')),
                 'id_ruang'         => htmlspecialchars_decode($this->input->post('id_ruang')),
                 'keterangan'         => htmlspecialchars_decode($this->input->post('keterangan')),
-                'id_tahun'         => htmlspecialchars_decode($this->input->post('id_tahun')),
-                'id_dana'         => htmlspecialchars_decode($this->input->post('id_dana')),
+                'tahun'         => $this->input->post('tahun'),
                 'photo'         => $gambar['file_name'],
                 'id_jurusan'    => $id_jurusan,
+                'id_user'       => $id_user,
                 'barcode'       => $kode
 
             );
@@ -133,15 +132,15 @@ class Alat extends MY_Controller
        }else{
            $save  = array(
             'nama_alat'         => htmlspecialchars_decode(ucwords($this->input->post('nama_alat'))),
-            'id_merk'         => htmlspecialchars_decode($this->input->post('id_merk')),
+             'merk'         => htmlspecialchars_decode($this->input->post('nama_merk')),
             'id_satuan'         => htmlspecialchars_decode($this->input->post('id_satuan')),
             'stok'         => htmlspecialchars_decode($this->input->post('stok')),
             'id_kondisi'         => htmlspecialchars_decode($this->input->post('id_kondisi')),
             'id_ruang'         => htmlspecialchars_decode($this->input->post('id_ruang')),
             'keterangan'         => htmlspecialchars_decode($this->input->post('keterangan')),
-            'id_tahun'         => htmlspecialchars_decode($this->input->post('id_tahun')),
-            'id_dana'         => htmlspecialchars_decode($this->input->post('id_dana')),
+            'tahun'         => $this->input->post('tahun'),
             'id_jurusan'    => $id_jurusan,
+            'id_user'       => $id_user,
             'barcode'       => $kode
 
         );
@@ -189,14 +188,13 @@ class Alat extends MY_Controller
          $gambar = $this->upload->data();
          $save  = array(
             'nama_alat'         => htmlspecialchars_decode(ucwords($this->input->post('nama_alat'))),
-            'id_merk'         => htmlspecialchars_decode($this->input->post('id_merk')),
+            'merk'         => htmlspecialchars_decode($this->input->post('nama_merk')),
             'id_satuan'         => htmlspecialchars_decode($this->input->post('id_satuan')),
             'stok'         => htmlspecialchars_decode($this->input->post('stok')),
             'id_kondisi'         => htmlspecialchars_decode($this->input->post('id_kondisi')),
             'id_ruang'         => htmlspecialchars_decode($this->input->post('id_ruang')),
             'keterangan'         => htmlspecialchars_decode($this->input->post('keterangan')),
-            'id_tahun'         => htmlspecialchars_decode($this->input->post('id_tahun')),
-            'id_dana'         => htmlspecialchars_decode($this->input->post('id_dana')),
+            'tahun'         => $this->input->post('tahun'),
             'photo'         => $gambar['file_name']
 
         );
@@ -214,14 +212,13 @@ class Alat extends MY_Controller
 }else{
     $save  = array(
         'nama_alat'         => htmlspecialchars_decode(ucwords($this->input->post('nama_alat'))),
-        'id_merk'         => htmlspecialchars_decode($this->input->post('id_merk')),
+        'merk'         => htmlspecialchars_decode($this->input->post('nama_merk')),
         'id_satuan'         => htmlspecialchars_decode($this->input->post('id_satuan')),
         'stok'         => htmlspecialchars_decode($this->input->post('stok')),
         'id_kondisi'         => htmlspecialchars_decode($this->input->post('id_kondisi')),
         'id_ruang'         => htmlspecialchars_decode($this->input->post('id_ruang')),
         'keterangan'         => htmlspecialchars_decode($this->input->post('keterangan')),
-        'id_tahun'         => $this->input->post('id_tahun'),
-        'id_dana'         => $this->input->post('id_dana'),
+        'tahun'         => $this->input->post('tahun'),
 
     );
     $this->Mod_alat->update($id, $save);

@@ -21,7 +21,6 @@
                                     <th>Foto</th>
                                     <th>Kondisi</th>
                                     <th>Ruang</th>
-                                    <th>Dana</th>
                                     <th>Tahun Masuk</th>
                                     <th>Keterangan</th>
                                     <th>Aksi</th>
@@ -309,7 +308,6 @@ $(document).ready(function(){
 
                             <label for="nama" class="col-sm-3 col-form-label">Merk</label>
                             <div class="col-sm-9 kosong">
-                                <input type="hidden" name="id_merk" id="id_merk">
                                 <input type="text" class="form-control" name="nama_merk" id="nama_merk" placeholder="Ketik Merk" >
                              <span class="help-block"></span>
                          </div>
@@ -362,27 +360,11 @@ $(document).ready(function(){
                         <span class="help-block"></span>
                     </div>
                 </div>
-                <div class="form-group row ">
-                    <label for="nama" class="col-sm-3 col-form-label">Dana</label>
-                    <div class="col-sm-9 kosong">
-                        <select class="form-control" name="id_dana" id="id_dana">
-                                <option value="" disabled="" selected="">Pilih Dana</option>
-                                <?php foreach ($dana->result() as $r): ?>
-                                 <option value="<?=$r->id_dana?>"><?php echo $r->dana; ?></option>
-                             <?php endforeach ?>
-                         </select>
-                        <span class="help-block"></span>
-                    </div>
-                </div>
+                
                 <div class="form-group row ">
                     <label for="nama" class="col-sm-3 col-form-label">Tahun Masuk</label>
                     <div class="col-sm-9 kosong">
-                        <select class="form-control" name="id_tahun" id="id_tahun">
-                                <option value="" disabled="" selected="">Pilih Tahun Masuk</option>
-                                <?php foreach ($tahun->result() as $r): ?>
-                                 <option value="<?=$r->id_tahun?>"><?php echo $r->tahun; ?></option>
-                             <?php endforeach ?>
-                         </select>
+                        <input type="text" class="form-control" name="tahun" id="tahun" placeholder="Tahun Masuk" >
                         <span class="help-block"></span>
                     </div>
                 </div>

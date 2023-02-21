@@ -10,7 +10,7 @@
               <div class="inner">
                 <h3><?php echo $jml_alat; ?></h3>
 
-                <p>Bahan</p>
+                <p>Alat</p>
               </div>
               <div class="icon">
                 <i class="ion ion-bag"></i>
@@ -25,7 +25,7 @@
               <div class="inner">
                 <h3><?php echo $jml_bahan; ?></h3>
 
-                <p>Alat</p>
+                <p>Bahan</p>
               </div>
               <div class="icon">
                 <i class="ion ion-stats-bars"></i>

@@ -15,13 +15,13 @@
                         <table id="tbl_peminjaman" class="table table-bordered table-striped table-hover nowrap">
                             <thead>
                                 <tr class="bg-purple">
-                                    <th>Nama</th>
+                                    <th>Nama Peminjam</th>
                                     <th>Jabatan</th>
                                     <th>Nama Alat</th>
                                     <th>Stok Out</th>
                                     <th>Satuan</th>
                                     <th>Kondisi</th>
-                                    <th>Tanggal Out</th>
+                                    <th>Tanggal Pinjam</th>
                                     <th>Penanggung Jawab</th>
                                     <th>Keterangan</th>
                                     <th>Aksi</th>
@@ -182,17 +182,17 @@ function edit(id){
             $('.modal-title').text('Peminjaman'); // Set title to Bootstrap modal title
             setTimeout(function() { $('input[name="scanbar"]').focus() }, 2000);
             $.ajax({
-            url : 'peminjaman/get_alat_by_id/',
-            data : {id_alat:data.id_alat},
-            dataType : 'json',
-            type : 'POST',
-            success : function (data) {
-                $("#nama_alat").val(data.nama_alat); 
-                $("#id_alat").val(data.id_alat);
-                return false;
-            }
+                url : 'peminjaman/get_alat_by_id/',
+                data : {id_alat:data.id_alat},
+                dataType : 'json',
+                type : 'POST',
+                success : function (data) {
+                    $("#nama_alat").val(data.nama_alat); 
+                    $("#id_alat").val(data.id_alat);
+                    return false;
+                }
 
-        })
+            })
         },
         error: function (jqXHR, textStatus, errorThrown)
         {
@@ -203,6 +203,8 @@ function edit(id){
 
 function save()
 {
+
+
     $('#btnSave').text('saving...'); //change button text
     $('#btnSave').attr('disabled',true); //set button disable 
     if(save_method == 'add') {
@@ -210,7 +212,23 @@ function save()
     } else {
         url = "<?php echo site_url('peminjaman/update')?>";
     }
-    var formdata = new FormData($('#form')[0]);
+
+    let stok =$('[name="stok"]').val();
+    let stok_out=$('[name="stok_out"]').val();
+
+    if (stok_out > stok) {
+     Swal.fire({
+        title : 'Peringatan!',
+        html :'Stok Saat Ini = '+stok+'<br> Anda Menginput = '+stok_out,
+        icon : 'warning'
+    });
+     $('[name="stok_out"]').val(stok);
+     $('#btnSave').text('save'); //change button text
+            $('#btnSave').attr('disabled',false); //set button enable 
+            return false;
+        }
+
+        var formdata = new FormData($('#form')[0]);
     // ajax adding data to database
     $.ajax({
         url : url,
@@ -271,37 +289,59 @@ $(document).ready(function(){
          var value = ui.item.value;
         $("#id_alat").val(value); // save selected id to hidden input
         $("#nama_alat").val(ui.item.label);
+        $('[name="id_satuan"]').val(ui.item.id_satuan);
+        $('[name="id_kondisi"]').val(ui.item.id_kondisi);
+        $('[name="stok"]').val(ui.item.stok);
+        $('[name="stok_out"]').val(ui.item.stok);
         return false;
-    },
+    }/*,
     change : function (event, ui) {
          // display the selected text
          var value = ui.item.value;
         $("#id_alat").val(value); // save selected id to hidden input
         $("#nama_alat").val(ui.item.label);
+        $('[name="id_satuan"]').val(ui.item.id_satuan);
+        $('[name="id_kondisi"]').val(ui.item.id_kondisi);
+        $('[name="stok"]').val(ui.item.stok);
+        $('[name="stok_out"]').val(ui.item.stok);
         return false;
-    }
+    }*/
 })
 
-setTimeout(function() { $('input[name="scanbar"]').focus() }, 2000);
+   setTimeout(function() { $('input[name="scanbar"]').focus() }, 2000);
 
    $( "#scanbar").change(function () {
-        var barcode = $(this).val();
-        $.ajax({
-            url : 'peminjaman/get_alat_bar/',
-            data : {barcode:barcode},
-            dataType : 'json',
-            type : 'POST',
-            success : function (data) {
-                $("#nama_alat").val(data.nama_alat); 
-                $("#id_alat").val(data.id_alat);
-                // $('#scanbar').val('');
-                return false;
-            }
+    var barcode = $(this).val();
+    $.ajax({
+        url : 'peminjaman/get_alat_bar/',
+        data : {barcode:barcode},
+        dataType : 'json',
+        type : 'POST',
+        success : function (data) {
+            $("#nama_alat").val(data.nama_alat); 
+            $("#id_alat").val(data.id_alat);
+            $('[name="id_satuan"]').val(data.id_satuan);
+            $('[name="id_kondisi"]').val(data.id_kondisi);
+            $('[name="stok"]').val(data.stok);
+            $('[name="stok_out"]').val(data.stok);
+            return false;
+        }
 
-        })
-   })
+    })
+})
 
-
+   $('[name="stok_out"]').change(function () {
+    let stok_out = $(this).val();
+    let stok = $('[name="stok"]').val();
+    if (stok_out > stok) {
+     Swal.fire({
+        title : 'Peringatan!',
+        html :'Stok Saat Ini = '+stok+'<br> Anda Menginput = '+stok_out,
+        icon : 'warning'
+    });
+     $(this).val(stok);
+ }
+})
 
 });
 </script>
@@ -324,48 +364,51 @@ setTimeout(function() { $('input[name="scanbar"]').focus() }, 2000);
                 <form action="#" id="form" class="form-horizontal" >
                     <input type="hidden" value="" name="id"/> 
                     <div class="card-body">
-                         <div class="form-group row ">
-                            <label for="id_alat" class="col-sm-3 col-form-label">Barcode</label>
-                            <div class="col-sm-9 kosong">
-                                <input type="text" class="form-control" name="scanbar" id="scanbar" autofocus autocomplete="off" placeholder="Scan Barcode" >
-                                <span class="help-block"></span>
-                            </div>
+                     <div class="form-group row ">
+                        <label for="id_alat" class="col-sm-3 col-form-label">Barcode</label>
+                        <div class="col-sm-9 kosong">
+                            <input type="text" class="form-control" name="scanbar" id="scanbar" autofocus autocomplete="off" placeholder="Scan Barcode" >
+                            <span class="help-block"></span>
                         </div>
-                        <div class="form-group row ">
-                            <label for="id_alat" class="col-sm-3 col-form-label">Nama Alat</label>
-                            <div class="col-sm-9 kosong">
-                                <input type="text" class="form-control" name="nama_alat" id="nama_alat" autofocus autocomplete="off" placeholder="Ketik Nama Alat" >
-                                <input type="hidden" class="form-control" name="id_alat" id="id_alat">
-                                <span class="help-block"></span>
-                            </div>
+                    </div>
+                    <div class="form-group row ">
+                        <label for="id_alat" class="col-sm-3 col-form-label">Nama Alat</label>
+                        <div class="col-sm-9 kosong">
+                            <input type="hidden" class="form-control" name="id_alat" id="id_alat">
+                            <input type="hidden" class="form-control" name="id_satuan" id="id_satuan">
+                            <input type="text" class="form-control" name="nama_alat" id="nama_alat" autofocus autocomplete="off" placeholder="Ketik Nama Alat" >
+
+                            <span class="help-block"></span>
                         </div>
-                        <div class="form-group row ">
-                            <label for="nama" class="col-sm-3 col-form-label">Nama</label>
-                            <div class="col-sm-9 kosong">
-                                <input type="text" class="form-control" name="nama" id="nama" placeholder="Nama" >
-                                <span class="help-block"></span>
-                            </div>
+                    </div>
+                    <div class="form-group row ">
+                        <label for="nama" class="col-sm-3 col-form-label">Nama Peminjam</label>
+                        <div class="col-sm-9 kosong">
+                            <input type="text" class="form-control" name="nama" id="nama" placeholder="Nama Peminjam" >
+                            <span class="help-block"></span>
                         </div>
-                        <div class="form-group row ">
-                            <label for="id_jabatan" class="col-sm-3 col-form-label">Jabatan</label>
-                            <div class="col-sm-9 kosong">
-                                <select class="form-control" name="id_jabatan" id="id_jabatan">
-                                    <option value="" selected="" disabled="">Pilih Jabatan</option>
-                                    <?php foreach ($jabatan->result() as $j): ?>
-                                        <option value="<?=$j->id_jabatan?>"><?php echo $j->nama_jabatan; ?></option>
-                                    <?php endforeach ?>
-                                </select>
-                                <span class="help-block"></span>
-                            </div>
+                    </div>
+                    <div class="form-group row ">
+                        <label for="id_jabatan" class="col-sm-3 col-form-label">Jabatan</label>
+                        <div class="col-sm-9 kosong">
+                            <select class="form-control" name="id_jabatan" id="id_jabatan">
+                                <option value="" selected="" disabled="">Pilih Jabatan</option>
+                                <?php foreach ($jabatan->result() as $j): ?>
+                                    <option value="<?=$j->id_jabatan?>"><?php echo $j->nama_jabatan; ?></option>
+                                <?php endforeach ?>
+                            </select>
+                            <span class="help-block"></span>
                         </div>
-                        <div class="form-group row ">
-                            <label for="nama" class="col-sm-3 col-form-label">Stok Out</label>
-                            <div class="col-sm-9 kosong">
-                                <input type="number" class="form-control" name="stok_out" id="stok_out" placeholder="Stok Out" >
-                                <span class="help-block"></span>
-                            </div>
+                    </div>
+                    <div class="form-group row ">
+                        <label for="nama" class="col-sm-3 col-form-label">Stok Out</label>
+                        <div class="col-sm-9 kosong">
+                            <input type="hidden" name="stok" id="stok">
+                            <input type="number" class="form-control" name="stok_out" id="stok_out" placeholder="Stok Out" >
+                            <span class="help-block"></span>
                         </div>
-                        <div class="form-group row ">
+                    </div>
+                        <!-- <div class="form-group row ">
                             <label for="nama" class="col-sm-3 col-form-label">Satuan</label>
                             <div class="col-sm-9 kosong">
                                 <select class="form-control" name="id_satuan" id="id_satuan">
@@ -376,7 +419,7 @@ setTimeout(function() { $('input[name="scanbar"]').focus() }, 2000);
                                 </select>
                                 <span class="help-block"></span>
                             </div>
-                        </div> 
+                        </div>  -->
                         <div class="form-group row ">
                             <label for="nama" class="col-sm-3 col-form-label">Kondisi</label>
                             <div class="col-sm-9 kosong">
@@ -390,9 +433,9 @@ setTimeout(function() { $('input[name="scanbar"]').focus() }, 2000);
                             </div>
                         </div>
                         <div class="form-group row ">
-                            <label for="nama" class="col-sm-3 col-form-label">Tanggal Out</label>
+                            <label for="nama" class="col-sm-3 col-form-label">Tanggal Pinjam</label>
                             <div class="col-sm-9 kosong">
-                                <input type="date" class="form-control" name="tgl_out" id="tgl_out" placeholder="Tanggal Out" >
+                                <input type="date" class="form-control" name="tgl_out" id="tgl_out" placeholder="Tanggal Pinjam" >
                                 <span class="help-block"></span>
                             </div>
                         </div>
@@ -400,7 +443,7 @@ setTimeout(function() { $('input[name="scanbar"]').focus() }, 2000);
                             <label for="nama" class="col-sm-3 col-form-label">Penanggung Jawab</label>
                             <div class="col-sm-9 kosong">
                                 <input type="text" class="form-control" name="penanggung_jawab" id="penanggung_jawab" placeholder="Penanggung Jawab" >
-                              
+
                                 <span class="help-block"></span>
                             </div>
                         </div>

@@ -177,7 +177,7 @@ class Pemakaian_bahan extends MY_Controller
         if (count($data->result()) > 0) {
 
             foreach ($data->result() as $row){
-                $arr_result[] = array( 'value' => $row->id_bahan, 'label'  => $row->nama_bahan,  );
+                $arr_result[] = array( 'value' => $row->id_bahan, 'label'  => $row->nama_bahan, 'id_satuan' => $row->id_satuan, 'id_kondisi' => $row->id_kondisi, 'stok' => $row->stok,  );
             } 
             echo json_encode($arr_result);
         }else{

@@ -5,31 +5,30 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * Create By : Aryo
  * Youtube : Aryo Coding
  */
-class Mod_pengembalian extends CI_Model
+class Mod_kerusakan_alat extends CI_Model
 {
-	var $table = 'pengembalian';
+	var $table = 'kerusakan_alat';
 	var $column_search = array('nama'); 
 	var $column_order = array('nama');
-	var $order = array('id_pengembalian' => 'desc'); 
+	var $order = array('id_kerusakan_alat' => 'desc'); 
 	function __construct()
 	{
 		parent::__construct();
 		$this->load->database();
 	}
 
-		private function _get_datatables_query()
+	private function _get_datatables_query()
 	{
 		$level = $this->session->userdata['id_level'];
 		$id_jurusan = $this->session->userdata['id_jurusan'];
 		if ($level=='6' || $level=='9') {
 			$this->db->where('a.id_jurusan',$id_jurusan);
 		}
-		$this->db->select('a.*,b.nama_alat,c.nama_satuan,d.nama_jabatan,e.kondisi');
+		$this->db->select('a.*,b.nama_alat,c.nama_satuan,f.kondisi');
 		$this->db->join('alat b','a.id_alat=b.id_alat');
 		$this->db->join('satuan c','a.id_satuan=c.id');
-		$this->db->join('jabatan d', 'a.id_jabatan=d.id_jabatan');
-		$this->db->join('kondisi e', 'a.id_kondisi=e.id_kondisi','left');
-		$this->db->from('pengembalian a');
+		$this->db->join('kondisi f', 'a.id_kondisi=f.id_kondisi');
+		$this->db->from('kerusakan_alat a');
 		$i = 0;
 
 	foreach ($this->column_search as $item) // loop column 
@@ -41,17 +40,17 @@ class Mod_pengembalian extends CI_Model
 	{
 	$this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
 	$this->db->like($item, $_POST['search']['value']);
-	}
-	else
-	{
-		$this->db->or_like($item, $_POST['search']['value']);
-	}
+}
+else
+{
+	$this->db->or_like($item, $_POST['search']['value']);
+}
 
 		if(count($this->column_search) - 1 == $i) //last loop
 		$this->db->group_end(); //close bracket
 	}
 	$i++;
-	}
+}
 
 		if(isset($_POST['order'])) // here order processing
 		{
@@ -82,6 +81,7 @@ class Mod_pengembalian extends CI_Model
 
 	function count_all()
 	{
+
 		$level = $this->session->userdata['id_level'];
 		$id_jurusan = $this->session->userdata['id_jurusan'];
 		if ($level=='6') {
@@ -89,53 +89,38 @@ class Mod_pengembalian extends CI_Model
 		}
 		$this->db->join('alat b','a.id_alat=b.id_alat');
 		$this->db->join('satuan c','a.id_satuan=c.id');
-		$this->db->join('jabatan d', 'a.id_jabatan=d.id_jabatan');
-		$this->db->from('pengembalian a');
+		$this->db->from('kerusakan_alat a');
 		return $this->db->count_all_results();
 	}
 
 	function insert($table, $data)
-    {
-        $insert = $this->db->insert($table, $data);
-        return $insert;
-    }
+	{
+		$insert = $this->db->insert($table, $data);
+		return $insert;
+	}
 
-        function update($id, $data)
-    {
-        $this->db->where('id_pengembalian', $id);
-        $this->db->update('pengembalian', $data);
-    }
+	function update($id, $data)
+	{
+		$this->db->where('id_kerusakan_alat', $id);
+		$this->db->update('kerusakan_alat', $data);
+	}
 
-        function get($id)
-    {   
+	function get($id)
+	{   
+		$this->db->where('id_kerusakan_alat',$id);
+		return $this->db->get('kerusakan_alat')->row();
+	}
 
-        $this->db->where('a.id_pengembalian',$id);
-        return $this->db->get('pengembalian a')->row();
-    }
+	function delete($id, $table)
+	{
+		$this->db->where('id_kerusakan_alat', $id);
+		$this->db->delete($table);
+	}
 
-        function delete($id, $table)
-    {
-        $this->db->where('id_pengembalian', $id);
-        $this->db->delete($table);
-    }
-
-       function getImage($id)
+	   function getImage($id)
     {
         $this->db->select('foto');
-        $this->db->where('id_pengembalian', $id);
-        return $this->db->get('pengembalian');
-    }
-
-    function cek_nama_peminjam($nama='')
-    {
-    	$this->db->like('nama', $nama);
-        $this->db->where('status', '0');
-        return $this->db->get('peminjaman');
-    }
- 
- 	function get_peminjam($id='')
-    {
-        $this->db->where('id_peminjaman', $id);
-        return $this->db->get('peminjaman');
+        $this->db->where('id_kerusakan_alat', $id);
+        return $this->db->get('kerusakan_alat');
     }
 }
