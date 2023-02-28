@@ -197,8 +197,8 @@ function save()
     } else {
         url = "<?php echo site_url('pemakaian_bahan/update')?>";
     }
-    let stok =$('[name="stok"]').val();
-    let stok_out=$('[name="stok_out"]').val();
+    let stok = parseInt($('[name="stok"]').val());
+    let stok_out=parseInt($('[name="stok_out"]').val());
 
     if (stok_out > stok) {
      Swal.fire({
@@ -311,8 +311,8 @@ $(document).ready(function(){
 })
 
    $('[name="stok_out"]').change(function () {
-    let stok_out = $(this).val();
-    let stok = $('[name="stok"]').val();
+    let stok_out = parseInt($(this).val());
+    let stok = parseInt($('[name="stok"]').val());
     if (stok_out > stok) {
      Swal.fire({
         title : 'Peringatan!',

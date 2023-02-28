@@ -40,6 +40,8 @@ class Dashboard extends MY_Controller {
                 $data['jml_bahan'] = $this->Mod_dashboard->jml_bahan();
                 $data['jml_pinjam'] = $this->Mod_dashboard->jml_pinjam();
                 $data['jml_pemakai_bahan'] = $this->Mod_dashboard->jml_pemakai_bahan();
+                $data['jml_rusak'] = $this->Mod_dashboard->jml_rusak();
+                $data['jml_perbaikan'] = $this->Mod_dashboard->jml_perbaikan();
                $this->template->load('layoutbackend','dashboard/dashboard_data',$data);
            }else{
             $data['page']=$link;

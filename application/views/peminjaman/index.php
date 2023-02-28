@@ -48,7 +48,7 @@ var save_method; //for save method string
 var table;
 
 $(document).ready(function() {
-
+    $('select').select2();
     //datatables
     table =$("#tbl_peminjaman").DataTable({
         "responsive": true,
@@ -213,8 +213,8 @@ function save()
         url = "<?php echo site_url('peminjaman/update')?>";
     }
 
-    let stok =$('[name="stok"]').val();
-    let stok_out=$('[name="stok_out"]').val();
+    let stok =parseInt($('[name="stok"]').val());
+    let stok_out=parseInt($('[name="stok_out"]').val());
 
     if (stok_out > stok) {
      Swal.fire({
@@ -292,7 +292,7 @@ $(document).ready(function(){
         $('[name="id_satuan"]').val(ui.item.id_satuan);
         $('[name="id_kondisi"]').val(ui.item.id_kondisi);
         $('[name="stok"]').val(ui.item.stok);
-        $('[name="stok_out"]').val(ui.item.stok);
+        // $('[name="stok_out"]').val(ui.item.stok);
         return false;
     }/*,
     change : function (event, ui) {
@@ -323,7 +323,7 @@ $(document).ready(function(){
             $('[name="id_satuan"]').val(data.id_satuan);
             $('[name="id_kondisi"]').val(data.id_kondisi);
             $('[name="stok"]').val(data.stok);
-            $('[name="stok_out"]').val(data.stok);
+            // $('[name="stok_out"]').val(data.stok);
             return false;
         }
 
@@ -331,8 +331,8 @@ $(document).ready(function(){
 })
 
    $('[name="stok_out"]').change(function () {
-    let stok_out = $(this).val();
-    let stok = $('[name="stok"]').val();
+    let stok_out = parseInt($(this).val());
+    let stok = parseInt($('[name="stok"]').val());
     if (stok_out > stok) {
      Swal.fire({
         title : 'Peringatan!',
@@ -344,6 +344,7 @@ $(document).ready(function(){
 })
 
 });
+
 </script>
 
 

@@ -320,8 +320,8 @@ $(document).ready(function(){
 })
 
    $('[name="stok_out"]').change(function () {
-    let stok_out = $(this).val();
-    let stok = $('[name="stok"]').val();
+    let stok_out = parseInt($(this).val());
+    let stok = parseInt($('[name="stok"]').val());
     if (stok_out > stok) {
      Swal.fire({
         title : 'Peringatan!',

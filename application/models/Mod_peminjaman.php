@@ -8,8 +8,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Mod_peminjaman extends CI_Model
 {
 	var $table = 'peminjaman';
-	var $column_search = array('nama'); 
-	var $column_order = array('nama');
+	var $column_search = array('a.nama','b.nama_alat','c.nama_satuan','d.nama_jabatan','f.kondisi'); 
+	var $column_order = array('a.nama','b.nama_alat','c.nama_satuan','d.nama_jabatan','f.kondisi');
 	var $order = array('id_peminjaman' => 'desc'); 
 	function __construct()
 	{

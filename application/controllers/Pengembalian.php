@@ -82,7 +82,17 @@ class Pengembalian extends MY_Controller
         $id_user = $this->session->userdata['id_user'];
         $id_jurusan = $this->session->userdata['id_jurusan'];
 
+        $id_peminjaman = $this->input->post('id_peminjaman');
+        $stok_out = $this->input->post('stok_out');
+        $stok_in = $this->input->post('stok_in');
+        $cek=$this->Mod_pengembalian->get_pengembalian($id_peminjaman)->row();
+        $stok_in1 = (!empty($cek->stok_in)) ? $cek->stok_in : '0' ;
+        $stin = $stok_in+$stok_in1;
         
+        if ($stok_out==$stin) {
+            $save1 = array('status' => '1', );
+            $this->Mod_peminjaman->update($id_peminjaman, $save1);
+        }
 
         if(!empty($_FILES['imagefile']['name'])) {
         // $this->_validate();
@@ -113,6 +123,7 @@ class Pengembalian extends MY_Controller
                 'id_user'    => $id_user,
                 'id_jurusan' => $id_jurusan,
                 'foto'         => $gambar['file_name'],
+                'id_peminjaman' => $this->input->post('id_peminjaman')
 
             );
              $this->Mod_pengembalian->insert("pengembalian", $save);
@@ -131,21 +142,31 @@ class Pengembalian extends MY_Controller
             'keterangan'    => $this->input->post('keterangan'),
             'id_user'    => $id_user,
             'id_jurusan' => $id_jurusan,
+            'id_peminjaman' => $this->input->post('id_peminjaman')
 
         );
         $this->Mod_pengembalian->insert("pengembalian", $save);
         echo json_encode(array("status" => TRUE));
     }
-    $id_peminjaman = $this->input->post('id_peminjaman');
-    $save1 = array('status' => '1', );
-    $this->Mod_peminjaman->update($id_peminjaman, $save1);
+   
+    
 }
 
 public function update()
 {
-        // $this->_validate();
+        
     $id      = $this->input->post('id');
 
+    /*$id_peminjaman = $this->input->post('id_peminjaman');
+    $stok_out = $this->input->post('stok_out');
+    $stok_in = $this->input->post('stok_in');
+    $cek=$this->Mod_pengembalian->get_pengembalian($id_peminjaman)->row();
+    $stok_in1 = $cek->stok_in;
+    $stin = $stok_in+$stok_in1;
+    if ($stok_out==$stin) {
+        $save1 = array('status' => '1', );
+        $this->Mod_peminjaman->update($id_peminjaman, $save1);
+    }*/
     if(!empty($_FILES['imagefile']['name'])) {
         // $this->_validate();
         $id = $this->input->post('id_user');

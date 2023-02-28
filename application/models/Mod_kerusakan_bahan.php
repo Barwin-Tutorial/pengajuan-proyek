@@ -8,8 +8,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Mod_kerusakan_bahan extends CI_Model
 {
 	var $table = 'kerusakan_bahan';
-	var $column_search = array('nama'); 
-	var $column_order = array('nama');
+	var $column_search = array('a.nama','b.nama_bahan','c.nama_satuan','f.kondisi'); 
+	var $column_order = array('a.nama','b.nama_bahan','c.nama_satuan','f.kondisi');
 	var $order = array('id_kerusakan_bahan' => 'desc'); 
 	function __construct()
 	{

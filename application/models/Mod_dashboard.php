@@ -81,4 +81,27 @@ class Mod_dashboard extends CI_Model
 		$this->db->from('pemakaian_bahan');
 		return $this->db->count_all_results();
 	}
+
+	function jml_rusak()
+	{
+		$level = $this->session->userdata['id_level'];
+		$id_jurusan = $this->session->userdata['id_jurusan'];
+		if ($level=='6' || $level=='9') {
+			$this->db->where('id_jurusan',$id_jurusan);
+		}
+		
+		$this->db->from('kerusakan_alat');
+		return $this->db->count_all_results();
+	}
+	function jml_perbaikan()
+	{
+		$level = $this->session->userdata['id_level'];
+		$id_jurusan = $this->session->userdata['id_jurusan'];
+		if ($level=='6' || $level=='9') {
+			$this->db->where('id_jurusan',$id_jurusan);
+		}
+		
+		$this->db->from('perbaikan_alat');
+		return $this->db->count_all_results();
+	}
 }

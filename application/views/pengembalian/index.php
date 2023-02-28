@@ -330,8 +330,8 @@ setTimeout(function() { $('input[name="scanbar"]').focus() }, 3000);
 })
 
   $('[name="stok_in"]').change(function () {
-    let stok_in = $(this).val();
-    let stok_out = $('[name="stok_out"]').val();
+    let stok_in = parseInt($(this).val());
+    let stok_out = parseInt($('[name="stok_out"]').val());
     if (stok_in > stok_out) {
      Swal.fire({
         title : 'Peringatan!',

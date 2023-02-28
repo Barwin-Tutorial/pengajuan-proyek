@@ -8,8 +8,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Mod_perbaikan_alat extends CI_Model
 {
 	var $table = 'perbaikan_alat';
-	var $column_search = array('b.nama_alat'); 
-	var $column_order = array('b.nama_alat');
+	var $column_search = array('b.nama_alat','c.nama_satuan','f.kondisi'); 
+	var $column_order = array('b.nama_alat','c.nama_satuan','f.kondisi');
 	var $order = array('id_perbaikan_alat' => 'desc'); 
 	function __construct()
 	{
