@@ -75,7 +75,7 @@ class Login extends CI_Controller {
         $this->session->sess_destroy();
         $this->load->driver('cache');
         $this->cache->clean();
-        ob_clean();
+        // ob_clean();
         redirect('login');
     }
 

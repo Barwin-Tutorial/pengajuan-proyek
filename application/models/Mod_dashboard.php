@@ -81,8 +81,8 @@ class Mod_dashboard extends CI_Model
 		$this->db->from('pemakaian_bahan');
 		return $this->db->count_all_results();
 	}
-
-	function jml_rusak()
+	
+		function jml_rusak()
 	{
 		$level = $this->session->userdata['id_level'];
 		$id_jurusan = $this->session->userdata['id_jurusan'];

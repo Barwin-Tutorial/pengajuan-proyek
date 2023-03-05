@@ -15,12 +15,12 @@
                         <table id="tbl_kerusakan_bahan" class="table table-bordered table-striped table-hover nowrap">
                             <thead>
                                 <tr class="bg-purple">
-                                    <th>Nama Peminjam</th>
+                                    <!-- <th>Nama Peminjam</th> -->
                                     <!-- <th>Jabatan</th> -->
-                                    <th>Nama bahan</th>
+                                    <th>Nama Bahan</th>
                                     <th>Stok Out</th>
                                     <th>Satuan</th>
-                                    <th>Kondisi</th>
+                                    <!--<th>Kondisi</th>-->
                                     <th>Tanggal Input</th>
                                     <!-- <th>Penanggung Jawab</th> -->
                                     <th>Keterangan</th>
@@ -370,13 +370,13 @@ $(document).ready(function(){
                             <span class="help-block"></span>
                         </div>
                     </div>
-                    <div class="form-group row ">
+                    <!-- <div class="form-group row ">
                         <label for="nama" class="col-sm-3 col-form-label">Nama Peminjam</label>
                         <div class="col-sm-9 kosong">
                             <input type="text" class="form-control" name="nama" id="nama" placeholder="Nama Peminjam" >
                             <span class="help-block"></span>
                         </div>
-                    </div>
+                    </div> -->
                     <!-- <div class="form-group row ">
                         <label for="id_jabatan" class="col-sm-3 col-form-label">Jabatan</label>
                         <div class="col-sm-9 kosong">

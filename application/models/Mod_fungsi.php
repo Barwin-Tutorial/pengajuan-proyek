@@ -91,7 +91,7 @@ function get_bahan($nama)
 {   
     $level = $this->session->userdata['id_level'];
     $id_jurusan = $this->session->userdata['id_jurusan'];
-    if ($level=='6' || $level=='9') {
+    if ($level=='6' && $level=='9') {
         $this->db->where('id_jurusan',$id_jurusan);
     }
     $this->db->like('nama_bahan', $nama);

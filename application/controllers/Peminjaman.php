@@ -54,9 +54,10 @@ class Peminjaman extends MY_Controller
 
             $no++;
             $row = array();
-            $row[] = $pel->nama_alat;
+            
             $row[] = $pel->nama;
             $row[] = $pel->nama_jabatan;
+            $row[] = $pel->nama_alat;
             $row[] = $pel->stok_out;
             $row[] = $pel->nama_satuan;
             $row[] = $pel->kondisi;

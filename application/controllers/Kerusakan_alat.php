@@ -55,12 +55,13 @@ class Kerusakan_alat extends MY_Controller
             $no++;
             $row = array();
             $row[] = $pel->nama_alat;
-            $row[] = $pel->nama;
+            // $row[] = $pel->nama;
             $row[] = $pel->stok_out;
             $row[] = $pel->nama_satuan;
-            $row[] = $pel->kondisi;
+            // $row[] = $pel->kondisi;
             $row[] = $pel->tgl_input;
             $row[] = $pel->keterangan;
+            $row[] = "<img src=\"./assets/foto/kerusakan_alat/".$pel->foto."\" width=\"50px\" height=\"50px\">";
             $row[] = "<a class=\"btn btn-xs btn-outline-primary edit\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit('$pel->id_kerusakan_alat')\"><i class=\"fas fa-edit\"></i></a><a class=\"btn btn-xs btn-outline-danger delete\" href=\"javascript:void(0)\" title=\"Delete\"  onclick=\"hapus('$pel->id_kerusakan_alat')\"><i class=\"fas fa-trash\"></i></a>";
             $data[] = $row;
         }
@@ -85,7 +86,7 @@ class Kerusakan_alat extends MY_Controller
         // 
             $id = $this->input->post('id_user');
 
-            $nama = encrypt_url($this->input->post('nama'));
+            $nama = encrypt_url($this->input->post('id_alat'));
             $config['upload_path']   = './assets/foto/kerusakan_alat/';
             $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
             $config['max_size']      = '1000';
@@ -98,7 +99,7 @@ class Kerusakan_alat extends MY_Controller
             if ($this->upload->do_upload('imagefile')){
              $gambar = $this->upload->data();
              $save  = array(
-                'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
+                // 'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
                 // 'id_jabatan'    => $this->input->post('id_jabatan'),
                 'id_alat'    => $this->input->post('id_alat'),
                 'id_satuan'    => $this->input->post('id_satuan'),
@@ -126,7 +127,7 @@ class Kerusakan_alat extends MY_Controller
         // $this->_validate();
         $id = $this->input->post('id_user');
 
-        $nama = encrypt_url($this->input->post('nama'));
+        $nama = encrypt_url($this->input->post('id_alat'));
         $config['upload_path']   = './assets/foto/kerusakan_alat/';
             $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
             $config['max_size']      = '1000';
@@ -139,7 +140,7 @@ class Kerusakan_alat extends MY_Controller
             if ($this->upload->do_upload('imagefile')){
                $gambar = $this->upload->data();
                $save  = array(
-                'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
+                // 'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
                 // 'id_jabatan'    => $this->input->post('id_jabatan'),
                 'id_alat'    => $this->input->post('id_alat'),
                 'id_satuan'    => $this->input->post('id_satuan'),
@@ -162,7 +163,7 @@ class Kerusakan_alat extends MY_Controller
         }
     }else{
         $save  = array(
-            'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
+            // 'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
                 // 'id_jabatan'    => $this->input->post('id_jabatan'),
             'id_alat'    => $this->input->post('id_alat'),
             'id_satuan'    => $this->input->post('id_satuan'),

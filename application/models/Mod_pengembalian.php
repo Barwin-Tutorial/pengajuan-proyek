@@ -25,9 +25,9 @@ class Mod_pengembalian extends CI_Model
 			$this->db->where('a.id_jurusan',$id_jurusan);
 		}
 		$this->db->select('a.*,b.nama_alat,c.nama_satuan,d.nama_jabatan,e.kondisi');
-		$this->db->join('alat b','a.id_alat=b.id_alat');
-		$this->db->join('satuan c','a.id_satuan=c.id');
-		$this->db->join('jabatan d', 'a.id_jabatan=d.id_jabatan');
+		$this->db->join('alat b','a.id_alat=b.id_alat', 'left');
+		$this->db->join('satuan c','a.id_satuan=c.id', 'left');
+		$this->db->join('jabatan d', 'a.id_jabatan=d.id_jabatan', 'left');
 		$this->db->join('kondisi e', 'a.id_kondisi=e.id_kondisi','left');
 		$this->db->from('pengembalian a');
 		$i = 0;
@@ -87,9 +87,9 @@ class Mod_pengembalian extends CI_Model
 		if ($level=='6') {
 			$this->db->where('a.id_jurusan',$id_jurusan);
 		}
-		$this->db->join('alat b','a.id_alat=b.id_alat');
-		$this->db->join('satuan c','a.id_satuan=c.id');
-		$this->db->join('jabatan d', 'a.id_jabatan=d.id_jabatan');
+		$this->db->join('alat b','a.id_alat=b.id_alat', 'left');
+		$this->db->join('satuan c','a.id_satuan=c.id', 'left');
+		$this->db->join('jabatan d', 'a.id_jabatan=d.id_jabatan', 'left');
 		$this->db->from('pengembalian a');
 		return $this->db->count_all_results();
 	}
@@ -138,9 +138,10 @@ class Mod_pengembalian extends CI_Model
         $this->db->where('id_peminjaman', $id);
         return $this->db->get('peminjaman');
     }
-
-    function get_pengembalian($id='')
+    
+     function get_pengembalian($id='')
     {
+        $this->db->select('SUM(stok_in) as stok_in');
         $this->db->where('id_peminjaman', $id);
         return $this->db->get('pengembalian');
     }

@@ -124,9 +124,10 @@ class Perbaikan_alat extends MY_Controller
         // $this->_validate();
     $id      = $this->input->post('id');
     $id_kondisi = $this->input->post('id_kondisi');
+    $id_alat = $this->input->post('id_alat');
+
     if(!empty($_FILES['imagefile']['name'])) {
         // $this->_validate();
-        $id = $this->input->post('id_user');
 
         $nama = encrypt_url($this->input->post('id_alat'));
         $config['upload_path']   = './assets/foto/perbaikan_alat/';
@@ -135,7 +136,6 @@ class Perbaikan_alat extends MY_Controller
             $config['max_width']     = '2000';
             $config['max_height']    = '1024';
             $config['file_name']     = $nama; 
-            
             $this->upload->initialize($config);
 
             if ($this->upload->do_upload('imagefile')){
@@ -163,7 +163,11 @@ class Perbaikan_alat extends MY_Controller
 
             $this->Mod_perbaikan_alat->update($id, $save);
             echo json_encode(array("status" => TRUE));
+
+
         }
+
+
     }else{
         $save  = array(
             // 'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
@@ -178,7 +182,42 @@ class Perbaikan_alat extends MY_Controller
         );
         $this->Mod_perbaikan_alat->update($id, $save);
         echo json_encode(array("status" => TRUE));
+
+
+
     }
+
+    if ($id_kondisi=='3') {
+        $r=$this->Mod_fungsi->get_alat_by_id($id_alat)->row();
+        $stok =$r->stok;
+        $stok_in=$this->input->post('stok_out');
+        $jml_stok=$stok+$stok_in;
+        $save  = array(
+            'stok'    => $jml_stok,
+        );
+        $this->Mod_perbaikan_alat->update_stok($id_alat, $save);
+    }
+
+    if ($id_kondisi=='2') {
+       $id_user = $this->session->userdata['id_user'];
+       $id_jurusan = $this->session->userdata['id_jurusan'];
+       $data = $this->Mod_perbaikan_alat->get($id);
+       $path= './assets/foto/perbaikan_alat/'.$data->foto;
+       $path1= './assets/foto/kerusakan_alat/'.$data->foto;
+       $save1  = array(
+        'id_alat'    => $this->input->post('id_alat'),
+        'id_satuan'    => $this->input->post('id_satuan'),
+        'id_kondisi'    => $this->input->post('id_kondisi'),
+        'tgl_input'    => $this->input->post('tgl_masuk'),
+        'stok_out'    => $this->input->post('stok_out'),
+        'keterangan'    => $this->input->post('keterangan'),
+        'id_user'    => $id_user,
+        'id_jurusan' => $id_jurusan,
+        'foto' => $data->foto
+    );
+       copy($path, $path1);
+       $this->Mod_perbaikan_alat->insert("kerusakan_alat", $save1);
+   }
 
 }
 

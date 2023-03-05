@@ -15,15 +15,16 @@
                         <table id="tbl_kerusakan_alat" class="table table-bordered table-striped table-hover nowrap">
                             <thead>
                                 <tr class="bg-purple">
-                                    <th>Nama Peminjam</th>
+                                    <!-- <th>Nama Peminjam</th> -->
                                     <!-- <th>Jabatan</th> -->
                                     <th>Nama Alat</th>
                                     <th>Stok Out</th>
                                     <th>Satuan</th>
-                                    <th>Kondisi</th>
+                                    <!--<th>Kondisi</th>-->
                                     <th>Tanggal Input</th>
                                     <!-- <th>Penanggung Jawab</th> -->
                                     <th>Keterangan</th>
+                                    <th>Foto</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -370,13 +371,13 @@ $(document).ready(function(){
                             <span class="help-block"></span>
                         </div>
                     </div>
-                    <div class="form-group row ">
+                    <!-- <div class="form-group row ">
                         <label for="nama" class="col-sm-3 col-form-label">Nama Peminjam</label>
                         <div class="col-sm-9 kosong">
                             <input type="text" class="form-control" name="nama" id="nama" placeholder="Nama Peminjam" >
                             <span class="help-block"></span>
                         </div>
-                    </div>
+                    </div> -->
                     <!-- <div class="form-group row ">
                         <label for="id_jabatan" class="col-sm-3 col-form-label">Jabatan</label>
                         <div class="col-sm-9 kosong">
@@ -402,10 +403,10 @@ $(document).ready(function(){
                             <label for="nama" class="col-sm-3 col-form-label">Kondisi</label>
                             <div class="col-sm-9 kosong">
                                 <select class="form-control" name="id_kondisi" id="id_kondisi">
-                                    <option value="" selected="" disabled="">Pilih Kondisi</option>
-                                    <?php foreach ($kondisi->result() as $k): ?>
+                                    <option value="2" selected="" disabled="">Rusak</option>
+                                    <!--<?php foreach ($kondisi->result() as $k): ?>
                                         <option value="<?=$k->id_kondisi?>"><?php echo $k->kondisi; ?></option>
-                                    <?php endforeach ?>
+                                    <?php endforeach ?>-->
                                 </select>
                                 <span class="help-block"></span>
                             </div>

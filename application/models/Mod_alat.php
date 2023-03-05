@@ -109,8 +109,9 @@ class Mod_alat extends CI_Model
 
         function get($id)
     {   
-        $this->db->where('id_alat',$id);
-        return $this->db->get('alat')->row();
+    	$this->db->join('satuan c','a.id_satuan=c.id');
+        $this->db->where('a.id_alat',$id);
+        return $this->db->get('alat a')->row();
     }
 
         function delete($id, $table)

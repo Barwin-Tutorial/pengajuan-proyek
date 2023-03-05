@@ -165,7 +165,7 @@ function edit(id){
 
             $('[name="id"]').val(data.id_bahan);
             $('[name="nama_bahan"]').val(data.nama_bahan);
-            $('[name="id_merk"]').val(data.id_merk);
+            $('[name="merk"]').val(data.merk);
             $('[name="nama_merk"]').val(data.nama_merk);
             $('[name="id_kondisi"]').val(data.id_kondisi);
             $('[name="id_ruang"]').val(data.id_ruang);
@@ -306,7 +306,7 @@ var loadFile = function(event) {
                             <label for="nama" class="col-sm-3 col-form-label">Merk</label>
                             <div class="col-sm-9 kosong">
                                 <input type="hidden" name="id_merk" id="id_merk">
-                                <input type="text" class="form-control" name="nama_merk" id="nama_merk" placeholder="Ketik Merk" >
+                                <input type="text" class="form-control" name="merk" id="merk" placeholder="Merk" >
                                 <span class="help-block"></span>
                             </div>
                         </div>

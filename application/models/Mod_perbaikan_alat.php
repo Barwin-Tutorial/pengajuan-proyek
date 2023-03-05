@@ -25,9 +25,9 @@ class Mod_perbaikan_alat extends CI_Model
 			$this->db->where('a.id_jurusan',$id_jurusan);
 		}
 		$this->db->select('a.*,b.nama_alat,c.nama_satuan,f.kondisi');
-		$this->db->join('alat b','a.id_alat=b.id_alat');
-		$this->db->join('satuan c','a.id_satuan=c.id');
-		$this->db->join('kondisi f', 'a.id_kondisi=f.id_kondisi');
+		$this->db->join('alat b','a.id_alat=b.id_alat', 'left');
+		$this->db->join('satuan c','a.id_satuan=c.id', 'left');
+		$this->db->join('kondisi f', 'a.id_kondisi=f.id_kondisi', 'left');
 		$this->db->from('perbaikan_alat a');
 		$i = 0;
 
@@ -87,8 +87,8 @@ else
 		if ($level=='6') {
 			$this->db->where('a.id_jurusan',$id_jurusan);
 		}
-		$this->db->join('alat b','a.id_alat=b.id_alat');
-		$this->db->join('satuan c','a.id_satuan=c.id');
+		$this->db->join('alat b','a.id_alat=b.id_alat', 'left');
+		$this->db->join('satuan c','a.id_satuan=c.id', 'left');
 		$this->db->from('perbaikan_alat a');
 		return $this->db->count_all_results();
 	}
@@ -103,6 +103,12 @@ else
 	{
 		$this->db->where('id_perbaikan_alat', $id);
 		$this->db->update('perbaikan_alat', $data);
+	}
+
+	function update_stok($id, $data)
+	{
+		$this->db->where('id_alat', $id);
+		$this->db->update('alat', $data);
 	}
 
 	function get($id)

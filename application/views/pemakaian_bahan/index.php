@@ -270,8 +270,10 @@ $(document).ready(function(){
          // display the selected text
          var value = ui.item.value;
         $("#id_bahan").val(value); // save selected id to hidden input
-        $("#nama_bahan").val(ui.item.label);
-        $('[name="stok"]').val(ui.item.stok);
+         $("#nama_bahan").val(ui.item.label);
+        $('[name="id_satuan"]').val(ui.item.id_satuan);
+        $('[name="id_kondisi"]').val(ui.item.id_kondisi);
+         $('[name="stok"]').val(ui.item.stok);
         $('[name="stok_out"]').val(ui.item.stok);
         return false;
     }/*,

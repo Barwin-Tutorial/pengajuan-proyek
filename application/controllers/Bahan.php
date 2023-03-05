@@ -56,7 +56,7 @@ class Bahan extends MY_Controller
             $no++;
             $row = array();
             $row[] = "<a download href=\"./assets/foto/bahan/".$pel->barcode.".png"."\" title=\"Download QR Code\">
-                <img alt=\"Download QR Code\" src=\"./assets/foto/bahan/".$pel->barcode.".png"."\" width=\"50px\" height=\"50px\"> </a>";
+            <img alt=\"Download QR Code\" src=\"./assets/foto/bahan/".$pel->barcode.".png"."\" width=\"50px\" height=\"50px\"> </a>";
             $row[] = $pel->nama_bahan;
             $row[] = $pel->stok;
             $row[] = "<img src=\"./assets/foto/bahan/".$pel->photo."\" width=\"50px\" height=\"50px\">";
@@ -108,8 +108,8 @@ class Bahan extends MY_Controller
             $this->upload->initialize($config);
 
             if ($this->upload->do_upload('imagefile')){
-               $gambar = $this->upload->data();
-               $save  = array(
+             $gambar = $this->upload->data();
+             $save  = array(
                 'nama_bahan'         => htmlspecialchars_decode(ucwords($this->input->post('nama_bahan'))),
                 'merk'         => htmlspecialchars_decode($this->input->post('merk')),
                 'id_satuan'         => htmlspecialchars_decode($this->input->post('id_satuan')),
@@ -123,11 +123,11 @@ class Bahan extends MY_Controller
                 'barcode'       => $kode
 
             );
-               $this->Mod_bahan->insert("bahan", $save);
-               echo json_encode(array("status" => TRUE));
-           }
-       }else{
-           $save  = array(
+             $this->Mod_bahan->insert("bahan", $save);
+             echo json_encode(array("status" => TRUE));
+         }
+     }else{
+         $save  = array(
             'nama_bahan'         => htmlspecialchars_decode(ucwords($this->input->post('nama_bahan'))),
             'merk'         => htmlspecialchars_decode($this->input->post('merk')),
             'id_satuan'         => htmlspecialchars_decode($this->input->post('id_satuan')),
@@ -137,9 +137,9 @@ class Bahan extends MY_Controller
             'barcode'       => $kode
 
         );
-           $this->Mod_bahan->insert("bahan", $save);
-           echo json_encode(array("status" => TRUE));
-       }
+         $this->Mod_bahan->insert("bahan", $save);
+         echo json_encode(array("status" => TRUE));
+     }
 
         $config['cacheable']    = true; //boolean, the default is true
         $config['cachedir']     = './assets/'; //string, the default is application/cache/
@@ -168,7 +168,7 @@ class Bahan extends MY_Controller
         // $this->_validate();
             $id = $this->input->post('id_user');
 
-            $nama = slug($this->input->post('nama_guru'));
+            $nama = slug($this->input->post('nama_bahan'));
             $config['upload_path']   = './assets/foto/bahan/';
         $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
         $config['max_size']      = '1000';
@@ -179,8 +179,8 @@ class Bahan extends MY_Controller
         $this->upload->initialize($config);
 
         if ($this->upload->do_upload('imagefile')){
-         $gambar = $this->upload->data();
-         $save  = array(
+           $gambar = $this->upload->data();
+           $save  = array(
             'nama_bahan'         => htmlspecialchars_decode(ucwords($this->input->post('nama_bahan'))),
             'merk'         => htmlspecialchars_decode($this->input->post('merk')),
             'id_satuan'         => htmlspecialchars_decode($this->input->post('id_satuan')),
@@ -190,9 +190,9 @@ class Bahan extends MY_Controller
 
         );
 
-         $g = $this->Mod_bahan->getImage($id)->row();
+           $g = $this->Mod_bahan->getImage($id)->row();
 
-         if (!empty($g->photo) || $g->photo != NULL) {
+           if (!empty($g->photo) || $g->photo != NULL) {
                 //hapus gambar yg ada diserver
             unlink('assets/foto/bahan/'.$g->photo);
         }

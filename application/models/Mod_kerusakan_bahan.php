@@ -25,9 +25,9 @@ class Mod_kerusakan_bahan extends CI_Model
 			$this->db->where('a.id_jurusan',$id_jurusan);
 		}
 		$this->db->select('a.*,b.nama_bahan,c.nama_satuan,f.kondisi');
-		$this->db->join('bahan b','a.id_bahan=b.id_bahan');
-		$this->db->join('satuan c','a.id_satuan=c.id');
-		$this->db->join('kondisi f', 'a.id_kondisi=f.id_kondisi');
+		$this->db->join('bahan b','a.id_bahan=b.id_bahan', 'left');
+		$this->db->join('satuan c','a.id_satuan=c.id', 'left');
+		$this->db->join('kondisi f', 'a.id_kondisi=f.id_kondisi', 'left');
 		$this->db->from('kerusakan_bahan a');
 		$i = 0;
 
@@ -87,8 +87,8 @@ else
 		if ($level=='6') {
 			$this->db->where('a.id_jurusan',$id_jurusan);
 		}
-		$this->db->join('bahan b','a.id_bahan=b.id_bahan');
-		$this->db->join('satuan c','a.id_satuan=c.id');
+		$this->db->join('bahan b','a.id_bahan=b.id_bahan', 'left');
+		$this->db->join('satuan c','a.id_satuan=c.id', 'left');
 		$this->db->from('kerusakan_bahan a');
 		return $this->db->count_all_results();
 	}

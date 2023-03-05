@@ -174,7 +174,7 @@ class Alat extends MY_Controller
         // $this->_validate();
             $id = $this->input->post('id_user');
 
-            $nama = slug($this->input->post('nama_guru'));
+            $nama = slug($this->input->post('nama_alat'));
             $config['upload_path']   = './assets/foto/alat/';
         $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
         $config['max_size']      = '1000';

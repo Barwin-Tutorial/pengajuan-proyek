@@ -48,7 +48,7 @@ var save_method; //for save method string
 var table;
 
 $(document).ready(function() {
-    $('select').select2();
+
     //datatables
     table =$("#tbl_peminjaman").DataTable({
         "responsive": true,
@@ -344,7 +344,6 @@ $(document).ready(function(){
 })
 
 });
-
 </script>
 
 

@@ -168,18 +168,18 @@ function edit(id){
 
             $('[name="id"]').val(data.id_alat);
             $('[name="nama_alat"]').val(data.nama_alat);
-            $('[name="id_merk"]').val(data.id_merk);
+             $('[name="nama_merk"]').val(data.merk);
             $('[name="id_kondisi"]').val(data.id_kondisi);
             $('[name="id_ruang"]').val(data.id_ruang);
             $('[name="id_satuan"]').val(data.id_satuan);
-            $('[name="id_dana"]').val(data.id_dana);
-            $('[name="id_tahun"]').val(data.id_tahun);
+            $('[name="nama_satuan"]').val(data.nama_satuan);
+            $('[name="tahun"]').val(data.tahun);
             $('[name="stok"]').val(data.stok);
-            $('[name="photo"]').val(data.photo);
             $('[name="keterangan"]').val(data.keterangan);
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
             $('.modal-title').text('Edit Alat'); // Set title to Bootstrap modal title
-
+            var image = "<?php echo base_url('assets/foto/alat/')?>";
+            $("#v_image").attr("src",image+data.photo);
         },
         error: function (jqXHR, textStatus, errorThrown)
         {
@@ -253,7 +253,7 @@ $(function () {
 
 $(document).ready(function(){
 
-   $( "#nama_merk").autocomplete({
+ /*  $( "#nama_merk").autocomplete({
     source: 'alat/get_merk_by_nama/?', 
     select : function (event, ui) {
 
@@ -263,7 +263,7 @@ $(document).ready(function(){
         $("#nama_merk").val(ui.item.label);
         return false;
     }
-})
+})*/
   $( "#nama_satuan").autocomplete({
     source: 'bahan/get_satuan_by_nama/?', 
     select : function (event, ui) {
@@ -308,7 +308,7 @@ $(document).ready(function(){
 
                             <label for="nama" class="col-sm-3 col-form-label">Merk</label>
                             <div class="col-sm-9 kosong">
-                                <input type="text" class="form-control" name="nama_merk" id="nama_merk" placeholder="Ketik Merk" >
+                                <input type="text" class="form-control" name="nama_merk" id="nama_merk" placeholder="Merk" >
                              <span class="help-block"></span>
                          </div>
                      </div>

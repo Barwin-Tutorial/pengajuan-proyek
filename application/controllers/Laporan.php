@@ -33,6 +33,7 @@ class Laporan extends MY_Controller
             $akses=$a_submenu->view;
         }
         if ($akses=="Y") {
+            $data['ruang'] = $this->Mod_fungsi->get_ruang();
             $this->template->load('layoutbackend','laporan/laporan',$data);
         }else{
             $data['page']=$link;
@@ -42,75 +43,163 @@ class Laporan extends MY_Controller
 
 
 
-    public function laporan()
+    public function cetak_pinjam_alat()
     {
-        $data['act'] = $this->input->post('act');
         $tglrange =$this->input->post('tgl');
-        $data['lap'] = $this->Mod_laporan->get_laporan_projek($tglrange)->result();
-        $this->load->view('projek/cetak',$data);
+        $id_ruang =$this->input->post('id_ruang');
+        $data['tgl'] = $this->input->post('tgl');
+        $data['lap'] = $this->Mod_laporan->get_laporan_pinjam($tglrange,$id_ruang)->result();
+
+        $this->load->view('laporan/cetak_pinjam_alat',$data);
     }
 
-    public function cetak_pdf()
+
+
+    public function download_pdf_pinjam()
     {
         $tglrange =$this->input->post('tgl');
-        $data['lap'] = $this->Mod_laporan->get_laporan_projek($tglrange)->result();
+        $id_ruang =$this->input->post('id_ruang');
+        $data['tgl'] = $this->input->post('tgl');
+        $data['lap'] = $this->Mod_laporan->get_laporan_pinjam($tglrange,$id_ruang)->result();
         $data['act'] = $this->input->post('act');
         $date=date('ymdhis');
-        $namafile='lap_projek_'.$date.'.pdf';
+        $namafile='lap_pinjam_alat_'.$date.'.pdf';
         // fungsi pdf dari library di autoload
         $this->pdf->setPaper('A4', 'landscape');
         $this->pdf->set_option('isRemoteEnabled', true);
         $this->pdf->filename = $namafile;
-        $this->pdf->load_view('projek/cetak', $data);
+        $this->pdf->load_view('laporan/cetak_pinjam_alat', $data);
     }
 
-    public function lap_excel()
+    public function lap_pinjam_xls()
     {
-
-        $tglrange =$this->input->post('tgl');
-        $list = $this->Mod_laporan->get_laporan_projek($tglrange)->result();
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', 'No');
-        $sheet->setCellValue('B1', 'Tanggal');
-        $sheet->setCellValue('C1', 'Nama Projek');
-        $sheet->setCellValue('D1', 'Nama Klien');
-        $sheet->setCellValue('E1', 'Tanggal Mulai');
-        $sheet->setCellValue('F1', 'Tanggal Selesai');
-        $sheet->setCellValue('G1', 'Status');
-        $sheet->setCellValue('H1', 'Keterangan');
-        $no = 1;
-        $x = 2;
-        foreach($list as $row)
-        {
-            $sheet->setCellValue('A'.$x, $no++);
-            $sheet->setCellValue('B'.$x, tgl_indonesia($row->tgl_input));
-            $sheet->setCellValue('C'.$x, $row->nama_projek);
-            $sheet->setCellValue('D'.$x, $row->nama_klien);
-            $sheet->setCellValue('E'.$x, $row->tgl_mulai);
-            $sheet->setCellValue('F'.$x, $row->tgl_selesai);
-            $sheet->setCellValue('G'.$x, $row->status);
-            $sheet->setCellValue('H'.$x, htmlspecialchars_decode($row->keterangan,ENT_QUOTES));
-            $x++;
-        }
-        $writer = new Xlsx($spreadsheet);
-        $filename = 'laporan_projek';
-
+        $filename = 'lap_pinjam_alat';
         header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="'. $filename .'.xlsx"'); 
+        header('Content-Disposition: attachment;filename="'. $filename .'.xls"'); 
         header('Cache-Control: max-age=0');
+        $tglrange =$this->input->post('tgl');
+        $id_ruang =$this->input->post('id_ruang');
+        $data['tgl'] = $this->input->post('tgl');
+        $data['lap'] = $this->Mod_laporan->get_laporan_pinjam($tglrange,$id_ruang)->result();
 
-        $writer->save('php://output');
+        $this->load->view('laporan/cetak_pinjam_alat',$data);
+        // $writer->save('php://output');
     }
 
-    public function word()
+    public function cetak_pakai_bahan()
     {
-     $filename = 'laporan_projek';
-     header("Content-type: application/vnd.ms-word");
-     header("Content-Disposition: attachment;Filename=".$filename.".doc");
-     $data['act'] = $this->input->post('act');
-     $tglrange =$this->input->post('tgl');
-     $data['lap'] = $this->Mod_laporan->get_laporan_projek($tglrange)->result();
-     $this->load->view('projek/cetak_word',$data);
- }
+        $tglrange =$this->input->post('tgl');
+        // $id_ruang =$this->input->post('id_ruang');
+        $data['tgl'] = $this->input->post('tgl');
+        $data['lap'] = $this->Mod_laporan->get_laporan_pakai($tglrange)->result();
+
+        $this->load->view('laporan/cetak_pemakaian_bahan',$data);
+    }
+
+    public function download_pdf_pakai_bahan()
+    {
+        $tglrange =$this->input->post('tgl');
+        $data['tgl'] = $this->input->post('tgl');
+        $data['lap'] = $this->Mod_laporan->get_laporan_pakai($tglrange)->result();
+        $data['act'] = $this->input->post('act');
+        $date=date('ymdhis');
+        $namafile='lap_pemakaian_bahan_'.$date.'.pdf';
+        // fungsi pdf dari library di autoload
+        $this->pdf->setPaper('A4', 'landscape');
+        $this->pdf->set_option('isRemoteEnabled', true);
+        $this->pdf->filename = $namafile;
+        $this->pdf->load_view('laporan/cetak_pemakaian_bahan', $data);
+    }
+
+    public function lap_pemakaian_bahan()
+    {
+        $filename = 'lap_pemakaian_bahan';
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="'. $filename .'.xls"'); 
+        header('Cache-Control: max-age=0');
+        $tglrange =$this->input->post('tgl');
+        $data['tgl'] = $this->input->post('tgl');
+        $data['lap'] = $this->Mod_laporan->get_laporan_pakai($tglrange)->result();
+
+        $this->load->view('laporan/cetak_pemakaian_bahan',$data);
+        // $writer->save('php://output');
+    }
+
+    public function cetak_kerusakan_alat()
+    {
+        $tglrange =$this->input->post('tgl');
+        // $id_ruang =$this->input->post('id_ruang');
+        $data['tgl'] = $this->input->post('tgl');
+        $data['lap'] = $this->Mod_laporan->get_laporan_kerusakan_alat($tglrange)->result();
+
+        $this->load->view('laporan/cetak_kerusakan_alat',$data);
+    }
+
+    public function download_pdf_kerusakan_alat()
+    {
+        $tglrange =$this->input->post('tgl');
+        $data['tgl'] = $this->input->post('tgl');
+        $data['lap'] = $this->Mod_laporan->get_laporan_kerusakan_alat($tglrange)->result();
+        $data['act'] = $this->input->post('act');
+        $date=date('ymdhis');
+        $namafile='Lap_kerusakan_alat'.$date.'.pdf';
+        // fungsi pdf dari library di autoload
+        $this->pdf->setPaper('A4', 'landscape');
+        $this->pdf->set_option('isRemoteEnabled', true);
+        $this->pdf->filename = $namafile;
+        $this->pdf->load_view('laporan/cetak_kerusakan_alat', $data);
+    }
+
+    public function lap_kerusakan_alat()
+    {
+        $filename = 'Lap_kerusakan_alat';
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="'. $filename .'.xls"'); 
+        header('Cache-Control: max-age=0');
+        $tglrange =$this->input->post('tgl');
+        $data['tgl'] = $this->input->post('tgl');
+        $data['lap'] = $this->Mod_laporan->get_laporan_kerusakan_alat($tglrange)->result();
+
+        $this->load->view('laporan/cetak_kerusakan_alat',$data);
+        // $writer->save('php://output');
+    }
+
+       public function cetak_kerusakan_bahan()
+    {
+        $tglrange =$this->input->post('tgl');
+        // $id_ruang =$this->input->post('id_ruang');
+        $data['tgl'] = $this->input->post('tgl');
+        $data['lap'] = $this->Mod_laporan->get_laporan_kerusakan_bahan($tglrange)->result();
+
+        $this->load->view('laporan/cetak_kerusakan_bahan',$data);
+    }
+
+    public function download_pdf_kerusakan_bahan()
+    {
+        $tglrange =$this->input->post('tgl');
+        $data['tgl'] = $this->input->post('tgl');
+        $data['lap'] = $this->Mod_laporan->get_laporan_kerusakan_bahan($tglrange)->result();
+        $data['act'] = $this->input->post('act');
+        $date=date('ymdhis');
+        $namafile='Lap_kerusakan_bahan'.$date.'.pdf';
+        // fungsi pdf dari library di autoload
+        $this->pdf->setPaper('A4', 'landscape');
+        $this->pdf->set_option('isRemoteEnabled', true);
+        $this->pdf->filename = $namafile;
+        $this->pdf->load_view('laporan/cetak_kerusakan_bahan', $data);
+    }
+
+    public function lap_kerusakan_bahan()
+    {
+        $filename = 'Lap_kerusakan_bahan';
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="'. $filename .'.xls"'); 
+        header('Cache-Control: max-age=0');
+        $tglrange =$this->input->post('tgl');
+        $data['tgl'] = $this->input->post('tgl');
+        $data['lap'] = $this->Mod_laporan->get_laporan_kerusakan_bahan($tglrange)->result();
+
+        $this->load->view('laporan/cetak_kerusakan_bahan',$data);
+        // $writer->save('php://output');
+    }
 }

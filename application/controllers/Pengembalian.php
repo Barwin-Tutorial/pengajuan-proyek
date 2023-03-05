@@ -11,7 +11,7 @@ class Pengembalian extends MY_Controller
     function __construct()
     {
         parent::__construct();
-        $this->load->model(array('Mod_pengembalian','Mod_peminjaman'));
+        $this->load->model(array('Mod_pengembalian','Mod_peminjaman','Mod_alat'));
         // $this->load->model('dashboard/Mod_dashboard');
     }
 
@@ -78,7 +78,10 @@ class Pengembalian extends MY_Controller
 
     public function insert()
     {
-
+        $kondisi = $this->input->post('id_kondisi');
+        if($kondisi=='2'){
+            $this->_validate1();
+        }
         $id_user = $this->session->userdata['id_user'];
         $id_jurusan = $this->session->userdata['id_jurusan'];
 
@@ -93,13 +96,20 @@ class Pengembalian extends MY_Controller
             $save1 = array('status' => '1', );
             $this->Mod_peminjaman->update($id_peminjaman, $save1);
         }
+        
+        
+      
 
         if(!empty($_FILES['imagefile']['name'])) {
-        // $this->_validate();
+      
             $id = $this->input->post('id_user');
 
             $nama = encrypt_url($this->input->post('nama'));
             $config['upload_path']   = './assets/foto/kembali/';
+            if($kondisi=='2'){
+                $config['upload_path']   = './assets/foto/kerusakan_alat/';
+        }
+            
             $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
             $config['max_size']      = '1000';
             $config['max_width']     = '2000';
@@ -113,6 +123,7 @@ class Pengembalian extends MY_Controller
              $save  = array(
                 'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
                 'id_jabatan'    => $this->input->post('id_jabatan'),
+                'id_peminjaman'    => $this->input->post('id_peminjaman'),
                 'id_alat'    => $this->input->post('id_alat'),
                 'id_satuan'    => $this->input->post('id_satuan'),
                 'id_kondisi'    => $this->input->post('id_kondisi'),
@@ -123,16 +134,34 @@ class Pengembalian extends MY_Controller
                 'id_user'    => $id_user,
                 'id_jurusan' => $id_jurusan,
                 'foto'         => $gambar['file_name'],
-                'id_peminjaman' => $this->input->post('id_peminjaman')
 
             );
              $this->Mod_pengembalian->insert("pengembalian", $save);
+             
              echo json_encode(array("status" => TRUE));
+             
+             if ($kondisi=='2') {
+            $save1  = array(
+                // 'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
+                'id_alat'    => $this->input->post('id_alat'),
+                'id_satuan'    => $this->input->post('id_satuan'),
+                'id_kondisi'    => $this->input->post('id_kondisi'),
+                'tgl_input'    => $this->input->post('tgl_in'),
+                'stok_out'    => $this->input->post('stok_in'),
+                'keterangan'    => $this->input->post('keterangan'),
+                'id_user'    => $id_user,
+                'id_jurusan' => $id_jurusan,
+                'foto'         => $gambar['file_name'],
+
+            );
+             $this->Mod_pengembalian->insert("kerusakan_alat", $save1);
+        }
          }
      }else{
         $save  = array(
             'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
             'id_jabatan'    => $this->input->post('id_jabatan'),
+            'id_peminjaman'    => $this->input->post('id_peminjaman'),
             'id_alat'    => $this->input->post('id_alat'),
             'id_satuan'    => $this->input->post('id_satuan'),
             'id_kondisi'    => $this->input->post('id_kondisi'),
@@ -142,31 +171,35 @@ class Pengembalian extends MY_Controller
             'keterangan'    => $this->input->post('keterangan'),
             'id_user'    => $id_user,
             'id_jurusan' => $id_jurusan,
-            'id_peminjaman' => $this->input->post('id_peminjaman')
 
         );
         $this->Mod_pengembalian->insert("pengembalian", $save);
         echo json_encode(array("status" => TRUE));
     }
-   
-    
+     
+        
+    if ($kondisi=='1') {
+            $save  = array(
+                'id_alat'    => $this->input->post('id_alat'),
+                'id_satuan'    => $this->input->post('id_satuan'),
+                'id_kondisi'    => $this->input->post('id_kondisi'),
+                'tgl_masuk'    => $this->input->post('tgl_in'),
+                'stok'    => $this->input->post('stok_in'),
+                'keterangan'    => $this->input->post('keterangan'),
+                'id_user'    => $id_user,
+                'id_jurusan' => $id_jurusan,
+
+            );
+               $this->Mod_pengembalian->insert("perbaikan_alat", $save);
+             
+        }
 }
 
 public function update()
 {
-        
+        // $this->_validate();
     $id      = $this->input->post('id');
 
-    /*$id_peminjaman = $this->input->post('id_peminjaman');
-    $stok_out = $this->input->post('stok_out');
-    $stok_in = $this->input->post('stok_in');
-    $cek=$this->Mod_pengembalian->get_pengembalian($id_peminjaman)->row();
-    $stok_in1 = $cek->stok_in;
-    $stin = $stok_in+$stok_in1;
-    if ($stok_out==$stin) {
-        $save1 = array('status' => '1', );
-        $this->Mod_peminjaman->update($id_peminjaman, $save1);
-    }*/
     if(!empty($_FILES['imagefile']['name'])) {
         // $this->_validate();
         $id = $this->input->post('id_user');
@@ -270,6 +303,27 @@ private function _validate()
     }
 }
 
+private function _validate1()
+{
+    $data = array();
+    $data['error_string'] = array();
+    $data['inputerror'] = array();
+    $data['status'] = TRUE;
+
+    
+    if(empty($_FILES['imagefile']['name']))
+    {
+        $data['inputerror'][] = 'imagefile';
+        $data['error_string'][] = 'Foto Wajib Dilampirkan';
+        $data['status'] = FALSE;
+    }
+
+    if($data['status'] === FALSE)
+    {
+        echo json_encode($data);
+        exit();
+    }
+}
 public function get_alat_bar()
 {
     $barcode = $this->input->post('barcode');
