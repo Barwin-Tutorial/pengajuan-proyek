@@ -11,7 +11,7 @@ class Pengembalian extends MY_Controller
     function __construct()
     {
         parent::__construct();
-        $this->load->model(array('Mod_pengembalian','Mod_peminjaman','Mod_alat'));
+        $this->load->model(array('Mod_pengembalian','Mod_peminjaman','Mod_alat','Mod_perbaikan_alat','Mod_kerusakan_alat'));
         // $this->load->model('dashboard/Mod_dashboard');
     }
 
@@ -97,18 +97,19 @@ class Pengembalian extends MY_Controller
             $this->Mod_peminjaman->update($id_peminjaman, $save1);
         }
         
-        
-      
-
         if(!empty($_FILES['imagefile']['name'])) {
-      
+
             $id = $this->input->post('id_user');
 
             $nama = encrypt_url($this->input->post('nama'));
             $config['upload_path']   = './assets/foto/kembali/';
             if($kondisi=='2'){
                 $config['upload_path']   = './assets/foto/kerusakan_alat/';
-        }
+            }
+
+            if($kondisi=='1'){
+                $config['upload_path']   = './assets/foto/perbaikan_alat/';
+            }
             
             $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
             $config['max_size']      = '1000';
@@ -137,27 +138,45 @@ class Pengembalian extends MY_Controller
 
             );
              $this->Mod_pengembalian->insert("pengembalian", $save);
-             
+             $id_pengembalian = $this->db->insert_id();
              echo json_encode(array("status" => TRUE));
-             
-             if ($kondisi=='2') {
-            $save1  = array(
-                // 'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
-                'id_alat'    => $this->input->post('id_alat'),
-                'id_satuan'    => $this->input->post('id_satuan'),
-                'id_kondisi'    => $this->input->post('id_kondisi'),
-                'tgl_input'    => $this->input->post('tgl_in'),
-                'stok_out'    => $this->input->post('stok_in'),
-                'keterangan'    => $this->input->post('keterangan'),
-                'id_user'    => $id_user,
-                'id_jurusan' => $id_jurusan,
-                'foto'         => $gambar['file_name'],
 
-            );
-             $this->Mod_pengembalian->insert("kerusakan_alat", $save1);
+             if ($kondisi=='2') {
+                $save1  = array(
+                    'id_alat'    => $this->input->post('id_alat'),
+                    'id_satuan'    => $this->input->post('id_satuan'),
+                    'id_kondisi'    => $this->input->post('id_kondisi'),
+                    'tgl_input'    => $this->input->post('tgl_in'),
+                    'stok_out'    => $this->input->post('stok_in'),
+                    'keterangan'    => $this->input->post('keterangan'),
+                    'id_user'    => $id_user,
+                    'id_jurusan' => $id_jurusan,
+                    'id_pengembalian' => $id_pengembalian,
+                    'foto'         => $gambar['file_name'],
+
+                );
+                $this->Mod_pengembalian->insert("kerusakan_alat", $save1);
+            }
+
+            if ($kondisi=='1') {
+                $save  = array(
+                    'id_alat'    => $this->input->post('id_alat'),
+                    'id_satuan'    => $this->input->post('id_satuan'),
+                    'id_kondisi'    => $this->input->post('id_kondisi'),
+                    'tgl_masuk'    => $this->input->post('tgl_in'),
+                    'stok'    => $this->input->post('stok_in'),
+                    'keterangan'    => $this->input->post('keterangan'),
+                    'id_user'    => $id_user,
+                    'id_jurusan' => $id_jurusan,
+                    'id_pengembalian' => $id_pengembalian,
+                    'foto'         => $gambar['file_name'],
+
+                );
+                $this->Mod_pengembalian->insert("perbaikan_alat", $save);
+
+            }
         }
-         }
-     }else{
+    }else{
         $save  = array(
             'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
             'id_jabatan'    => $this->input->post('id_jabatan'),
@@ -174,11 +193,10 @@ class Pengembalian extends MY_Controller
 
         );
         $this->Mod_pengembalian->insert("pengembalian", $save);
+        $id_pengembalian = $this->db->insert_id();
         echo json_encode(array("status" => TRUE));
-    }
-     
-        
-    if ($kondisi=='1') {
+
+        if ($kondisi=='1') {
             $save  = array(
                 'id_alat'    => $this->input->post('id_alat'),
                 'id_satuan'    => $this->input->post('id_satuan'),
@@ -188,18 +206,44 @@ class Pengembalian extends MY_Controller
                 'keterangan'    => $this->input->post('keterangan'),
                 'id_user'    => $id_user,
                 'id_jurusan' => $id_jurusan,
+                'id_pengembalian' => $id_pengembalian,
 
             );
-               $this->Mod_pengembalian->insert("perbaikan_alat", $save);
-             
+            $this->Mod_pengembalian->insert("perbaikan_alat", $save);
+
         }
+
+
+
+    }
 }
 
 public function update()
 {
-        // $this->_validate();
-    $id      = $this->input->post('id');
+    $kondisi = $this->input->post('id_kondisi');
+    if($kondisi=='2'){
+        $this->_validate1();
+    }
+    $id_user = $this->session->userdata['id_user'];
+    $id_jurusan = $this->session->userdata['id_jurusan'];
 
+    $id_peminjaman = $this->input->post('id_peminjaman');
+    $stok_out = $this->input->post('stok_out');
+    $stok_in = $this->input->post('stok_in');
+    $cek=$this->Mod_pengembalian->get_pengembalian($id_peminjaman)->row();
+    $stok_in1 = (!empty($cek->stok_in)) ? $cek->stok_in : '0' ;
+    $stin = $stok_in+$stok_in1;
+
+    if ($stok_out==$stin) {
+        $save1 = array('status' => '1', );
+        $this->Mod_peminjaman->update($id_peminjaman, $save1);
+    }else{
+        $save1 = array('status' => '0', );
+        $this->Mod_peminjaman->update($id_peminjaman, $save1);
+    }
+
+
+    $id      = $this->input->post('id');
     if(!empty($_FILES['imagefile']['name'])) {
         // $this->_validate();
         $id = $this->input->post('id_user');
@@ -207,6 +251,13 @@ public function update()
         $nama = encrypt_url($this->input->post('nama'));
         $config['upload_path']   = './assets/foto/kembali/';
             $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
+            if($kondisi=='2'){
+                $config['upload_path']   = './assets/foto/kerusakan_alat/';
+            }
+
+            if($kondisi=='1'){
+                $config['upload_path']   = './assets/foto/perbaikan_alat/';
+            }
             $config['max_size']      = '1000';
             $config['max_width']     = '2000';
             $config['max_height']    = '1024';
@@ -231,14 +282,57 @@ public function update()
             );
              $g = $this->Mod_pengembalian->getImage($id)->row();
 
-            if (!empty($g->foto) || $g->foto != NULL) {
+             if (!empty($g->foto)) {
                 //hapus gambar yg ada diserver
                 unlink('assets/foto/kembali/'.$g->foto);
+                if($kondisi=='2'){
+
+                    unlink('./assets/foto/perbaikan_alat/'.$g->foto);
+                }elseif($kondisi=='2'){
+
+                    unlink('./assets/foto/kerusakan_alat/'.$g->foto);
+                }else{
+                    unlink('./assets/foto/perbaikan_alat/'.$g->foto);
+                    unlink('./assets/foto/kerusakan_alat/'.$g->foto);
+                }
             }
-             $this->Mod_pengembalian->update($id, $save);
-             echo json_encode(array("status" => TRUE));
-         }
-     }else{
+            $this->Mod_pengembalian->update($id, $save);
+            echo json_encode(array("status" => TRUE));
+
+            if ($kondisi=='2') {//Jika kondisi rusak 
+                $save  = array(
+                    'id_alat'    => $this->input->post('id_alat'),
+                    'id_satuan'    => $this->input->post('id_satuan'),
+                    'id_kondisi'    => $this->input->post('id_kondisi'),
+                    'tgl_masuk'    => $this->input->post('tgl_in'),
+                    'stok'    => $this->input->post('stok_in'),
+                    'keterangan'    => $this->input->post('keterangan'),
+                    'id_user'    => $id_user,
+                    'id_jurusan' => $id_jurusan,
+
+                );
+                $this->Mod_pengembalian->update_rusak($id, $save);//update kerusakan
+                $this->Mod_pengembalian->delete_perbaikan($id, 'perbaikan_alat');  //hapus perbaikan
+            }elseif ($kondisi=='1') {//jika maintenance
+                $save  = array(
+                    'id_alat'    => $this->input->post('id_alat'),
+                    'id_satuan'    => $this->input->post('id_satuan'),
+                    'id_kondisi'    => $this->input->post('id_kondisi'),
+                    'tgl_masuk'    => $this->input->post('tgl_in'),
+                    'stok'    => $this->input->post('stok_in'),
+                    'keterangan'    => $this->input->post('keterangan'),
+                    'id_user'    => $id_user,
+                    'id_jurusan' => $id_jurusan,
+
+                );
+                $this->Mod_pengembalian->update_perbaikan($id, $save);//update perbaikan
+                $this->Mod_pengembalian->delete_kerusakan($id, 'kerusakan_alat'); //hapus kerusakan
+            }else{
+                 $this->Mod_pengembalian->delete_perbaikan($id, 'perbaikan_alat');  //hapus perbaikan
+                $this->Mod_pengembalian->delete_kerusakan($id, 'kerusakan_alat'); //hapus kerusakan
+            }
+        }
+    }else{
         $save  = array(
             'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
             'id_jabatan'    => $this->input->post('id_jabatan'),
@@ -254,6 +348,24 @@ public function update()
 
         $this->Mod_pengembalian->update($id, $save);
         echo json_encode(array("status" => TRUE));
+        if ($kondisi=='1') {
+            $save  = array(
+                'id_alat'    => $this->input->post('id_alat'),
+                'id_satuan'    => $this->input->post('id_satuan'),
+                'id_kondisi'    => $this->input->post('id_kondisi'),
+                'tgl_masuk'    => $this->input->post('tgl_in'),
+                'stok'    => $this->input->post('stok_in'),
+                'keterangan'    => $this->input->post('keterangan'),
+                'id_user'    => $id_user,
+                'id_jurusan' => $id_jurusan,
+                'id_pengembalian' => $id,
+
+            );
+            $this->Mod_pengembalian->insert("perbaikan_alat", $save);
+            $this->Mod_pengembalian->delete_kerusakan($id, 'kerusakan_alat'); //hapus kerusakan
+        }
+
+
     }
 
 }
@@ -272,11 +384,26 @@ public function edit($id)
 public function delete()
 {
     $id = $this->input->post('id');
+    $data = $this->Mod_pengembalian->get($id);
+    $id_peminjaman = $data->id_peminjaman;
+    $save1 = array('status' => '0', );
+    $this->Mod_peminjaman->update($id_peminjaman, $save1);
+    $this->Mod_pengembalian->delete_perbaikan($id, 'perbaikan_alat');  //hapus perbaikan
+     $this->Mod_pengembalian->delete_kerusakan($id, 'kerusakan_alat'); //hapus kerusakan
     $g = $this->Mod_pengembalian->getImage($id)->row();
 
     if (!empty($g->foto) || $g->foto != NULL) {
                 //hapus gambar yg ada diserver
         unlink('assets/foto/kembali/'.$g->foto);
+        if ($g->id_kondisi=='1') {
+            unlink('assets/foto/perbaikan_alat/'.$g->foto);
+        } 
+        if ($g->id_kondisi=='1') {
+            unlink('assets/foto/kerusakan_alat/'.$g->foto);
+        }
+        
+        
+        
     }
     $this->Mod_pengembalian->delete($id, 'pengembalian');        
     echo json_encode(array("status" => TRUE));

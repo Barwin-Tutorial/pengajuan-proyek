@@ -106,6 +106,8 @@ class Mod_pengembalian extends CI_Model
         $this->db->update('pengembalian', $data);
     }
 
+
+
         function get($id)
     {   
 
@@ -119,9 +121,20 @@ class Mod_pengembalian extends CI_Model
         $this->db->delete($table);
     }
 
+     function delete_perbaikan($id, $table)
+    {
+        $this->db->where('id_pengembalian', $id);
+        $this->db->delete($table);
+    }
+
+     function delete_kerusakan($id, $table)
+    {
+        $this->db->where('id_pengembalian', $id);
+        $this->db->delete($table);
+    }
        function getImage($id)
     {
-        $this->db->select('foto');
+        $this->db->select('foto,id_kondisi');
         $this->db->where('id_pengembalian', $id);
         return $this->db->get('pengembalian');
     }
