@@ -106,7 +106,16 @@ class Mod_pengembalian extends CI_Model
         $this->db->update('pengembalian', $data);
     }
 
-
+  function update_kerusakan($id, $data)
+    {
+        $this->db->where('id_pengembalian', $id);
+        $this->db->update('kerusakan_alat', $data);
+    }
+      function update_perbaikan($id, $data)
+    {
+        $this->db->where('id_pengembalian', $id);
+        $this->db->update('perbaikan_alat', $data);
+    }
 
         function get($id)
     {   
@@ -157,5 +166,17 @@ class Mod_pengembalian extends CI_Model
         $this->db->select('SUM(stok_in) as stok_in');
         $this->db->where('id_peminjaman', $id);
         return $this->db->get('pengembalian');
+    }
+
+    function cek_kerusakan_alat($id_pengembalian='')
+    {
+    	$this->db->where('id_pengembalian', $id_pengembalian);
+        return $this->db->get('kerusakan_alat');
+    }
+
+    function cek_perbaikan_alat($id_pengembalian='')
+    {
+    	$this->db->where('id_pengembalian', $id_pengembalian);
+        return $this->db->get('perbaikan_alat');
     }
 }
