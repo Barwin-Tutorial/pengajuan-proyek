@@ -173,9 +173,13 @@ function edit(id){
             $('[name="id_kondisi"]').val(data.id_kondisi);
             $('[name="id_satuan"]').val(data.id_satuan);
             $('[name="stok_in"]').val(data.stok_in);
+            $('[name="stok_out"]').val(data.stok_out);
             $('[name="tgl_out"]').val(data.tgl_out);
             $('[name="tgl_in"]').val(data.tgl_in);
             $('[name="keterangan"]').val(data.keterangan);
+            $('[name="id_peminjaman"]').val(data.id_peminjaman); 
+            var foto = "<?php echo base_url('assets/foto/images/')?>"+data.foto;
+             $("#v_image").attr("src",foto);
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
             $('.modal-title').text('Pengembalian'); // Set title to Bootstrap modal title
 

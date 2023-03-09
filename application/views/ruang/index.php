@@ -232,6 +232,15 @@ function save()
         }
     });
 }
+
+function enter(event) {
+    if (event.key === "Enter") {
+    event.preventDefault();
+    save();
+  }
+}
+
+
 var loadFile = function(event) {
   var image = document.getElementById('v_image');
   image.src = URL.createObjectURL(event.target.files[0]);
@@ -253,14 +262,14 @@ var loadFile = function(event) {
 
             </div>
             <div class="modal-body form">
-                <form action="#" id="form" class="form-horizontal" >
+                <form action="" id="form" class="form-horizontal" method="post">
                     <input type="hidden" value="" name="id"/> 
                     <div class="card-body">
 
                         <div class="form-group row ">
                             <label for="nama" class="col-sm-3 col-form-label">Nama Ruang</label>
                             <div class="col-sm-9 kosong">
-                                <input type="text" class="form-control" name="nama_ruang" id="nama" placeholder="Nama Ruang" >
+                                <input type="text" class="form-control" name="nama_ruang" id="nama"  placeholder="Nama Ruang" onkeypress="enter(event)">
                                 <span class="help-block"></span>
                             </div>
                         </div>

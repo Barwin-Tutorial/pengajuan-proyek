@@ -86,7 +86,7 @@ class Perbaikan_alat extends MY_Controller
             $id = $this->input->post('id_user');
 
             $nama = encrypt_url($this->input->post('id_alat'));
-            $config['upload_path']   = './assets/foto/perbaikan_alat/';
+            $config['upload_path']   = './assets/foto/images/';
             $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
             $config['max_size']      = '1000';
             $config['max_width']     = '2000';
@@ -130,7 +130,7 @@ class Perbaikan_alat extends MY_Controller
         // $this->_validate();
 
         $nama = encrypt_url($this->input->post('id_alat'));
-        $config['upload_path']   = './assets/foto/perbaikan_alat/';
+        $config['upload_path']   = './assets/foto/images/';
             $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
             $config['max_size']      = '1000';
             $config['max_width']     = '2000';
@@ -202,8 +202,6 @@ class Perbaikan_alat extends MY_Controller
        $id_user = $this->session->userdata['id_user'];
        $id_jurusan = $this->session->userdata['id_jurusan'];
        $data = $this->Mod_perbaikan_alat->get($id);
-       $path= './assets/foto/perbaikan_alat/'.$data->foto;
-       $path1= './assets/foto/kerusakan_alat/'.$data->foto;
        $save1  = array(
         'id_alat'    => $this->input->post('id_alat'),
         'id_satuan'    => $this->input->post('id_satuan'),
@@ -215,7 +213,6 @@ class Perbaikan_alat extends MY_Controller
         'id_jurusan' => $id_jurusan,
         'foto' => $data->foto
     );
-       copy($path, $path1);
        $this->Mod_perbaikan_alat->insert("kerusakan_alat", $save1);
    }
 
@@ -235,7 +232,7 @@ public function delete()
 
     if (!empty($g->foto) || $g->foto != NULL) {
                 //hapus gambar yg ada diserver
-        unlink('assets/foto/perbaikan_alat/'.$g->foto);
+        unlink('assets/foto/images/'.$g->foto);
     }
     $this->Mod_perbaikan_alat->delete($id, 'perbaikan_alat');        
     echo json_encode(array("status" => TRUE));

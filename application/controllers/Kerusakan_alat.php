@@ -61,7 +61,7 @@ class Kerusakan_alat extends MY_Controller
             // $row[] = $pel->kondisi;
             $row[] = $pel->tgl_input;
             $row[] = $pel->keterangan;
-            $row[] = "<img src=\"./assets/foto/kerusakan_alat/".$pel->foto."\" width=\"50px\" height=\"50px\">";
+            $row[] = "<img src=\"./assets/foto/images/".$pel->foto."\" width=\"50px\" height=\"50px\">";
             $row[] = "<a class=\"btn btn-xs btn-outline-primary edit\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit('$pel->id_kerusakan_alat')\"><i class=\"fas fa-edit\"></i></a><a class=\"btn btn-xs btn-outline-danger delete\" href=\"javascript:void(0)\" title=\"Delete\"  onclick=\"hapus('$pel->id_kerusakan_alat')\"><i class=\"fas fa-trash\"></i></a>";
             $data[] = $row;
         }
@@ -87,7 +87,7 @@ class Kerusakan_alat extends MY_Controller
             $id = $this->input->post('id_user');
 
             $nama = encrypt_url($this->input->post('id_alat'));
-            $config['upload_path']   = './assets/foto/kerusakan_alat/';
+            $config['upload_path']   = './assets/foto/images/';
             $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
             $config['max_size']      = '1000';
             $config['max_width']     = '2000';
@@ -128,7 +128,7 @@ class Kerusakan_alat extends MY_Controller
         $id = $this->input->post('id_user');
 
         $nama = encrypt_url($this->input->post('id_alat'));
-        $config['upload_path']   = './assets/foto/kerusakan_alat/';
+        $config['upload_path']   = './assets/foto/images/';
             $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
             $config['max_size']      = '1000';
             $config['max_width']     = '2000';
@@ -155,7 +155,7 @@ class Kerusakan_alat extends MY_Controller
 
                if (!empty($g->foto) || $g->foto != NULL) {
                 //hapus gambar yg ada diserver
-                unlink('assets/foto/kerusakan_alat/'.$g->foto);
+                unlink('assets/foto/images/'.$g->foto);
             }
 
             $this->Mod_kerusakan_alat->update($id, $save);
@@ -192,7 +192,7 @@ public function delete()
 
     if (!empty($g->foto) || $g->foto != NULL) {
                 //hapus gambar yg ada diserver
-        unlink('assets/foto/kerusakan_alat/'.$g->foto);
+        unlink('assets/foto/images/'.$g->foto);
     }
     $this->Mod_kerusakan_alat->delete($id, 'kerusakan_alat');        
     echo json_encode(array("status" => TRUE));

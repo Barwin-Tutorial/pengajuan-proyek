@@ -119,7 +119,8 @@ class Mod_pengembalian extends CI_Model
 
         function get($id)
     {   
-
+    	$this->db->select('a.*,b.stok_out');
+    	$this->db->join('peminjaman b','a.id_peminjaman=b.id_peminjaman','left');
         $this->db->where('a.id_pengembalian',$id);
         return $this->db->get('pengembalian a')->row();
     }
@@ -168,7 +169,7 @@ class Mod_pengembalian extends CI_Model
         return $this->db->get('pengembalian');
     }
 
-    function cek_kerusakan_alat($id_pengembalian='')
+    function cek_kerusakan_alat($id_pengembalian)
     {
     	$this->db->where('id_pengembalian', $id_pengembalian);
         return $this->db->get('kerusakan_alat');

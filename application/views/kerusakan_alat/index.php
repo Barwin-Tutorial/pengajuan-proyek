@@ -177,7 +177,7 @@ function edit(id){
             $('[name="tgl_input"]').val(data.tgl_input);
             $('[name="keterangan"]').val(data.keterangan);
             // $('[name="imagefile"]').val(data.foto);
-            var foto = "<?php echo base_url('assets/foto/kerusakan_alat/')?>"+data.foto;
+            var foto = "<?php echo base_url('assets/foto/images/')?>"+data.foto;
              $("#v_image").attr("src",foto);
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
             $('.modal-title').text('Kerusakan Alat'); // Set title to Bootstrap modal title
