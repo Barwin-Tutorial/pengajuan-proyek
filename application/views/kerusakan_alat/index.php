@@ -371,25 +371,7 @@ $(document).ready(function(){
                             <span class="help-block"></span>
                         </div>
                     </div>
-                    <!-- <div class="form-group row ">
-                        <label for="nama" class="col-sm-3 col-form-label">Nama Peminjam</label>
-                        <div class="col-sm-9 kosong">
-                            <input type="text" class="form-control" name="nama" id="nama" placeholder="Nama Peminjam" >
-                            <span class="help-block"></span>
-                        </div>
-                    </div> -->
-                    <!-- <div class="form-group row ">
-                        <label for="id_jabatan" class="col-sm-3 col-form-label">Jabatan</label>
-                        <div class="col-sm-9 kosong">
-                            <select class="form-control" name="id_jabatan" id="id_jabatan">
-                                <option value="" selected="" disabled="">Pilih Jabatan</option>
-                                <?php foreach ($jabatan->result() as $j): ?>
-                                    <option value="<?=$j->id_jabatan?>"><?php echo $j->nama_jabatan; ?></option>
-                                <?php endforeach ?>
-                            </select>
-                            <span class="help-block"></span>
-                        </div>
-                    </div> -->
+                  
                     <div class="form-group row ">
                         <label for="nama" class="col-sm-3 col-form-label">Stok Out</label>
                         <div class="col-sm-9 kosong">
@@ -403,10 +385,7 @@ $(document).ready(function(){
                             <label for="nama" class="col-sm-3 col-form-label">Kondisi</label>
                             <div class="col-sm-9 kosong">
                                 <select class="form-control" name="id_kondisi" id="id_kondisi">
-                                    <option value="2" selected="" disabled="">Rusak</option>
-                                    <!--<?php foreach ($kondisi->result() as $k): ?>
-                                        <option value="<?=$k->id_kondisi?>"><?php echo $k->kondisi; ?></option>
-                                    <?php endforeach ?>-->
+                                    <option value="2" selected="" >Rusak</option>
                                 </select>
                                 <span class="help-block"></span>
                             </div>

@@ -82,15 +82,14 @@ class Perbaikan_alat extends MY_Controller
         $id_jurusan = $this->session->userdata['id_jurusan'];
         $this->_validate();
         if(!empty($_FILES['imagefile']['name'])) {
-        // 
-            $id = $this->input->post('id_user');
+  
 
             $nama = encrypt_url($this->input->post('id_alat'));
             $config['upload_path']   = './assets/foto/images/';
             $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
-            $config['max_size']      = '1000';
-            $config['max_width']     = '2000';
-            $config['max_height']    = '1024';
+            $config['max_size']      = '10000';
+            $config['max_width']     = '5000';
+            $config['max_height']    = '5000';
             $config['file_name']     = $nama; 
             
             $this->upload->initialize($config);
@@ -98,8 +97,6 @@ class Perbaikan_alat extends MY_Controller
             if ($this->upload->do_upload('imagefile')){
                $gambar = $this->upload->data();
                $save  = array(
-                // 'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
-                // 'id_jabatan'    => $this->input->post('id_jabatan'),
                 'id_alat'    => $this->input->post('id_alat'),
                 'id_satuan'    => $this->input->post('id_satuan'),
                 'id_kondisi'    => $this->input->post('id_kondisi'),
@@ -132,17 +129,15 @@ class Perbaikan_alat extends MY_Controller
         $nama = encrypt_url($this->input->post('id_alat'));
         $config['upload_path']   = './assets/foto/images/';
             $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
-            $config['max_size']      = '1000';
-            $config['max_width']     = '2000';
-            $config['max_height']    = '1024';
+            $config['max_size']      = '10000';
+            $config['max_width']     = '5000';
+            $config['max_height']    = '5000';
             $config['file_name']     = $nama; 
             $this->upload->initialize($config);
 
             if ($this->upload->do_upload('imagefile')){
              $gambar = $this->upload->data();
              $save  = array(
-                // 'nama'         => htmlspecialchars_decode(ucwords($this->input->post('nama'))),
-                // 'id_jabatan'    => $this->input->post('id_jabatan'),
                 'id_alat'    => $this->input->post('id_alat'),
                 'id_satuan'    => $this->input->post('id_satuan'),
                 'id_kondisi'    => $this->input->post('id_kondisi'),
@@ -155,9 +150,9 @@ class Perbaikan_alat extends MY_Controller
 
              $g = $this->Mod_perbaikan_alat->getImage($id)->row();
 
-             if (!empty($g->foto) || $g->foto != NULL) {
+             if (!empty($g->foto)) {
                 //hapus gambar yg ada diserver
-                unlink('assets/foto/perbaikan_alat/'.$g->foto);
+                unlink('assets/foto/images/'.$g->foto);
             }
 
 
@@ -187,6 +182,17 @@ class Perbaikan_alat extends MY_Controller
 
     }
 
+    $stok_in=$this->input->post('stok_out');
+    if ($stok_in=='0') {
+        $g = $this->Mod_perbaikan_alat->getImage($id)->row();
+
+       if (!empty($g->foto)) {
+                //hapus gambar yg ada diserver
+        unlink('assets/foto/images/'.$g->foto);
+    }
+    $this->Mod_perbaikan_alat->delete($id, 'perbaikan_alat');   
+    }
+
     if ($id_kondisi=='3') {
         $r=$this->Mod_fungsi->get_alat_by_id($id_alat)->row();
         $stok =$r->stok;
@@ -196,6 +202,13 @@ class Perbaikan_alat extends MY_Controller
             'stok'    => $jml_stok,
         );
         $this->Mod_perbaikan_alat->update_stok($id_alat, $save);
+         $g = $this->Mod_perbaikan_alat->getImage($id)->row();
+
+       if (!empty($g->foto)) {
+                //hapus gambar yg ada diserver
+        unlink('assets/foto/images/'.$g->foto);
+    }
+    $this->Mod_perbaikan_alat->delete($id, 'perbaikan_alat');   
     }
 
     if ($id_kondisi=='2') {
@@ -214,6 +227,8 @@ class Perbaikan_alat extends MY_Controller
         'foto' => $data->foto
     );
        $this->Mod_perbaikan_alat->insert("kerusakan_alat", $save1);
+       
+    $this->Mod_perbaikan_alat->delete($id, 'perbaikan_alat');   
    }
 
 }

@@ -104,4 +104,65 @@ class Mod_dashboard extends CI_Model
 		$this->db->from('perbaikan_alat');
 		return $this->db->count_all_results();
 	}
+
+	function grafik_peminjaman()
+	{
+		$tahun = date("Y");
+		$level = $this->session->userdata['id_level'];
+		$id_jurusan = $this->session->userdata['id_jurusan'];
+		if ($level=='6' || $level=='9') {
+			$this->db->where('a.id_jurusan',$id_jurusan);
+		}
+
+		$this->db->select('count(a.id_peminjaman) as total, month(a.tgl_input) as bulan');
+		$this->db->where('YEAR(a.tgl_input)',$tahun);
+		$this->db->group_by('month(a.tgl_input)');
+		return $this->db->get('peminjaman a');
+	}
+
+	function grafik_pengembalian()
+	{
+		$tahun = date("Y");
+		$level = $this->session->userdata['id_level'];
+		$id_jurusan = $this->session->userdata['id_jurusan'];
+		if ($level=='6' || $level=='9') {
+			$this->db->where('a.id_jurusan',$id_jurusan);
+		}
+
+		$this->db->select('count(a.id_pengembalian) as total,month(a.tgl_input) as bulan');
+		$this->db->where('YEAR(a.tgl_input)',$tahun);
+		$this->db->group_by('month(a.tgl_input)');
+		return $this->db->get('pengembalian a');
+	}
+
+	function grafik_alat()
+	{
+		$tahun = date("Y");
+		$level = $this->session->userdata['id_level'];
+		$id_jurusan = $this->session->userdata['id_jurusan'];
+		if ($level=='6' || $level=='9') {
+			$this->db->where('a.id_jurusan',$id_jurusan);
+		}
+
+		$this->db->select('count(a.id_alat) as total,month(a.tgl_input) as bulan');
+		$this->db->where('YEAR(a.tgl_input)',$tahun);
+		$this->db->group_by('month(a.tgl_input)');
+		$this->db->order_by('a.tgl_input');
+		return $this->db->get('alat a');
+	}
+
+	function grafik_bahan()
+	{
+		$tahun = date("Y");
+		$level = $this->session->userdata['id_level'];
+		$id_jurusan = $this->session->userdata['id_jurusan'];
+		if ($level=='6' || $level=='9') {
+			$this->db->where('a.id_jurusan',$id_jurusan);
+		}
+
+		$this->db->select('count(a.id_bahan) as total,month(a.tgl_input) as bulan');
+		$this->db->where('YEAR(a.tgl_input)',$tahun);
+		$this->db->group_by('month(a.tgl_input)');
+		return $this->db->get('bahan a');
+	}
 }

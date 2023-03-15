@@ -102,9 +102,9 @@ class Alat extends MY_Controller
             $nama = slug($this->input->post('nama_alat'));
             $config['upload_path']   = './assets/foto/alat/';
             $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
-            $config['max_size']      = '1000';
-            $config['max_width']     = '2000';
-            $config['max_height']    = '1024';
+            $config['max_size']      = '10000';
+            $config['max_width']     = '5000';
+            $config['max_height']    = '5000';
             $config['file_name']     = $nama; 
             
             $this->upload->initialize($config);
@@ -116,8 +116,8 @@ class Alat extends MY_Controller
                 'merk'         => htmlspecialchars_decode($this->input->post('nama_merk')),
                 'id_satuan'         => htmlspecialchars_decode($this->input->post('id_satuan')),
                 'stok'         => htmlspecialchars_decode($this->input->post('stok')),
-                'id_kondisi'         => htmlspecialchars_decode($this->input->post('id_kondisi')),
-                'id_ruang'         => htmlspecialchars_decode($this->input->post('id_ruang')),
+                'id_kondisi'         => $this->input->post('id_kondisi'),
+                'id_ruang'         => $this->input->post('id_ruang'),
                 'keterangan'         => htmlspecialchars_decode($this->input->post('keterangan')),
                 'tahun'         => $this->input->post('tahun'),
                 'photo'         => $gambar['file_name'],
@@ -171,16 +171,14 @@ class Alat extends MY_Controller
         // $this->_validate();
         $id      = $this->input->post('id');
         if(!empty($_FILES['imagefile']['name'])) {
-        // $this->_validate();
-            $id = $this->input->post('id_user');
 
-            $nama = slug($this->input->post('nama_alat'));
+             $nama = slug($this->input->post('nama_alat'));
             $config['upload_path']   = './assets/foto/alat/';
-        $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
-        $config['max_size']      = '1000';
-        $config['max_width']     = '2000';
-        $config['max_height']    = '1024';
-        $config['file_name']     = $nama; 
+            $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
+            $config['max_size']      = '10000';
+            $config['max_width']     = '5000';
+            $config['max_height']    = '5000';
+            $config['file_name']     = $nama; 
         
         $this->upload->initialize($config);
 
@@ -189,19 +187,19 @@ class Alat extends MY_Controller
          $save  = array(
             'nama_alat'         => htmlspecialchars_decode(ucwords($this->input->post('nama_alat'))),
             'merk'         => htmlspecialchars_decode($this->input->post('nama_merk')),
-            'id_satuan'         => htmlspecialchars_decode($this->input->post('id_satuan')),
-            'stok'         => htmlspecialchars_decode($this->input->post('stok')),
-            'id_kondisi'         => htmlspecialchars_decode($this->input->post('id_kondisi')),
-            'id_ruang'         => htmlspecialchars_decode($this->input->post('id_ruang')),
+            'id_satuan'         => $this->input->post('id_satuan'),
+            'stok'         => $this->input->post('stok'),
+            'id_kondisi'         => $this->input->post('id_kondisi'),
+            'id_ruang'         => $this->input->post('id_ruang'),
             'keterangan'         => htmlspecialchars_decode($this->input->post('keterangan')),
             'tahun'         => $this->input->post('tahun'),
-            'photo'         => $gambar['file_name']
+             'photo'         => $gambar['file_name'],
 
         );
 
          $g = $this->Mod_alat->getImage($id)->row();
 
-         if (!empty($g->photo) || $g->photo != NULL) {
+         if (!empty($g->photo)) {
                 //hapus gambar yg ada diserver
             unlink('assets/foto/alat/'.$g->photo);
         }
@@ -213,10 +211,10 @@ class Alat extends MY_Controller
     $save  = array(
         'nama_alat'         => htmlspecialchars_decode(ucwords($this->input->post('nama_alat'))),
         'merk'         => htmlspecialchars_decode($this->input->post('nama_merk')),
-        'id_satuan'         => htmlspecialchars_decode($this->input->post('id_satuan')),
-        'stok'         => htmlspecialchars_decode($this->input->post('stok')),
-        'id_kondisi'         => htmlspecialchars_decode($this->input->post('id_kondisi')),
-        'id_ruang'         => htmlspecialchars_decode($this->input->post('id_ruang')),
+        'id_satuan'         => $this->input->post('id_satuan'),
+        'stok'         => $this->input->post('stok'),
+        'id_kondisi'         => $this->input->post('id_kondisi'),
+        'id_ruang'         => $this->input->post('id_ruang'),
         'keterangan'         => htmlspecialchars_decode($this->input->post('keterangan')),
         'tahun'         => $this->input->post('tahun'),
 

@@ -100,9 +100,9 @@ class Bahan extends MY_Controller
             $nama = slug($this->input->post('nama_bahan'));
             $config['upload_path']   = './assets/foto/bahan/';
             $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
-            $config['max_size']      = '1000';
-            $config['max_width']     = '2000';
-            $config['max_height']    = '1024';
+            $config['max_size']      = '10000';
+            $config['max_width']     = '5000';
+            $config['max_height']    = '5000';
             $config['file_name']     = $nama; 
             
             $this->upload->initialize($config);
@@ -165,15 +165,14 @@ class Bahan extends MY_Controller
         // $this->_validate();
         $id      = $this->input->post('id');
         if(!empty($_FILES['imagefile']['name'])) {
-        // $this->_validate();
-            $id = $this->input->post('id_user');
+
 
             $nama = slug($this->input->post('nama_bahan'));
             $config['upload_path']   = './assets/foto/bahan/';
         $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
-        $config['max_size']      = '1000';
-        $config['max_width']     = '2000';
-        $config['max_height']    = '1024';
+        $config['max_size']      = '10000';
+        $config['max_width']     = '5000';
+        $config['max_height']    = '5000';
         $config['file_name']     = $nama; 
         
         $this->upload->initialize($config);
@@ -192,7 +191,7 @@ class Bahan extends MY_Controller
 
            $g = $this->Mod_bahan->getImage($id)->row();
 
-           if (!empty($g->photo) || $g->photo != NULL) {
+           if (!empty($g->photo) && $g->photo != NULL) {
                 //hapus gambar yg ada diserver
             unlink('assets/foto/bahan/'.$g->photo);
         }

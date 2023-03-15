@@ -85,15 +85,14 @@ class Peminjaman extends MY_Controller
         $id_jurusan = $this->session->userdata['id_jurusan'];
 
         if(!empty($_FILES['imagefile']['name'])) {
-        // $this->_validate();
-            $id = $this->input->post('id_user');
+      
 
             $nama = encrypt_url($this->input->post('nama'));
             $config['upload_path']   = './assets/foto/pinjam/';
             $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
-            $config['max_size']      = '1000';
-            $config['max_width']     = '2000';
-            $config['max_height']    = '1024';
+            $config['max_size']      = '10000';
+            $config['max_width']     = '5000';
+            $config['max_height']    = '5000';
             $config['file_name']     = $nama; 
             
             $this->upload->initialize($config);
@@ -144,15 +143,13 @@ class Peminjaman extends MY_Controller
         // $this->_validate();
     $id      = $this->input->post('id');
     if(!empty($_FILES['imagefile']['name'])) {
-        // $this->_validate();
-        $id = $this->input->post('id_user');
-
+      
         $nama = encrypt_url($this->input->post('nama'));
         $config['upload_path']   = './assets/foto/pinjam/';
             $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
-            $config['max_size']      = '1000';
-            $config['max_width']     = '2000';
-            $config['max_height']    = '1024';
+            $config['max_size']      = '10000';
+            $config['max_width']     = '5000';
+            $config['max_height']    = '5000';
             $config['file_name']     = $nama; 
             
             $this->upload->initialize($config);

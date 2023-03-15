@@ -99,14 +99,13 @@ class Pengembalian extends MY_Controller
         
         if(!empty($_FILES['imagefile']['name'])) {
 
-            $id = $this->input->post('id_user');
 
             $nama = encrypt_url($this->input->post('nama'));
             $config['upload_path']   = './assets/foto/images/';
             $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
-            $config['max_size']      = '1000';
-            $config['max_width']     = '2000';
-            $config['max_height']    = '1024';
+            $config['max_size']      = '10000';
+            $config['max_width']     = '5000';
+            $config['max_height']    = '5000';
             $config['file_name']     = $nama; 
             
             $this->upload->initialize($config);
@@ -251,9 +250,9 @@ public function update()
         $config['upload_path']   = './assets/foto/images/';
             $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
 
-            $config['max_size']      = '1000';
-            $config['max_width']     = '2000';
-            $config['max_height']    = '1024';
+            $config['max_size']      = '10000';
+            $config['max_width']     = '5000';
+            $config['max_height']    = '5000';
             $config['file_name']     = $nama; 
             
             $this->upload->initialize($config);

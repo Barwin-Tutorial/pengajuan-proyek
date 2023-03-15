@@ -60,7 +60,36 @@ public function header_perusahaan()
 
 }
 
+  public function chart_peminjaman()
+    {
+        
+        $data= $this->Mod_dashboard->grafik_peminjaman()->result();
+        echo json_encode($data);
 
+    }
 
+    public function chart_pengembalian()
+    {
+        
+        $data= $this->Mod_dashboard->grafik_pengembalian()->result();
+        echo json_encode($data);
+
+    }
+
+     public function chart_alat()
+    {
+        
+        $data= $this->Mod_dashboard->grafik_alat()->result();
+        echo json_encode($data);
+
+    }
+
+     public function chart_bahan()
+    {
+        
+        $data= $this->Mod_dashboard->grafik_bahan()->result();
+        echo json_encode($data);
+
+    }
 }
 /* End of file Controllername.php */
