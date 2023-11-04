@@ -1,10 +1,6 @@
 <?php 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
- * Create BY : Aryo
- * Youtube : Aryo Coding
- */
 class Mod_dashboard extends CI_Model
 {
 	
@@ -34,135 +30,55 @@ class Mod_dashboard extends CI_Model
 		return $this->db->get('tbl_akses_submenu a');
 	}
 
-	function jml_alat()
+	function total_dokumentasi()
 	{
-		$level = $this->session->userdata['id_level'];
-		$id_jurusan = $this->session->userdata['id_jurusan'];
-		if ($level=='6' || $level=='9') {
-			$this->db->where('id_jurusan',$id_jurusan);
-		}
-		
-		$this->db->from('alat');
+		$this->db->from('tbl_dokumen');
 		return $this->db->count_all_results();
 	}
 
-	function jml_bahan()
+	function belum_acc()
 	{
-		$level = $this->session->userdata['id_level'];
-		$id_jurusan = $this->session->userdata['id_jurusan'];
-		if ($level=='6' || $level=='9') {
-			$this->db->where('id_jurusan',$id_jurusan);
-		}
-		
-		$this->db->from('bahan');
+		$this->db->where('status','1');
+		$this->db->from('tbl_dokumen');
 		return $this->db->count_all_results();
 	}
 
-	function jml_pinjam()
+	function total_acc()
 	{
-		$level = $this->session->userdata['id_level'];
-		$id_jurusan = $this->session->userdata['id_jurusan'];
-		if ($level=='6' || $level=='9') {
-			$this->db->where('id_jurusan',$id_jurusan);
-		}
-		
-		$this->db->from('peminjaman');
+		$this->db->where('status','2');
+		$this->db->from('tbl_dokumen');
 		return $this->db->count_all_results();
 	}
 
-	function jml_pemakai_bahan()
+	function total_tolak()
 	{
-		$level = $this->session->userdata['id_level'];
-		$id_jurusan = $this->session->userdata['id_jurusan'];
-		if ($level=='6' || $level=='9') {
-			$this->db->where('id_jurusan',$id_jurusan);
-		}
-		
-		$this->db->from('pemakaian_bahan');
+		$this->db->where('status','3');
+		$this->db->from('tbl_dokumen');
 		return $this->db->count_all_results();
+	}
+	function total_anggaran()
+	{
+		$this->db->where('upload1 is not null');
+		$this->db->from('tbl_dokumen');
+		return $this->db->count_all_results();
+	}
+	function total_laporan() {
+		// Menghitung tanggal satu bulan sebelum hari ini
+		$startDate = date('Y-m-d', strtotime('-1 month'));
+	
+		// Menghitung tanggal hari ini
+		$endDate = date('Y-m-d');
+	
+		$this->db->select('COUNT(*) as total');
+		$this->db->from('tbl_dokumen');
+		$this->db->where('upload1 IS NOT NULL');
+		$this->db->where("tgl_input >= '$startDate'");
+		$this->db->where("tgl_diajukan <= '$endDate'");
+		$query = $this->db->get();
+	
+		$result = $query->row();
+		return $result->total;
+
 	}
 	
-		function jml_rusak()
-	{
-		$level = $this->session->userdata['id_level'];
-		$id_jurusan = $this->session->userdata['id_jurusan'];
-		if ($level=='6' || $level=='9') {
-			$this->db->where('id_jurusan',$id_jurusan);
-		}
-		
-		$this->db->from('kerusakan_alat');
-		return $this->db->count_all_results();
-	}
-	function jml_perbaikan()
-	{
-		$level = $this->session->userdata['id_level'];
-		$id_jurusan = $this->session->userdata['id_jurusan'];
-		if ($level=='6' || $level=='9') {
-			$this->db->where('id_jurusan',$id_jurusan);
-		}
-		
-		$this->db->from('perbaikan_alat');
-		return $this->db->count_all_results();
-	}
-
-	function grafik_peminjaman()
-	{
-		$tahun = date("Y");
-		$level = $this->session->userdata['id_level'];
-		$id_jurusan = $this->session->userdata['id_jurusan'];
-		if ($level=='6' || $level=='9') {
-			$this->db->where('a.id_jurusan',$id_jurusan);
-		}
-
-		$this->db->select('count(a.id_peminjaman) as total, month(a.tgl_input) as bulan');
-		$this->db->where('YEAR(a.tgl_input)',$tahun);
-		$this->db->group_by('month(a.tgl_input)');
-		return $this->db->get('peminjaman a');
-	}
-
-	function grafik_pengembalian()
-	{
-		$tahun = date("Y");
-		$level = $this->session->userdata['id_level'];
-		$id_jurusan = $this->session->userdata['id_jurusan'];
-		if ($level=='6' || $level=='9') {
-			$this->db->where('a.id_jurusan',$id_jurusan);
-		}
-
-		$this->db->select('count(a.id_pengembalian) as total,month(a.tgl_input) as bulan');
-		$this->db->where('YEAR(a.tgl_input)',$tahun);
-		$this->db->group_by('month(a.tgl_input)');
-		return $this->db->get('pengembalian a');
-	}
-
-	function grafik_alat()
-	{
-		$tahun = date("Y");
-		$level = $this->session->userdata['id_level'];
-		$id_jurusan = $this->session->userdata['id_jurusan'];
-		if ($level=='6' || $level=='9') {
-			$this->db->where('a.id_jurusan',$id_jurusan);
-		}
-
-		$this->db->select('count(a.id_alat) as total,month(a.tgl_input) as bulan');
-		$this->db->where('YEAR(a.tgl_input)',$tahun);
-		$this->db->group_by('month(a.tgl_input)');
-		$this->db->order_by('a.tgl_input');
-		return $this->db->get('alat a');
-	}
-
-	function grafik_bahan()
-	{
-		$tahun = date("Y");
-		$level = $this->session->userdata['id_level'];
-		$id_jurusan = $this->session->userdata['id_jurusan'];
-		if ($level=='6' || $level=='9') {
-			$this->db->where('a.id_jurusan',$id_jurusan);
-		}
-
-		$this->db->select('count(a.id_bahan) as total,month(a.tgl_input) as bulan');
-		$this->db->where('YEAR(a.tgl_input)',$tahun);
-		$this->db->group_by('month(a.tgl_input)');
-		return $this->db->get('bahan a');
-	}
 }

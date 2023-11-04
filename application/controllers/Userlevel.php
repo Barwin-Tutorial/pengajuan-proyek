@@ -2,8 +2,8 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * Create By ARYO
- * Youtube : Aryo Coding
+ * 
+ * 
  */
 class Userlevel extends MY_Controller
 {

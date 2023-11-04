@@ -36,12 +36,12 @@ class Dashboard extends MY_Controller {
             
             $data['level'] = $this->session->userdata['id_level'];
             if ($akses=="Y") {
-                $data['jml_alat'] = $this->Mod_dashboard->jml_alat();
-                $data['jml_bahan'] = $this->Mod_dashboard->jml_bahan();
-                $data['jml_pinjam'] = $this->Mod_dashboard->jml_pinjam();
-                $data['jml_pemakai_bahan'] = $this->Mod_dashboard->jml_pemakai_bahan();
-                $data['jml_rusak'] = $this->Mod_dashboard->jml_rusak();
-                $data['jml_perbaikan'] = $this->Mod_dashboard->jml_perbaikan();
+                $data['dok'] = $this->Mod_dashboard->total_dokumentasi();
+                $data['blm_acc'] = $this->Mod_dashboard->belum_acc();
+                $data['total_acc'] = $this->Mod_dashboard->total_acc();
+                 $data['total_tolak'] = $this->Mod_dashboard->total_tolak();
+                 $data['total_anggaran'] = $this->Mod_dashboard->total_anggaran();
+                 $data['total_laporan'] = $this->Mod_dashboard->total_laporan();
                $this->template->load('layoutbackend','dashboard/dashboard_data',$data);
            }else{
             $data['page']=$link;
@@ -60,36 +60,6 @@ public function header_perusahaan()
 
 }
 
-  public function chart_peminjaman()
-    {
-        
-        $data= $this->Mod_dashboard->grafik_peminjaman()->result();
-        echo json_encode($data);
 
-    }
-
-    public function chart_pengembalian()
-    {
-        
-        $data= $this->Mod_dashboard->grafik_pengembalian()->result();
-        echo json_encode($data);
-
-    }
-
-     public function chart_alat()
-    {
-        
-        $data= $this->Mod_dashboard->grafik_alat()->result();
-        echo json_encode($data);
-
-    }
-
-     public function chart_bahan()
-    {
-        
-        $data= $this->Mod_dashboard->grafik_bahan()->result();
-        echo json_encode($data);
-
-    }
 }
 /* End of file Controllername.php */

@@ -16,6 +16,7 @@ class ComposerStaticInit3aba1b5c950d1fb8ee1ffb301ff4220e
     public static $prefixLengthsPsr4 = array (
         'Z' => 
         array (
+            'Zxing\\' => 6,
             'ZipStream\\' => 10,
         ),
         'S' => 
@@ -55,6 +56,10 @@ class ComposerStaticInit3aba1b5c950d1fb8ee1ffb301ff4220e
     );
 
     public static $prefixDirsPsr4 = array (
+        'Zxing\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/zxing/qr-reader/lib',
+        ),
         'ZipStream\\' => 
         array (
             0 => __DIR__ . '/..' . '/maennchen/zipstream-php/src',
@@ -77,8 +82,8 @@ class ComposerStaticInit3aba1b5c950d1fb8ee1ffb301ff4220e
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-factory/src',
-            1 => __DIR__ . '/..' . '/psr/http-message/src',
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+            1 => __DIR__ . '/..' . '/psr/http-factory/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (

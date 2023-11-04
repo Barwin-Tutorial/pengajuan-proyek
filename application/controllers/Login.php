@@ -48,7 +48,6 @@ class Login extends CI_Controller {
                     'logo'        => $apl->logo,
                     'nama_owner'     => $apl->nama_owner,
                     'logged_in'    => TRUE,
-                    'id_jurusan'  => $db->id_jurusan,
                 );
 
                 $urls=$this->Mod_login->akses_menu($db->id_level)->row();

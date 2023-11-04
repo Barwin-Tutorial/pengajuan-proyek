@@ -2,8 +2,8 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * Create By : Aryo
- * Youtube : Aryo Coding
+ * 
+ * 
  */
 class Ganti_password extends MY_Controller
 {

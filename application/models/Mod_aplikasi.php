@@ -1,9 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
- * Create By ARYO
- */
+
 class Mod_aplikasi extends CI_Model
 {
 	

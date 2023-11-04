@@ -15,7 +15,8 @@
 		"phpoffice/phpspreadsheet": "^1.25",
 		"sabberworm/php-css-parser": "^8.3",
 		"picqer/php-barcode-generator": "^2.2",
-		"dompdf/dompdf": "^1.0"
+		"dompdf/dompdf": "^1.0",
+		"zxing/qr-reader" :"^1.0"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"

@@ -6,6 +6,14 @@ $user=$this->db->where('id_user',$id);
 $user=$this->db->get("tbl_user")->row();
 $idlevel  = $this->session->userdata['id_level'];
 
+$level=$this->db->where('id_level',$idlevel);
+$level=$this->db->get('tbl_userlevel')->row();
+
+  $coun=$this->db->where('status','3');
+  $coun=$this->db->from('tbl_dokumen');
+  $coun = $this->db->count_all_results();
+
+
 ?>
 <!-- main-header navbar navbar-expand navbar-default navbar-dark navbar-cyan -->
 <!-- Navbar -->
@@ -37,7 +45,21 @@ $idlevel  = $this->session->userdata['id_level'];
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
-    
+      <?php if ($idlevel=='6'): ?>
+        <li class="nav-item dropdown">
+        <a class="nav-link" data-toggle="dropdown" href="#">
+          <i class="far fa-bell"></i>
+          <span class="badge badge-warning navbar-badge"><?php echo $coun; ?></span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+          <div class="dropdown-divider"></div>
+          <a href="<?php echo base_url('dokumen') ?>" class="dropdown-item">
+            <i class="fas fa-envelope mr-2"></i> <?php echo $coun; ?> Ditolak
+          </a>
+        </div>
+      </li>
+      <?php endif ?>
+         
       <li class="nav-item">
         <a href="#" class="nav-link">
           <div class="user-panel">
@@ -48,7 +70,7 @@ $idlevel  = $this->session->userdata['id_level'];
             <img  id="pasfotox" width="100px" height="140px" border="2"  src="<?php echo base_url("assets/foto/logo/$apl->logo");?>">
           <?php } ?>
           
-          <?php echo $this->session->userdata['full_name']; ?>
+         <?php echo $this->session->userdata['full_name']; ?>
         </div>
       <!-- </div> -->
         
@@ -92,7 +114,7 @@ $idlevel  = $this->session->userdata['id_level'];
           
         </div>
         <div class="info">
-          <a href="#" class="d-block"><?php echo $this->session->userdata['full_name']; ?></a>
+          <a href="#" class="d-block"><?php echo $level->nama_level; ?></a>
         </div>
       </div>
 

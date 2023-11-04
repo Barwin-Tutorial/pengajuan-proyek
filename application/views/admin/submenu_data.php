@@ -121,7 +121,7 @@ $(document).ready(function() {
 });
  $("select").change(function(){
   $(this).parent().parent().removeClass('has-error');
-  $(this).next().empty();
+  $(this).next().next().empty();
   $(this).removeClass('is-invalid');
 });
 
@@ -231,13 +231,13 @@ function reload_table()
       {
 
         $('[name="id"]').val(data.id_submenu);
-        $('[name="id_menu"]').val(data.id_menu);
+        $('[name="id_menu"]').val(data.id_menu).select2();
         $('[name="id_submenu"]').val(data.id_submenu);
         $('[name="nama_submenu"]').val(data.nama_submenu);
         $('[name="link"]').val(data.link);
         $('[name="icon"]').val(data.icon);
         $('[name="urutan"]').val(data.urutan);
-        $('[name="is_active"]').val(data.is_active);
+        $('[name="is_active"]').val(data.is_active).select2();
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
             $('.modal-title').text('Edit Submenu'); // Set title to Bootstrap modal title
 
@@ -302,6 +302,7 @@ function reload_table()
         });
   }
 
+
 </script>
 
 
@@ -325,7 +326,7 @@ function reload_table()
             <div class="form-group row">
               <label for="id_menu" class="col-sm-3 col-form-label">Menu</label>
               <div class="col-sm-9 kosong">
-                <select class="form-control" name="id_menu" id="id_menu" >
+                <select class="form-control select2" name="id_menu" id="id_menu" >
                   <option value="" selected disabled>Pilih Menu</option>
                   <?php 
                   foreach ($menu as $menus):
@@ -360,7 +361,7 @@ function reload_table()
             <div class="form-group row ">
               <label for="is_active" class="col-sm-3 col-form-label">Is Active</label>
               <div class="col-sm-9 kosong">
-                <select class="form-control" name="is_active" id="is_active" >
+                <select class="form-control select2" name="is_active" id="is_active" >
                   <option value="" selected disabled>Pilih Active</option>
                   <option value="Y">Y</option>
                   <option value="N">N</option>

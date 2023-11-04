@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 /**
- * Create BY Aryo
+ * 
  */
 class User extends MY_Controller {
 
@@ -34,7 +34,6 @@ class User extends MY_Controller {
             $akses=$a_submenu->view;
         }
         if ($akses=="Y") {
-            $data['jurusan'] = $this->Mod_fungsi->get_jurusan();
             $this->template->load('layoutbackend', 'admin/user_data', $data);
         }else{
             $data['page']=$link;
@@ -102,7 +101,6 @@ class User extends MY_Controller {
                 'full_name' => ucwords($this->input->post('full_name')),
                 'password'  => get_hash($this->input->post('password')),
                 'id_level'  => $this->input->post('level'),
-                'id_jurusan'  => $this->input->post('id_jurusan'),
                 'is_active' => $this->input->post('is_active'),
                 'image' => $gambar['file_name']
             );
@@ -115,7 +113,6 @@ class User extends MY_Controller {
                 'full_name' => ucwords($this->input->post('full_name')),
                 'password'  => get_hash($this->input->post('password')),
                 'id_level'  => $this->input->post('level'),
-                'id_jurusan'  => $this->input->post('id_jurusan'),
                 'is_active' => $this->input->post('is_active')
             );
             
@@ -147,6 +144,7 @@ class User extends MY_Controller {
 
     public function update()
     {
+        // $this->_validate();
         $nip = $this->input->post('nip');
         if(!empty($_FILES['imagefile']['name'])) {
         // $this->_validate();
@@ -172,7 +170,6 @@ class User extends MY_Controller {
                     'password'  => get_hash($this->input->post('password')),
                     'id_level'  => $this->input->post('level'),
                     'is_active' => $this->input->post('is_active'),
-                    'id_jurusan'  => $this->input->post('id_jurusan'),
                     'image' => $gambar['file_name']
                 );
             }else{//Jika password kosong
@@ -181,7 +178,6 @@ class User extends MY_Controller {
                 'full_name' => ucwords($this->input->post('full_name')),
                 'id_level'  => $this->input->post('level'),
                 'is_active' => $this->input->post('is_active'),
-                'id_jurusan'  => $this->input->post('id_jurusan'),
                 'image' => $gambar['file_name']
                 );
             }
@@ -189,7 +185,7 @@ class User extends MY_Controller {
             
             $g = $this->Mod_user->getImage($id)->row_array();
 
-            if ($g['image'] != null) {
+            if (!empty($g['image'])) {
                 //hapus gambar yg ada diserver
                 unlink('assets/foto/user/'.$g['image']);
             }
@@ -206,7 +202,6 @@ class User extends MY_Controller {
                     'full_name' => ucwords($this->input->post('full_name')),
                     'password'  => get_hash($this->input->post('password')),
                     'id_level'  => $this->input->post('level'),
-                    'id_jurusan'  => $this->input->post('id_jurusan'),
                     'is_active' => $this->input->post('is_active')
                 );
             }else{//Jika password kosong
@@ -214,7 +209,6 @@ class User extends MY_Controller {
                 'username' => $this->input->post('username'),
                 'full_name' => ucwords($this->input->post('full_name')),
                 'id_level'  => $this->input->post('level'),
-                'id_jurusan'  => $this->input->post('id_jurusan'),
                 'is_active' => $this->input->post('is_active')
                 );
             }
@@ -232,7 +226,6 @@ class User extends MY_Controller {
                 'full_name' => ucwords($this->input->post('full_name')),
                 'password'  => get_hash($this->input->post('password')),
                 'id_level'  => $this->input->post('level'),
-                'id_jurusan'  => $this->input->post('id_jurusan'),
                 'is_active' => $this->input->post('is_active')
                 );
             }else{
@@ -240,7 +233,6 @@ class User extends MY_Controller {
                 'username' => $this->input->post('username'),
                 'full_name' => ucwords($this->input->post('full_name')),
                 'id_level'  => $this->input->post('level'),
-                'id_jurusan'  => $this->input->post('id_jurusan'),
                 'is_active' => $this->input->post('is_active')
                 );
             }
@@ -371,13 +363,8 @@ class User extends MY_Controller {
             $data['error_string'][] = 'Please select is level';
             $data['status'] = FALSE;
         }
-
-        /*if($this->input->post('image') == '')
-        {
-            $data['inputerror'][] = 'image';
-            $data['error_string'][] = 'Image is required';
-            $data['status'] = FALSE;
-        }*/
+        
+        
 
         if($data['status'] === FALSE)
         {

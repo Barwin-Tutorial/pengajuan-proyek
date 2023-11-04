@@ -3,8 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 /**
- * Create By : Aryo
- * Youtube : Aryo Coding
+ 
+ 
  */
 class Aplikasi extends MY_Controller
 {
@@ -33,13 +33,9 @@ class Aplikasi extends MY_Controller
             $akses=$a_submenu->view;
         }
         if ($akses=="Y") {
-            $data['aplikasi'] = $this->Mod_aplikasi->getAplikasi();
-           $this->template->load('layoutbackend', 'admin/aplikasi',$data);
-        }else{
-            $data['page']=$link;
-            $this->template->load('layoutbackend','login/akses_ditolak',$data);
+            
         }
-	}
+    }
 
 	   
 

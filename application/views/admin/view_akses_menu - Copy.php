@@ -1,7 +1,7 @@
 <div class="card-body">
   <table class="table table-striped table-bordered" id="vakses"> 
     <thead>
-      <tr class="bg-gray">
+      <tr class="bg-purple">
         <th>Menu</th>
         <th>View</th>
       </tr>

@@ -66,13 +66,8 @@ var save_method; //for save method string
 var table;
 
 $(document).ready(function() {
-  var id_level=$('[name="level"]').val();
-  if (id_level=='6' || id_level=='8') {
-    $('.jrs').show();
-  }else{
-    $('.jrs').hide();
-  }
-  
+
+  $('.select').select2();
   table =$("#tabeluser").DataTable({
     "responsive": true,
     "autoWidth": false,
@@ -101,7 +96,7 @@ $(document).ready(function() {
   });
   $("select").change(function(){
     $(this).parent().parent().removeClass('has-error');
-    $(this).next().empty();
+    $(this).next().next().empty();
     $(this).removeClass('is-invalid');
   });
 });
@@ -249,9 +244,8 @@ function add_user()
         $('[name="id_user"]').val(data.id_user);
         $('[name="username"]').val(data.username);
         $('[name="full_name"]').val(data.full_name);
-        $('[name="is_active"]').val(data.is_active);
-        $('[name="level"]').val(data.id_level);
-        $('[name="id_jurusan"]').val(data.id_jurusan);
+        $('[name="is_active"]').val(data.is_active).select2();
+        $('[name="level"]').val(data.id_level).select2();
         var id_level=$('[name="level"]').val(data.id_level);
         if (id_level=='6' || id_level=='8') {
           $('.jrs').show();
@@ -377,7 +371,7 @@ function add_user()
             <div class="form-group row ">
               <label for="level" class="col-sm-3 col-form-label">Level</label>
               <div class="col-sm-9 kosong">
-                <select class="form-control" name="level" id="level">
+                <select class="form-control select" name="level" id="level">
                   <option value="">Pilih Level</option>
                   <?php
                   foreach ($user_level as $level) {?>
@@ -409,7 +403,7 @@ function add_user()
             <div class="form-group row ">
               <label for="is_active" class="col-sm-3 col-form-label">Status</label>
               <div class="col-sm-9 kosong">
-                <select class="form-control" name="is_active" id="is_active">
+                <select class="form-control select" name="is_active" id="is_active">
                   <option value=""></option>
                   <option value="Y">Y</option>
                   <option value="N">N</option>
@@ -424,18 +418,7 @@ function add_user()
                 <input type="file" class="form-control btn-file" onchange="loadFile(event)" name="imagefile" id="imagefile" placeholder="Image" value="UPLOAD">
               </div>
             </div>
-            <div class="form-group row ">
-              <label for="id_jurusan" class="col-sm-3 col-form-label">Jurusan</label>
-              <div class="col-sm-9 kosong">
-                <select class="form-control" name="id_jurusan" id="id_jurusan">
-                  <option value="" selected="" disabled="">Pilih Jurusan</option>
-                  <?php
-                  foreach ($jurusan->result() as $j) {?>
-                    <option value="<?=$j->id_jurusan;?>"><?=$j->nama_jurusan;?></option>
-                  <?php }?>
-                </select>
-              </div>
-            </div>
+            
           </div>
         </form>
       </div>
